@@ -2,7 +2,7 @@
 
 using namespace glm;
 
-Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidth(width), m_wHeight(height), m_window(0), m_openGLContext(0)
+Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidth(width), m_wHeight(height), m_window(0), m_openGLContext(0), input()
 {}
 
 Scene::~Scene()
@@ -77,7 +77,6 @@ bool Scene::initGL()
 
 void Scene::mainLoop()
 {
-    bool ending(false);
     unsigned int frameRate(1000/50);
     Uint32 loopBeg(0), loopEnd(0), time(0);
 
@@ -89,30 +88,53 @@ void Scene::mainLoop()
 
     Cube cube(2.0, "Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
 
-    float angle(0.0);
+    float angleX(0.0);
+    float angleY(0.0);
 
-    while (!ending)
+    while (!input.end())
     {
         loopBeg = SDL_GetTicks();
 
-        SDL_PollEvent(&m_events);
+        input.updateEvent();
 
-        if(m_events.window.event == SDL_WINDOWEVENT_CLOSE)
+        if(input.getKey(SDL_SCANCODE_ESCAPE))
+            break;
+        
+
+        if(input.getKey(SDL_SCANCODE_LEFT))
+            angleY -= 0.01;
+        if(input.getKey(SDL_SCANCODE_RIGHT))
+            angleY += 0.01;
+
+        if(angleY >= 360.0)
         {
-            ending = true;
+            angleY -= 360.0;
+        }
+        else if (angleY <= -360.0)
+        {
+            angleY += 360.0;
         }
 
-        angle += 0.01;
+        if(input.getKey(SDL_SCANCODE_UP))
+            angleX -= 0.01;
+        if(input.getKey(SDL_SCANCODE_DOWN))
+            angleX += 0.01;
 
-        if(angle >= 360.0)
+        if(angleX >= 360.0)
         {
-            angle -= 360.0;
+            angleX -= 360.0;
         }
+        else if (angleX <= -360.0)
+        {
+            angleX += 360.0;
+        }
+        
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
         modelview = lookAt(vec3(3, 3, 3), vec3(0, 0, 0), vec3(0, 1, 0)); //init the camera
 
-        modelview = rotate(modelview, angle, vec3(0, 1, 0));
+        modelview = rotate(modelview, angleX, vec3(1, 0, 0));
+        modelview = rotate(modelview, angleY, vec3(0, 1, 0));
 
         cube.draw(projection, modelview);
 

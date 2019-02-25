@@ -13,6 +13,7 @@
 
 #include "Models/Cube.h"
 #include "Shaders/Shader.h"
+#include "Inputs/Input.h"
 
 // Include Windows
 #ifdef WIN32
@@ -57,5 +58,6 @@ class Scene
         SDL_Window * m_window;
         SDL_GLContext m_openGLContext;
         SDL_Event m_events;
+        Input input;
 };
 #endif
