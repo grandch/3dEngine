@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -Wall
 EXEC_NAME = engine
-INCLUDES = main.cpp Scene.cpp Shader.cpp Cube.cpp
+INCLUDES = main.cpp Scene.cpp Shaders/Shader.cpp Models/Cube.cpp
 LIBS = -lGL -lSDL2
 OBJ_FILES = main.o Scene.o Shader.o Cube.o
 INSTALL_DIR = /usr/bin

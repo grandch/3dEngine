@@ -84,7 +84,7 @@ void Scene::mainLoop()
     mat4 projection;
     mat4 modelview;
 
-    projection = perspective(70.0, (double) m_wWidth / m_wHeight, 1.0, 100.0);
+    projection = perspective(70.0, (double) m_wWidth / m_wHeight, 1.0, 100.0); //init the camera
     modelview = mat4(0.1);
 
     Cube cube(2.0, "Shaders/couleur3D.vert", "Shaders/couleur3D.frag");

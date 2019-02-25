@@ -11,8 +11,8 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Cube.h"
-#include "Shader.h"
+#include "Models/Cube.h"
+#include "Shaders/Shader.h"
 
 // Include Windows
 #ifdef WIN32
