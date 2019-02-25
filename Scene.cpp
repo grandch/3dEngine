@@ -87,8 +87,8 @@ void Scene::mainLoop()
     modelview = mat4(0.1);
 
     Cube cube(2.0, "Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+    cube.load();
 
-    float angleX(0.0);
     float angleY(0.0);
 
     while (!input.end())
@@ -114,26 +114,11 @@ void Scene::mainLoop()
         {
             angleY += 360.0;
         }
-
-        if(input.getKey(SDL_SCANCODE_UP))
-            angleX -= 0.01;
-        if(input.getKey(SDL_SCANCODE_DOWN))
-            angleX += 0.01;
-
-        if(angleX >= 360.0)
-        {
-            angleX -= 360.0;
-        }
-        else if (angleX <= -360.0)
-        {
-            angleX += 360.0;
-        }
         
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
         modelview = lookAt(vec3(3, 3, 3), vec3(0, 0, 0), vec3(0, 1, 0)); //init the camera
 
-        modelview = rotate(modelview, angleX, vec3(1, 0, 0));
         modelview = rotate(modelview, angleY, vec3(0, 1, 0));
 
         cube.draw(projection, modelview);

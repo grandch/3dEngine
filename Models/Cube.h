@@ -11,11 +11,18 @@
 
 #endif
 
+#ifndef BUFFER_OFFSET //vbo
+
+    #define BUFFER_OFFSET(offset) ((char*)NULL + (offset))
+
+#endif
+
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <string>
+#include <cstring>
 
 #include "../Shaders/Shader.h"
 
@@ -31,12 +38,18 @@ class Cube
 
         void draw(mat4 &projection, mat4 &modelview);
 
+        void load();
+        void updateVbo(void *data, int size, int offset);
+
     private:
 
-        Shader m_shader;
-        float m_vertex[108];
-        float m_color[108];
+        Shader shader;
+        float vertex[108];
+        float color[108];
 
+        int vertexSize, colorSize;
+
+        GLuint vboID;
 };
 
 #endif
