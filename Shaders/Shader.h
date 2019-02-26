@@ -1,62 +1,53 @@
 #ifndef DEF_SHADER
 #define DEF_SHADER
 
-
-// Include Windows
-
+//Windows
 #ifdef WIN32
 #include <GL/glew.h>
 
-
-// Include Mac
-
+//Mac
 #elif __APPLE__
 #define GL3_PROTOTYPES 1
 #include <OpenGL/gl3.h>
 
-
-// Include UNIX/Linux
-
+//UNIX/Linux
 #else
 #define GL3_PROTOTYPES 1
 #include <GLES3/gl3.h>
-
 #endif
 
-
-// Includes communs
 
 #include <iostream>
 #include <string>
 #include <fstream>
 
-
-// Classe Shader
+using namespace std;
 
 class Shader
 {
     public:
 
-    Shader();
-    Shader(Shader const &shaderACopier);
-    Shader(std::string vertexSource, std::string fragmentSource);
-    ~Shader();
+        Shader();
+        ~Shader();
 
-    Shader& operator=(Shader const &shaderACopier);
+        Shader(string vertexPath, string fragmentPath);
+        Shader(Shader const &toCopyShader);
 
-    bool charger();
-    bool compilerShader(GLuint &shader, GLenum type, std::string const &fichierSource);
-    GLuint getProgramID() const;
+        Shader& operator=(Shader const &toCopyShader);
 
+        GLuint getProgramID() const;
+
+        bool load();
+        bool shaderCompile(GLuint &shader, GLenum type, string const &filePath);
 
     private:
 
-    GLuint m_vertexID;
-    GLuint m_fragmentID;
-    GLuint m_programID;
+        GLuint fragmentID;
+        GLuint vertexID;
+        GLuint programID;
 
-    std::string m_vertexSource;
-    std::string m_fragmentSource;
+        string vertexPath;
+        string fragmentPath;
 };
 
 #endif

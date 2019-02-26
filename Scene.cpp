@@ -87,6 +87,7 @@ void Scene::mainLoop()
     modelview = mat4(0.1);
 
     Cube cube(2.0, "Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+
     cube.load();
 
     float angleY(0.0);

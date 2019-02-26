@@ -3,7 +3,7 @@
 Cube::Cube(float scale, string const vertexShader, string const fragmentShader): 
 shader(vertexShader, fragmentShader), vertexSize(108*sizeof(float)), colorSize(108*sizeof(float)), vboID(0)
 {
-    shader.charger();
+    shader.load();
 
     scale /= 2;
     float vertexTmp[] = {-scale, -scale, -scale,   scale, -scale, -scale,   scale, scale, -scale,
