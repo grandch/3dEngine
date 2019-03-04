@@ -1,8 +1,6 @@
 #include "Scene.h"
 
-using namespace glm;
-
-Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidth(width), m_wHeight(height), m_window(0), m_openGLContext(0), input()
+Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidth(width), m_wHeight(height), m_window(0), m_openGLContext(0), m_input()
 {}
 
 Scene::~Scene()
@@ -13,12 +11,11 @@ Scene::~Scene()
 }
 
 
-
 bool Scene::initWindow()
 {
-    int depthSize(24);
-    //SDL init
+    int depthSize = 24;
 
+    //SDL init
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         cout << "Error while loading the SDL : " << SDL_GetError() << endl;
@@ -27,9 +24,10 @@ bool Scene::initWindow()
         return false;
     }
 
-    //openGL version
+    //openGL version (3.3 core)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     //doublebuffer
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -92,19 +90,19 @@ void Scene::mainLoop()
 
     float angleY(0.0);
 
-    while (!input.end())
+    while (!m_input.end())
     {
         loopBeg = SDL_GetTicks();
 
-        input.updateEvent();
+        m_input.updateEvent();
 
-        if(input.getKey(SDL_SCANCODE_ESCAPE))
+        if(m_input.getKey(SDL_SCANCODE_ESCAPE))
             break;
         
 
-        if(input.getKey(SDL_SCANCODE_LEFT))
+        if(m_input.getKey(SDL_SCANCODE_LEFT))
             angleY -= 0.01;
-        if(input.getKey(SDL_SCANCODE_RIGHT))
+        if(m_input.getKey(SDL_SCANCODE_RIGHT))
             angleY += 0.01;
 
         if(angleY >= 360.0)

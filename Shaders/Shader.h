@@ -1,21 +1,7 @@
 #ifndef DEF_SHADER
 #define DEF_SHADER
 
-//Windows
-#ifdef WIN32
-#include <GL/glew.h>
-
-//Mac
-#elif __APPLE__
-#define GL3_PROTOTYPES 1
-#include <OpenGL/gl3.h>
-
-//UNIX/Linux
-#else
-#define GL3_PROTOTYPES 1
 #include <GLES3/gl3.h>
-#endif
-
 
 #include <iostream>
 #include <string>
@@ -42,12 +28,12 @@ class Shader
 
     private:
 
-        GLuint fragmentID;
-        GLuint vertexID;
-        GLuint programID;
+        GLuint m_fragmentID;
+        GLuint m_vertexID;
+        GLuint m_programID;
 
-        string vertexPath;
-        string fragmentPath;
+        string m_vertexPath;
+        string m_fragmentPath;
 };
 
 #endif

@@ -1,9 +1,9 @@
 #include "Cube.h"
 
 Cube::Cube(float scale, string const vertexShader, string const fragmentShader): 
-shader(vertexShader, fragmentShader), vertexSize(108*sizeof(float)), colorSize(108*sizeof(float)), vboID(0)
+m_shader(vertexShader, fragmentShader), m_vertexSize(108*sizeof(float)), m_colorSize(108*sizeof(float)), m_vboId(0), m_vaoId(0)
 {
-    shader.load();
+    m_shader.load();
 
     scale /= 2;
     float vertexTmp[] = {-scale, -scale, -scale,   scale, -scale, -scale,   scale, scale, -scale,
@@ -44,67 +44,70 @@ shader(vertexShader, fragmentShader), vertexSize(108*sizeof(float)), colorSize(1
 
     for(int i = 0; i < 108; i++)
     {
-        vertex[i] = vertexTmp[i];
-        color[i] = colorTmp[i]; 
+        m_vertex[i] = vertexTmp[i];
+        m_color[i] = colorTmp[i]; 
     }
 }
 
 Cube::~Cube()
 {
-    glDeleteBuffers(1, &vboID);
+    glDeleteBuffers(1, &m_vboId);
+    glDeleteVertexArrays(1, &m_vaoId);
 }
 
 
 void Cube::draw(mat4 &projection, mat4 &modelview)
 {
-    glUseProgram(shader.getProgramID()); //load the current shader
+    glUseProgram(m_shader.getProgramID()); //load the current shader
 
-            glBindBuffer(GL_ARRAY_BUFFER, vboID); //lock the vbo
+        glBindVertexArray(m_vaoId); //lock the vao
 
-                glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0)); //first vertexAttrib (0), takes three coord (3)
-                glEnableVertexAttribArray(0); //load the first vertexAttrib
+            //send matrix to shaders
+            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "modelview"), 1, GL_FALSE, value_ptr(modelview));
+            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
 
-                glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(vertexSize)); //same
-                glEnableVertexAttribArray(1); //same
+            glDrawArrays(GL_TRIANGLES, 0, 36); //draw the vertex
 
-                //send matrix to shaders
-                glUniformMatrix4fv(glGetUniformLocation(shader.getProgramID(), "modelview"), 1, GL_FALSE, value_ptr(modelview));
-                glUniformMatrix4fv(glGetUniformLocation(shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
+        glBindVertexArray(0); //unlock the vao        
 
-                glDrawArrays(GL_TRIANGLES, 0, 36); //draw the vertex
-
-                glDisableVertexAttribArray(1);
-                glDisableVertexAttribArray(0);
-
-            glBindBuffer(GL_ARRAY_BUFFER, 0); //unlock the vbo
-
-        glUseProgram(0); //desable the shader
+    glUseProgram(0); //desable the shader
 }
 
 void Cube::load()
 {
-    if(glIsBuffer(vboID) == GL_TRUE ) //delete the current vbo
+    loadVBO();
+    loadVAO();
+}
+
+void Cube::loadVBO()
+{
+    if(glIsBuffer(m_vboId) == GL_TRUE ) //delete the current vbo
     {
-        glDeleteBuffers(1, &vboID);
+        glDeleteBuffers(1, &m_vboId);
     }
 
-    glGenBuffers(1, &vboID); //create the ID
+    glGenBuffers(1, &m_vboId); //create an ID
 
-    glBindBuffer(GL_ARRAY_BUFFER, vboID); //lock the vbo
+    glBindBuffer(GL_ARRAY_BUFFER, m_vboId); //lock the vbo
 
-        glBufferData(GL_ARRAY_BUFFER, vertexSize + colorSize, 0, GL_STATIC_DRAW); //memory allocation
+        glBufferData(GL_ARRAY_BUFFER, m_vertexSize + m_colorSize, 0, GL_STATIC_DRAW); //memory allocation
 
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertexSize, vertex);
-        glBufferSubData(GL_ARRAY_BUFFER, vertexSize, colorSize, color);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, m_vertexSize, m_vertex);
+        glBufferSubData(GL_ARRAY_BUFFER, m_vertexSize, m_colorSize, m_color);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0); //unlock the vbo
 }
 
-void Cube::updateVbo(void *data, int size, int offset)
+void Cube::updateVBO(void *data, int size, int offset)
 {
-    glBindBuffer(GL_ARRAY_BUFFER, vboID);
+    if(glIsVertexArray(m_vaoId) == GL_TRUE)
+    {
+        glDeleteVertexArrays(1, &m_vaoId);
+    }
 
-        void *vbo = glMapBufferRange(GL_ARRAY_BUFFER, 0, vertexSize + colorSize, GL_MAP_WRITE_BIT);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vboId);
+
+        void *vbo = glMapBufferRange(GL_ARRAY_BUFFER, 0, m_vertexSize + m_colorSize, GL_MAP_WRITE_BIT);
 
         if(vbo == NULL)
         {
@@ -119,4 +122,23 @@ void Cube::updateVbo(void *data, int size, int offset)
         vbo = 0;
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void Cube::loadVAO()
+{
+    glGenVertexArrays(1, &m_vaoId);
+
+    glBindVertexArray(m_vaoId);
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_vboId); //lock the vbo
+
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0)); //first vertexAttrib (0), vbo with no offset
+            glEnableVertexAttribArray(0); //load the first vertexAttrib
+
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(m_vertexSize)); //second vertexAttrib, vbo with vertexSizeOffset
+            glEnableVertexAttribArray(1); //same
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0); //unlock the vbo
+
+    glBindVertexArray(0);
 }

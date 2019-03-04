@@ -29,14 +29,14 @@ class Input
 
     private:
 
-        SDL_Event event;
-        bool keyboard[SDL_NUM_SCANCODES];
-        bool mouse[8];
+        SDL_Event m_event;
+        bool m_keyboard[SDL_NUM_SCANCODES];
+        bool m_mouse[8];
 
-        int x, y;
-        int xRel, yRel;
+        int m_x, m_y;
+        int m_xRel, m_yRel;
 
-        bool ending;
+        bool m_end;
 };
 
 #endif

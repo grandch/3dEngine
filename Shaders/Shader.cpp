@@ -1,23 +1,23 @@
 #include "Shader.h"
 
-Shader::Shader(): vertexID(0), fragmentID(0), programID(0), vertexPath(), fragmentPath()
+Shader::Shader(): m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexPath(), m_fragmentPath()
 {}
 
-Shader::Shader(string vertexPath, string fragmentPath): vertexID(0), fragmentID(0), programID(0), vertexPath(vertexPath), fragmentPath(fragmentPath)
+Shader::Shader(string vertexPath, string fragmentPath): m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexPath(vertexPath), m_fragmentPath(fragmentPath)
 {}
 
 Shader::Shader(Shader const &toCopyShader)
 {
-    vertexPath = toCopyShader.vertexPath;
-    fragmentPath = toCopyShader.fragmentPath;
+    m_vertexPath = toCopyShader.m_vertexPath;
+    m_fragmentPath = toCopyShader.m_fragmentPath;
 
     load();
 }
 
 Shader& Shader::operator=(Shader const &toCopyShader)
 {
-    vertexPath = toCopyShader.vertexPath;
-    fragmentPath = toCopyShader.fragmentPath;
+    m_vertexPath = toCopyShader.m_vertexPath;
+    m_fragmentPath = toCopyShader.m_fragmentPath;
 
     load();
 
@@ -26,72 +26,72 @@ Shader& Shader::operator=(Shader const &toCopyShader)
 
 Shader::~Shader()
 {
-    glDeleteShader(vertexID);
-    glDeleteShader(fragmentID);
-    glDeleteProgram(programID);
+    glDeleteShader(m_vertexID);
+    glDeleteShader(m_fragmentID);
+    glDeleteProgram(m_programID);
 }
 
 
 GLuint Shader::getProgramID() const
 {
-    return programID;
+    return m_programID;
 }
 
 bool Shader::load()
 {
     GLint linkError(0);
 
-    if(glIsShader(vertexID) == GL_TRUE)
+    if(glIsShader(m_vertexID) == GL_TRUE)
     {
-        glDeleteShader(vertexID);
+        glDeleteShader(m_vertexID);
     }
-    if(glIsShader(fragmentID) == GL_TRUE)
+    if(glIsShader(m_fragmentID) == GL_TRUE)
     {
-        glDeleteShader(fragmentID);
+        glDeleteShader(m_fragmentID);
     }
-    if(glIsProgram(programID) == GL_TRUE)
+    if(glIsProgram(m_programID) == GL_TRUE)
     {
-        glDeleteProgram(programID);
+        glDeleteProgram(m_programID);
     }
 
-    if(!shaderCompile(vertexID, GL_VERTEX_SHADER, vertexPath))
+    if(!shaderCompile(m_vertexID, GL_VERTEX_SHADER, m_vertexPath))
     {
         return false;
     }
-    if(!shaderCompile(fragmentID, GL_FRAGMENT_SHADER, fragmentPath))
+    if(!shaderCompile(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentPath))
     {
         return false;
     }   
 
-    programID = glCreateProgram();
+    m_programID = glCreateProgram();
 
     //associate the shaders
-    glAttachShader(programID, vertexID);
-    glAttachShader(programID, fragmentID);
+    glAttachShader(m_programID, m_vertexID);
+    glAttachShader(m_programID, m_fragmentID);
 
-    glBindAttribLocation(programID, 0, "in_Vertex");
+    glBindAttribLocation(m_programID, 0, "in_Vertex");
 
-    glBindAttribLocation(programID, 1, "in_Color");
-    glBindAttribLocation(programID, 2, "in_TexCoord0");
+    glBindAttribLocation(m_programID, 1, "in_Color");
+    glBindAttribLocation(m_programID, 2, "in_TexCoord0");
 
-    glLinkProgram(programID);
+    glLinkProgram(m_programID);
 
-    glGetProgramiv(programID, GL_LINK_STATUS, &linkError);
+    glGetProgramiv(m_programID, GL_LINK_STATUS, &linkError);
 
     if(linkError != GL_TRUE)
     {
         GLint errorSize(0);
-        glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &errorSize);
+        glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &errorSize);
 
         char *error = new char[errorSize + 1];
 
-        glGetProgramInfoLog(programID, errorSize, &errorSize, error);
+        glGetProgramInfoLog(m_programID, errorSize, &errorSize, error);
         error[errorSize] = '\0';
 
         cout << error << endl;
 
         delete[] error;
-        glDeleteProgram(programID);
+        glDeleteProgram(m_programID);
 
         return false;
     }

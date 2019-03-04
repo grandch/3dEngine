@@ -2,14 +2,7 @@
 #define DEF_CUBE
 #define GLM_ENABLE_EXPERIMENTAL
 
-#ifdef WIN32
-#include <GL/glew.h>
-
-#else
-#define GL3_PROTOTYPES 1
 #include <GLES3/gl3.h>
-
-#endif
 
 #ifndef BUFFER_OFFSET //vbo
 
@@ -39,17 +32,23 @@ class Cube
         void draw(mat4 &projection, mat4 &modelview);
 
         void load();
-        void updateVbo(void *data, int size, int offset);
+
+        void loadVBO();
+        void updateVBO(void *data, int size, int offset);
+
+        void loadVAO();
 
     private:
 
-        Shader shader;
-        float vertex[108];
-        float color[108];
+        Shader m_shader;
+        float m_vertex[108];
+        float m_color[108];
 
-        int vertexSize, colorSize;
+        int m_vertexSize;
+        int m_colorSize;
 
-        GLuint vboID;
+        GLuint m_vboId;
+        GLuint m_vaoId;
 };
 
 #endif

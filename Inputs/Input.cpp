@@ -1,15 +1,15 @@
 #include "Input.h"
 
-Input::Input(): x(0), y(0), xRel(0), yRel(0), ending(false  )
+Input::Input(): m_x(0), m_y(0), m_xRel(0), m_yRel(0), m_end(false)
 {
     for(int i = 0; i < SDL_NUM_SCANCODES; i++)
     {
-        keyboard[i] = false;
+        m_keyboard[i] = false;
     }
 
     for(int i = 0; i < 8; i++)
     {
-        mouse[i] = false;
+        m_mouse[i] = false;
     }
 }
 
@@ -19,48 +19,48 @@ Input::~Input()
 
 void Input::updateEvent()
 {
-    xRel = 0;
-    yRel = 0;
+    m_xRel = 0;
+    m_yRel = 0;
 
-    while(SDL_PollEvent(&event))
+    while(SDL_PollEvent(&m_event))
     {
-        switch(event.type)
+        switch(m_event.type)
         {
             //keyboard
             case SDL_KEYDOWN:
-                keyboard[event.key.keysym.scancode] = true;
+                m_keyboard[m_event.key.keysym.scancode] = true;
             break;
 
             case SDL_KEYUP:
-                keyboard[event.key.keysym.scancode] = false;
+                m_keyboard[m_event.key.keysym.scancode] = false;
             break;
 
             //mouse button
             case SDL_MOUSEBUTTONDOWN:
-                mouse[event.button.button] = true;
+                m_mouse[m_event.button.button] = true;
             break;
 
             case SDL_MOUSEBUTTONUP:
-                mouse[event.button.button] = false;
+                m_mouse[m_event.button.button] = false;
             break;
 
             //mouse movement
             case SDL_MOUSEMOTION:
 
-                x = event.motion.x;
-                y = event.motion.y;
+                m_x = m_event.motion.x;
+                m_y = m_event.motion.y;
 
-                xRel = event.motion.xrel;
-                yRel = event.motion.yrel;
+                m_xRel = m_event.motion.xrel;
+                m_yRel = m_event.motion.yrel;
 
             break;
 
             //closebutton
             case SDL_WINDOWEVENT:
 
-                if(event.window.event == SDL_WINDOWEVENT_CLOSE)
+                if(m_event.window.event == SDL_WINDOWEVENT_CLOSE)
                 {
-                    ending = true;
+                    m_end = true;
                 }
 
             break;
@@ -73,23 +73,23 @@ void Input::updateEvent()
 
 bool Input::end()
 {
-    return ending;
+    return m_end;
 }
 
 
 bool Input::getKey(const SDL_Scancode key) const
 {
-    return keyboard[key];
+    return m_keyboard[key];
 }
 
 bool Input::getMouseButton(const Uint8 button) const
 {
-    return mouse[button];
+    return m_mouse[button];
 }
 
 bool Input::getMouseMovement() const
 {
-    if(xRel == 0 && yRel == 0)
+    if(m_xRel == 0 && m_yRel == 0)
     {
         return false;
     }
@@ -102,22 +102,22 @@ bool Input::getMouseMovement() const
 
 int Input::getX() const
 {
-    return x;
+    return m_x;
 }
 
 int Input::getY() const
 {
-    return y;
+    return m_y;
 }
 
 int Input::getXRel() const
 {
-    return xRel;
+    return m_xRel;
 }
 
 int Input::getYRel() const
 {
-    return yRel;
+    return m_yRel;
 }
 
 
