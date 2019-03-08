@@ -12,6 +12,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Models/Cube.h"
+#include "Mesh/Mesh.h"
 #include "Shaders/Shader.h"
 #include "Inputs/Input.h"
 

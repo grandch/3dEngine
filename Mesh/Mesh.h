@@ -3,10 +3,17 @@
 
 #include <GLES3/gl3.h>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <vector>
 #include <string>
 
-#define GLM_ENABLE_EXPERIMENTAL
+#include "../Shaders/Shader.h"
+
+//#define GLM_ENABLE_EXPERIMENTAL
 
 class MeshHalfEdge;
 class MeshVertex;
@@ -14,13 +21,18 @@ class MeshTriangle;
 class MeshEdge;
 
 using namespace std;
+using namespace glm;
 
 class Mesh
 {
     public:
 
-        Mesh();
+        Mesh(string vertexShader, string fragmentShader);
         ~Mesh();
+
+        void draw(mat4 &projection, mat4 &modelview);
+
+        void loadTempVBO();
 
         void loadVBO();
 
@@ -45,8 +57,12 @@ class Mesh
         vector<MeshTriangle*> m_triangleList;
         vector<MeshHalfEdge*> m_halfEdgeList;
         vector<MeshVertex*> m_vertexList;
-        
         vector<MeshEdge*> m_edgeList;
+
+        vector<vec3> m_vertex;
+        vector<vec3> m_color;
+
+        Shader m_shader;
 
         GLuint m_vertexVboId;
         GLuint m_colorVboId;

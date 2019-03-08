@@ -1,20 +1,21 @@
 CC = g++
 CFLAGS = -Wall
 EXEC_NAME = engine
-INCLUDES = main.cpp Scene.cpp Shaders/Shader.cpp Models/Cube.cpp Inputs/Input.cpp
+INCLUDES = main.cpp Scene.cpp Shaders/Shader.cpp Models/Cube.cpp Inputs/Input.cpp Mesh/Mesh.cpp Mesh/MeshVertex.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshEdge.cpp
 LIBS = -lGL -lSDL2
-OBJ_FILES = main.o Scene.o Shader.o Cube.o Input.o
+OBJ_FILES = main.o Scene.o Shader.o Cube.o Input.o Mesh.o MeshVertex.o MeshHalfEdge.o MeshTriangle.o MeshEdge.o
 INSTALL_DIR = /usr/bin
 
 all :
-	$(CC) $(CFLAGS) -c $(INCLUDES) $(LIBS)
-	$(CC) $(CFLAGS) -o $(EXEC_NAME) $(OBJ_FILES) $(LIBS)
+	$(CC) $(CFLAGS) -c $(INCLUDES)
+	g++ -o $(EXEC_NAME) $(OBJ_FILES) $(LIBS)
 
 start : all
 	./$(EXEC_NAME)
+	make clean
 
 clean :
-	rm $(EXEC_NAME) $(OBJ_FILES)
+	rm $(OBJ_FILES)
 
 $(EXEC_NAME) : $(OBJ_FILES)
 	$(CC) -o $(EXEC_NAME) $(OBJ_FILES) $(LIBS)
@@ -27,6 +28,3 @@ $(EXEC_NAME) : $(OBJ_FILES)
 
 %.o: %.c
 	gcc $(CFLAGS) $(INCLUDES) -o $@ -c $<
-
-install :
-	cp $(EXEC_NAME) $(INSTALL_DIR)

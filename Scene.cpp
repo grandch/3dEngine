@@ -26,8 +26,9 @@ bool Scene::initWindow()
 
     //openGL version (3.3 core)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     //doublebuffer
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -85,8 +86,10 @@ void Scene::mainLoop()
     modelview = mat4(0.1);
 
     Cube cube(2.0, "Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+    Mesh mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
 
     cube.load();
+    mesh.loadTempVBO();
 
     float angleY(0.0);
 
@@ -120,7 +123,8 @@ void Scene::mainLoop()
 
         modelview = rotate(modelview, angleY, vec3(0, 1, 0));
 
-        cube.draw(projection, modelview);
+        //cube.draw(projection, modelview);
+        mesh.draw(projection, modelview);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 

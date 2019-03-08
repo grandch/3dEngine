@@ -37,6 +37,7 @@ class Cube
         void updateVBO(void *data, int size, int offset);
 
         void loadVAO();
+        //to do : updateVAO()
 
     private:
 

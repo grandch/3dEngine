@@ -5,12 +5,133 @@
 #include "MeshTriangle.h"
 #include "MeshEdge.h"
 
-Mesh::Mesh()
-{}
+Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader)
+{
+    m_vertex.push_back(vec3(-0.5, 0.5, 0.5));
+    m_vertex.push_back(vec3(-0.5, -0.5, 0.5));
+    m_vertex.push_back(vec3(0.5, -0.5, 0.5));
+    m_vertex.push_back(vec3(0.5, 0.5, 0.5));
+    m_vertex.push_back(vec3(-0.5, 0.5, -0.5));
+    m_vertex.push_back(vec3(-0.5, -0.5, -0.5));
+    m_vertex.push_back(vec3(0.5, -0.5, -0.5));
+    m_vertex.push_back(vec3(0.5, 0.5, -0.5));
+    
+    //random colors
+    m_color.push_back(vec3(0.0, 0.0, 1.0));
+    m_color.push_back(vec3(1.0, 0.0, 0.0));
+    m_color.push_back(vec3(0.0, 1.0, 0.0));
+    m_color.push_back(vec3(1.0, 0.0, 0.0));
+    m_color.push_back(vec3(0.0, 1.0, 0.0));
+    m_color.push_back(vec3(0.0, 0.0, 1.0));
+    m_color.push_back(vec3(0.0, 1.0, 0.0));
+    m_color.push_back(vec3(0.0, 0.0, 1.0));
+
+    m_shader.load();
+}
 
 Mesh::~Mesh()
-{}
+{
+    glDeleteBuffers(1, &m_vertexVboId);
+    glDeleteBuffers(1, &m_colorVboId);
+    glDeleteBuffers(1, &m_indexVboId);
+}
 
+
+void Mesh::draw(mat4 &projection, mat4 &modelview)
+{
+    glUseProgram(m_shader.getProgramID());
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_vertexVboId);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_colorVboId);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(1);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexVboId);
+
+            //send matrix to shaders
+            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "modelview"), 1, GL_FALSE, value_ptr(modelview));
+            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
+
+            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    glUseProgram(0);
+}
+
+void Mesh::loadTempVBO()
+{
+    vector<GLfloat> vertex;
+    vector<GLfloat> color;
+    vector<GLushort> index;
+
+    for(vec3 top: m_vertex)
+    {
+        vertex.push_back(top.x);
+        vertex.push_back(top.y);
+        vertex.push_back(top.z);
+    }
+    for(vec3 col: m_color)
+    {
+        color.push_back(col.x);
+        color.push_back(col.y);
+        color.push_back(col.z);
+    }
+
+    //ATTENTION DEGEULASSE
+    index.push_back(0);
+    index.push_back(1);
+    index.push_back(3);
+    index.push_back(1);
+    index.push_back(3);
+    index.push_back(2);
+
+    index.push_back(1);
+    index.push_back(2);
+    index.push_back(5);
+    index.push_back(2);
+    index.push_back(5);
+    index.push_back(6);
+
+    index.push_back(0);
+    index.push_back(1);
+    index.push_back(5);
+    index.push_back(0);
+    index.push_back(5);
+    index.push_back(4);
+    
+    index.push_back(0);
+    index.push_back(3);
+    index.push_back(4);
+    index.push_back(3);
+    index.push_back(4);
+    index.push_back(7);
+    
+    index.push_back(3);
+    index.push_back(2);
+    index.push_back(6);
+    index.push_back(3);
+    index.push_back(6);
+    index.push_back(7);
+    
+    index.push_back(4);
+    index.push_back(5);
+    index.push_back(6);
+    index.push_back(4);
+    index.push_back(6);
+    index.push_back(7);
+
+
+    m_vertexVboId = makeFloatVBO(vertex, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    m_colorVboId = makeFloatVBO(color, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    m_indexVboId = makeShortVBO(index, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+}
 
 void Mesh::loadVBO()
 {
