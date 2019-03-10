@@ -32,13 +32,12 @@ class Mesh
 
         void draw(mat4 &projection, mat4 &modelview);
 
-        void loadTempVBO();
-
         void loadVBO();
 
         GLuint makeFloatVBO(vector<GLfloat> values, int vboType, GLenum usage);
         GLuint makeShortVBO(vector<GLushort> values, int vboType, GLenum usage);
 
+        MeshTriangle* addTriangle(MeshVertex* v1, MeshVertex* v2, MeshVertex* v3);
         void pushTriangle(MeshTriangle* triangle);
         void popTriangle(MeshTriangle* triangle);
 
@@ -48,7 +47,7 @@ class Mesh
         void pushEdge(MeshEdge* edge);
         void popEdge(MeshEdge* edge);
 
-        MeshVertex addVertex(string name);
+        MeshVertex* addVertex(string name);
         void pushVertex(MeshVertex* vertex);
         void popVertex(MeshVertex* vertex);
 

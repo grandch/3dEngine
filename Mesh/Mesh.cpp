@@ -7,24 +7,60 @@
 
 Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader)
 {
-    m_vertex.push_back(vec3(-0.5, 0.5, 0.5));
-    m_vertex.push_back(vec3(-0.5, -0.5, 0.5));
-    m_vertex.push_back(vec3(0.5, -0.5, 0.5));
-    m_vertex.push_back(vec3(0.5, 0.5, 0.5));
-    m_vertex.push_back(vec3(-0.5, 0.5, -0.5));
-    m_vertex.push_back(vec3(-0.5, -0.5, -0.5));
-    m_vertex.push_back(vec3(0.5, -0.5, -0.5));
-    m_vertex.push_back(vec3(0.5, 0.5, -0.5));
+    MeshVertex* v1 = new MeshVertex(this, "v1");
+    v1->setCoord(vec3(-0.5, 0.5, 0.5));
+
+    MeshVertex* v2 = new MeshVertex(this, "v2");
+    v2->setCoord(vec3(-0.5, -0.5, 0.5));
+
+    MeshVertex* v3 = new MeshVertex(this, "v3");
+    v3->setCoord(vec3(0.5, -0.5, 0.5));
+
+    MeshVertex* v4 = new MeshVertex(this, "v4");
+    v4->setCoord(vec3(0.5, 0.5, 0.5));
+
+    MeshVertex* v5 = new MeshVertex(this, "v5");
+    v5->setCoord(vec3(-0.5, 0.5, -0.5));
+
+    MeshVertex* v6 = new MeshVertex(this, "v6");
+    v6->setCoord(vec3(-0.5, -0.5, -0.5));
+
+    MeshVertex* v7 = new MeshVertex(this, "v7");
+    v7->setCoord(vec3(0.5, -0.5, -0.5));
+
+    MeshVertex* v8 = new MeshVertex(this, "v8");
+    v8->setCoord(vec3(0.5, 0.5, -0.5));
+
     
     //random colors
-    m_color.push_back(vec3(0.0, 0.0, 1.0));
-    m_color.push_back(vec3(1.0, 0.0, 0.0));
-    m_color.push_back(vec3(0.0, 1.0, 0.0));
-    m_color.push_back(vec3(1.0, 0.0, 0.0));
-    m_color.push_back(vec3(0.0, 1.0, 0.0));
-    m_color.push_back(vec3(0.0, 0.0, 1.0));
-    m_color.push_back(vec3(0.0, 1.0, 0.0));
-    m_color.push_back(vec3(0.0, 0.0, 1.0));
+    v1->setColor(vec3(0.0, 0.0, 1.0));
+    v2->setColor(vec3(1.0, 0.0, 0.0));
+    v3->setColor(vec3(0.0, 1.0, 0.0));
+    v4->setColor(vec3(1.0, 0.0, 0.0));
+    v5->setColor(vec3(0.0, 1.0, 0.0));
+    v6->setColor(vec3(0.0, 0.0, 1.0));
+    v7->setColor(vec3(0.0, 1.0, 0.0));
+    v8->setColor(vec3(0.0, 0.0, 1.0));
+
+    MeshTriangle* t1 = new MeshTriangle(this, v1, v2, v4);
+    MeshTriangle* t2 = new MeshTriangle(this, v2, v4, v3);
+
+    MeshTriangle* t3 = new MeshTriangle(this, v2, v3, v6);
+    MeshTriangle* t4 = new MeshTriangle(this, v3, v6, v7);
+
+    MeshTriangle* t5 = new MeshTriangle(this, v1, v2, v6);
+    MeshTriangle* t6 = new MeshTriangle(this, v1, v6, v5);
+
+    MeshTriangle* t7 = new MeshTriangle(this, v1, v4, v5);
+    MeshTriangle* t8 = new MeshTriangle(this, v4, v5, v8);
+
+    MeshTriangle* t9 = new MeshTriangle(this, v4, v3, v7);
+    MeshTriangle* t10 = new MeshTriangle(this, v4, v7, v8);
+
+    MeshTriangle* t11 = new MeshTriangle(this, v5, v6, v7);
+    MeshTriangle* t12 = new MeshTriangle(this, v5, v7, v8);
+
+    loadVBO();
 
     m_shader.load();
 }
@@ -63,74 +99,6 @@ void Mesh::draw(mat4 &projection, mat4 &modelview)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     glUseProgram(0);
-}
-
-void Mesh::loadTempVBO()
-{
-    vector<GLfloat> vertex;
-    vector<GLfloat> color;
-    vector<GLushort> index;
-
-    for(vec3 top: m_vertex)
-    {
-        vertex.push_back(top.x);
-        vertex.push_back(top.y);
-        vertex.push_back(top.z);
-    }
-    for(vec3 col: m_color)
-    {
-        color.push_back(col.x);
-        color.push_back(col.y);
-        color.push_back(col.z);
-    }
-
-    //ATTENTION DEGEULASSE
-    index.push_back(0);
-    index.push_back(1);
-    index.push_back(3);
-    index.push_back(1);
-    index.push_back(3);
-    index.push_back(2);
-
-    index.push_back(1);
-    index.push_back(2);
-    index.push_back(5);
-    index.push_back(2);
-    index.push_back(5);
-    index.push_back(6);
-
-    index.push_back(0);
-    index.push_back(1);
-    index.push_back(5);
-    index.push_back(0);
-    index.push_back(5);
-    index.push_back(4);
-    
-    index.push_back(0);
-    index.push_back(3);
-    index.push_back(4);
-    index.push_back(3);
-    index.push_back(4);
-    index.push_back(7);
-    
-    index.push_back(3);
-    index.push_back(2);
-    index.push_back(6);
-    index.push_back(3);
-    index.push_back(6);
-    index.push_back(7);
-    
-    index.push_back(4);
-    index.push_back(5);
-    index.push_back(6);
-    index.push_back(4);
-    index.push_back(6);
-    index.push_back(7);
-
-
-    m_vertexVboId = makeFloatVBO(vertex, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-    m_colorVboId = makeFloatVBO(color, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-    m_indexVboId = makeShortVBO(index, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
 }
 
 void Mesh::loadVBO()
@@ -207,6 +175,12 @@ GLuint Mesh::makeShortVBO(vector<GLushort> values, int vboType, GLenum usage)
     return id;
 }
 
+MeshTriangle* Mesh::addTriangle(MeshVertex* v1, MeshVertex* v2, MeshVertex* v3)
+{
+    MeshTriangle* triangle = new MeshTriangle(this, v1, v2, v3);
+    return triangle;
+}
+
 void Mesh::pushTriangle(MeshTriangle* triangle)
 {
     m_triangleList.push_back(triangle);
@@ -258,9 +232,9 @@ void Mesh::popEdge(MeshEdge* edge)
     m_edgeList.erase(m_edgeList.begin() + i);
 }
 
-MeshVertex Mesh::addVertex(string name)
+MeshVertex* Mesh::addVertex(string name)
 {
-    MeshVertex vertex(this, name);
+    MeshVertex* vertex = new MeshVertex(this, name);
     return vertex;
 }
 

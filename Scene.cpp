@@ -85,11 +85,10 @@ void Scene::mainLoop()
     projection = perspective(70.0, (double) m_wWidth / m_wHeight, 1.0, 100.0); //init the camera
     modelview = mat4(0.1);
 
-    Cube cube(2.0, "Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+    //Cube cube(2.0, "Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
     Mesh mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
 
-    cube.load();
-    mesh.loadTempVBO();
+    //cube.load();
 
     float angleY(0.0);
 
