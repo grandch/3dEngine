@@ -61,6 +61,7 @@ Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, f
     MeshTriangle* t12 = new MeshTriangle(this, v5, v7, v8);
 
     loadVBO();
+    loadVAO();
 
     m_shader.load();
 }
@@ -77,29 +78,18 @@ void Mesh::draw(mat4 &projection, mat4 &modelview)
 {
     glUseProgram(m_shader.getProgramID());
 
-        glBindBuffer(GL_ARRAY_BUFFER, m_vertexVboId);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-        glEnableVertexAttribArray(0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, m_colorVboId);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-        glEnableVertexAttribArray(1);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexVboId);
+        glBindVertexArray(m_vaoId); //lock the vao
 
             //send matrix to shaders
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "modelview"), 1, GL_FALSE, value_ptr(modelview));
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
-
+            
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, 0);
 
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindVertexArray(0); //unlock the vao
 
     glUseProgram(0);
-}
+}       
 
 void Mesh::loadVBO()
 {
@@ -143,6 +133,30 @@ void Mesh::loadVBO()
     m_colorVboId = makeFloatVBO(colors, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
     m_indexVboId = makeShortVBO(indexList, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
+}
+
+void Mesh::loadVAO()
+{
+    glGenVertexArrays(1, &m_vaoId);
+
+    glBindVertexArray(m_vaoId);
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_vertexVboId);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_colorVboId);
+
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(1);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexVboId);
+        
+    glBindVertexArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 GLuint Mesh::makeFloatVBO(vector<GLfloat> values, int vboType, GLenum usage)

@@ -33,6 +33,7 @@ class Mesh
         void draw(mat4 &projection, mat4 &modelview);
 
         void loadVBO();
+        void loadVAO();
 
         GLuint makeFloatVBO(vector<GLfloat> values, int vboType, GLenum usage);
         GLuint makeShortVBO(vector<GLushort> values, int vboType, GLenum usage);
@@ -66,5 +67,7 @@ class Mesh
         GLuint m_vertexVboId;
         GLuint m_colorVboId;
         GLuint m_indexVboId;
+
+        GLuint m_vaoId;
 };
 #endif
