@@ -35,6 +35,8 @@ class Mesh
         void loadVBO();
         void loadVAO();
 
+        void loadEdgeVAO();
+
         GLuint makeFloatVBO(vector<GLfloat> values, int vboType, GLenum usage);
         GLuint makeShortVBO(vector<GLushort> values, int vboType, GLenum usage);
 
@@ -66,8 +68,10 @@ class Mesh
 
         GLuint m_vertexVboId;
         GLuint m_colorVboId;
-        GLuint m_indexVboId;
+        GLuint m_faceIndexVboId;
+        GLuint m_edgeIndexVboId;
 
         GLuint m_vaoId;
+        GLuint m_edgeVaoId;
 };
 #endif

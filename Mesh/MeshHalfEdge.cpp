@@ -22,7 +22,7 @@ MeshHalfEdge::MeshHalfEdge(Mesh* mesh, MeshVertex* origin, MeshVertex* target, M
             cout << "None manifold mesh" << endl;
         }
 
-        //this is  opposite to m_opposite and vice versa
+        //this halfedge is opposited to m_opposite and vice versa
         m_opposite = other;
         other->m_opposite = this;
 

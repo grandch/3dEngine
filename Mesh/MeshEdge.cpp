@@ -22,3 +22,16 @@ MeshEdge::~MeshEdge()
     m_vertex1 = nullptr;
     m_vertex2 = nullptr;
 }
+
+
+MeshVertex* MeshEdge::getVertex(int vertex)
+{
+    if(vertex == 0)
+    {
+        return m_vertex1;
+    }
+    else
+    {
+        return m_vertex2;
+    }
+}

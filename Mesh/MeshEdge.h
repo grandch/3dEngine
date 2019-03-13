@@ -15,6 +15,8 @@ class MeshEdge
     MeshEdge(Mesh* mesh, MeshVertex* v1, MeshVertex* v2);
     ~MeshEdge();
 
+    MeshVertex* getVertex(int vertex);
+
     private:
 
         Mesh* m_mesh;
