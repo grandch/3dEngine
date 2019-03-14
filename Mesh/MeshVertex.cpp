@@ -83,6 +83,11 @@ void MeshVertex::setNumber(int number)
     m_number = number;
 }
 
+string MeshVertex::getName()
+{
+    return m_name;
+}
+
 vec4 MeshVertex::getAttribute(int index)
 {
     return m_attributes[index];

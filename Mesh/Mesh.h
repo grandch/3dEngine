@@ -61,9 +61,6 @@ class Mesh
         vector<MeshVertex*> m_vertexList;
         vector<MeshEdge*> m_edgeList;
 
-        vector<vec3> m_vertex;
-        vector<vec3> m_color;
-
         Shader m_shader;
 
         GLuint m_vertexVboId;

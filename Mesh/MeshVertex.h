@@ -29,6 +29,8 @@ class MeshVertex
         int getNumber();
         void setNumber(int number);
 
+        string getName();
+
         vec4 getAttribute(int index);
         MeshVertex* setCoord(vec3 coord);
         MeshVertex* setColor(vec3 color);

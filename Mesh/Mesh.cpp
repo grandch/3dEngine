@@ -5,36 +5,30 @@
 #include "MeshTriangle.h"
 #include "MeshEdge.h"
 
+#include "../Importer.h" //no previous declaration
+
 Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader)
 {
-    MeshVertex* v1 = new MeshVertex(this, "v1");
-    v1->setCoord(vec3(-0.5, 0.5, 0.5));
+    Importer importer(this);
+    importer.loadObjFile("Models/vase.obj");
+    cout << "Mesh loaded" << endl << endl;
 
-    MeshVertex* v2 = new MeshVertex(this, "v2");
-    v2->setCoord(vec3(0.5, -0.5, 0.5));
+    cout << "Vertex List :" << endl;
+    for(MeshVertex* vertex: m_vertexList)
+    {
+        cout << vertex->getName() << endl;
+    }
+    cout << endl;
 
-    MeshVertex* v3 = new MeshVertex(this, "v3");
-    v3->setCoord(vec3(0.5, 0.5, -0.5));
+    cout << "Triangle List :" << endl << endl;
+    for(MeshTriangle* triangle: m_triangleList)
+    {
+        cout << triangle->getVertex0()->getName() << endl;
+        cout << triangle->getVertex1()->getName() << endl;
+        cout << triangle->getVertex2()->getName() << endl << endl;
+    }
 
-    MeshVertex* v4 = new MeshVertex(this, "v4");
-    v4->setCoord(vec3(-0.5, -0.5, -0.5));
-
-    
-    //random colors
-    v1->setColor(vec3(1.0, 1.0, 1.0));
-    v2->setColor(vec3(1.0, 1.0, 1.0));
-    v3->setColor(vec3(1.0, 1.0, 1.0));
-    v4->setColor(vec3(1.0, 1.0, 1.0));
-
-    MeshTriangle* t1 = new MeshTriangle(this, v1, v2, v3);
-
-    MeshTriangle* t2 = new MeshTriangle(this, v1, v3, v4);
-
-    MeshTriangle* t3 = new MeshTriangle(this, v1, v2, v4);
-
-    MeshTriangle* t4 = new MeshTriangle(this, v2, v3, v4);
-
-    loadVBO();
+    loadVBO(); 
     loadVAO();
     loadEdgeVAO();
 
@@ -60,7 +54,7 @@ void Mesh::draw(mat4 &projection, mat4 &modelview)
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "modelview"), 1, GL_FALSE, value_ptr(modelview));
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
             
-            glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, 0);
+            glDrawElements(GL_TRIANGLES, m_triangleList.size()*3, GL_UNSIGNED_SHORT, 0);
 
         glBindVertexArray(0); //unlock the vao
 
@@ -69,7 +63,8 @@ void Mesh::draw(mat4 &projection, mat4 &modelview)
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "modelview"), 1, GL_FALSE, value_ptr(modelview));
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
 
-            glDrawElements(GL_LINES, 12, GL_UNSIGNED_SHORT, 0);
+            glLineWidth(1.5);
+            glDrawElements(GL_LINES, m_edgeList.size()*2, GL_UNSIGNED_SHORT, 0);
 
         glBindVertexArray(0);
 
@@ -272,6 +267,14 @@ void Mesh::popEdge(MeshEdge* edge)
 
 MeshVertex* Mesh::addVertex(string name)
 {
+    for(MeshVertex* vertex: m_vertexList)
+    {
+        if(vertex->getName() == name)
+        {
+            return vertex;
+        }
+    }
+
     MeshVertex* vertex = new MeshVertex(this, name);
     return vertex;
 }
