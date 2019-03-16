@@ -14,6 +14,7 @@ using namespace glm;
 using namespace std;
 
 class MeshHalfEdge;
+class MeshTriangle;
 class Mesh;
 
 class MeshVertex
@@ -43,12 +44,14 @@ class MeshVertex
 
     private:
 
+        string m_name;
+
+        Mesh* m_mesh;
+
         vector<vec4> m_attributes;
 
         MeshHalfEdge* m_halfEdge;
-        GLushort m_number;
-        Mesh* m_mesh;
 
-        string m_name;
+        GLushort m_number;
 };
 #endif

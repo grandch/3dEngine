@@ -1,9 +1,10 @@
 #include "MeshVertex.h"
 
 #include "MeshHalfEdge.h"
+#include "MeshTriangle.h"
 #include "Mesh.h"
 
-MeshVertex::MeshVertex(Mesh* mesh, string name): m_mesh(mesh), m_name(name), m_halfEdge(nullptr) //p150
+MeshVertex::MeshVertex(Mesh* mesh, string name): m_name(name), m_mesh(mesh), m_halfEdge(nullptr) //p150
 {
     if(mesh != nullptr)
     {
@@ -28,20 +29,19 @@ MeshVertex::~MeshVertex()
     while(halfEdge != nullptr)
     {
         MeshHalfEdge* next = halfEdge->getSibling();
-        delete halfEdge->getTriangle(); //to test
+        delete halfEdge->getTriangle();
         halfEdge = next;
     }
 }
 
 
-//find triangles around the vertex
 void MeshVertex::processTrianglesAround1()
 {
     MeshHalfEdge* halfEdge = m_halfEdge; //starting half edge
 
     while(halfEdge != nullptr)
     {
-        MeshTriangle* triangle = halfEdge->getTriangle();
+        //MeshTriangle* triangle = halfEdge->getTriangle();
 
         //do something with the triangle
 
@@ -58,14 +58,13 @@ void MeshVertex::processTrianglesAround1()
     }
 }
 
-//find triangles around the vertex
 void MeshVertex::processTrianglesAround2()
 {
     MeshHalfEdge* halfEdge = m_halfEdge; //starting half edge
 
     while(halfEdge != nullptr)
     {
-        MeshTriangle* triangle = halfEdge->getTriangle();
+        //MeshTriangle* triangle = halfEdge->getTriangle();
 
         //do something with the triangle
 

@@ -3,7 +3,7 @@
 #include "MeshVertex.h"
 #include "Mesh.h"
 
-MeshEdge::MeshEdge(Mesh* mesh, MeshVertex* v1, MeshVertex* v2): m_vertex1(v1), m_vertex2(v2), m_mesh(mesh)
+MeshEdge::MeshEdge(Mesh* mesh, MeshVertex* v1, MeshVertex* v2): m_mesh(mesh), m_vertex1(v1), m_vertex2(v2)
 {
     if(mesh != nullptr)
     {

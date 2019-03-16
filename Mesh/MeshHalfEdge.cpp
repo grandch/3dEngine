@@ -5,7 +5,7 @@
 #include "MeshVertex.h"
 #include "Mesh.h"
 
-MeshHalfEdge::MeshHalfEdge(Mesh* mesh, MeshVertex* origin, MeshVertex* target, MeshTriangle* triangle): m_mesh(mesh), m_origin(origin), m_triangle(triangle), m_edge(nullptr), m_next(nullptr), m_sibling(nullptr), m_opposite(nullptr)
+MeshHalfEdge::MeshHalfEdge(Mesh* mesh, MeshVertex* origin, MeshVertex* target, MeshTriangle* triangle): m_mesh(mesh), m_origin(origin), m_triangle(triangle), m_edge(nullptr), m_next(nullptr), m_opposite(nullptr), m_sibling(nullptr) 
 {
     if(mesh != nullptr)
     {

@@ -71,7 +71,7 @@ void Importer::loadObjFile(string fileName)
             MeshVertex* v2 = findOrCreateVertex(word, vertexList, coordList, texCoordList, normalList);
 
             //other vertex index
-            while(word = strtok(NULL, " "))
+            while((word = strtok(NULL, " ")))
             {
                 MeshVertex* v3 = findOrCreateVertex(word, vertexList, coordList, texCoordList, normalList);
                 m_mesh->addTriangle(v1, v2, v3);
@@ -89,7 +89,7 @@ MeshVertex* Importer::findOrCreateVertex(char* nvntnn,
                                          vector<vec3> &normalList)
 {
     //index extracting
-    int nv, nt, nn;
+    int nv, nn;
     sscanf(nvntnn, "%d//%d", &nv, &nn);
     nv--; nn--;
 

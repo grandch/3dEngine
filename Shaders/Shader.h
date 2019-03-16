@@ -28,8 +28,8 @@ class Shader
 
     private:
 
-        GLuint m_fragmentID;
         GLuint m_vertexID;
+        GLuint m_fragmentID;
         GLuint m_programID;
 
         string m_vertexPath;
