@@ -10,7 +10,7 @@
 Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader)
 {
     Importer importer(this);
-    importer.loadObjFile("Models/vase.obj");
+    importer.loadObjFile(importer.findPath());
     cout << "Mesh loaded" << endl << endl;
 
     cout << "Vertex List :" << endl;

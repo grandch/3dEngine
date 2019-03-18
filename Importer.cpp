@@ -24,7 +24,7 @@ void Importer::loadObjFile(string fileName)
     while(inputStream.getline(line, sizeof(line)))
     {
         char* word = NULL;
-        word = strtok(line, " "); //cut the string between words
+        word = strtok(line, " ");
         if(word == NULL) continue;
 
         if(strcmp(word, "v") == 0)
@@ -61,10 +61,9 @@ void Importer::loadObjFile(string fileName)
         }
         if(strcmp(word, "f") == 0)
         {
-            //face 
             //first vertex index
             word = strtok(NULL, " ");
-            MeshVertex* v1 = findOrCreateVertex(word, vertexList, coordList, texCoordList, normalList); //gestion des index de normal et de texture !!!!!!!!!!!
+            MeshVertex* v1 = findOrCreateVertex(word, vertexList, coordList, texCoordList, normalList);
 
             //second vertex index
             word = strtok(NULL, " ");
@@ -116,4 +115,14 @@ MeshVertex* Importer::findOrCreateVertex(char* nvntnn,
     //vertex->setNormal(normalList[nn]);
 
     return vertex;
+}
+
+string Importer::findPath()
+{
+    string file;
+
+    cout << "OBJ file path : ";
+    cin >> file;
+
+    return file;
 }

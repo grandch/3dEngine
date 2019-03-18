@@ -84,10 +84,11 @@ void Scene::mainLoop()
     projection = perspective(70.0, (double) m_wWidth / m_wHeight, 1.0, 100.0); //init the camera
     modelview = mat4(0.1);
 
-    //Cube cube(2.0, "Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
-    Mesh mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+    Camera camera(vec3(3, 3, 3), vec3(0, 0, 0), vec3(0, 1, 0));
+    m_input.showCursor(false);
+    m_input.cursorCapture(true);
 
-    //cube.load();
+    Mesh mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
 
     float angleY(0.0);
 
@@ -100,6 +101,7 @@ void Scene::mainLoop()
         if(m_input.getKey(SDL_SCANCODE_ESCAPE))
             break;
         
+        camera.move(m_input);
 
         if(m_input.getKey(SDL_SCANCODE_LEFT))
             angleY -= 0.01;
@@ -117,11 +119,10 @@ void Scene::mainLoop()
         
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
-        modelview = lookAt(vec3(3, 3, 3), vec3(0, 0, 0), vec3(0, 1, 0)); //init the camera
+        camera.lookAt(modelview); //init the camera
 
-        modelview = rotate(modelview, angleY, vec3(0, 1, 0));
+        //modelview = rotate(modelview, angleY, vec3(0, 1, 0));
 
-        //cube.draw(projection, modelview);
         mesh.draw(projection, modelview);
 
         SDL_GL_SwapWindow(m_window); //refresh the window

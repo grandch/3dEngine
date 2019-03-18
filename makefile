@@ -1,16 +1,17 @@
 CC = g++
 CFLAGS = -Wall
 EXEC_NAME = engine
-INCLUDES = main.cpp Scene.cpp Importer.cpp Shaders/Shader.cpp Models/Cube.cpp Inputs/Input.cpp Mesh/Mesh.cpp Mesh/MeshVertex.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshEdge.cpp
+INCLUDES = main.cpp Scene.cpp Camera.cpp Importer.cpp Shaders/Shader.cpp Models/Cube.cpp Inputs/Input.cpp Mesh/Mesh.cpp Mesh/MeshVertex.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshEdge.cpp
 LIBS = -lGL -lSDL2
-OBJ_FILES = main.o Scene.o Importer.o Shader.o Cube.o Input.o Mesh.o MeshVertex.o MeshHalfEdge.o MeshTriangle.o MeshEdge.o
+OBJ_FILES = main.o Scene.o Camera.o Importer.o Shader.o Cube.o Input.o Mesh.o MeshVertex.o MeshHalfEdge.o MeshTriangle.o MeshEdge.o
 INSTALL_DIR = /usr/bin
 
 all :
 	$(CC) $(CFLAGS) -c $(INCLUDES)
 	g++ -o $(EXEC_NAME) $(OBJ_FILES) $(LIBS)
+	make clean
 
-start : all
+run : all
 	./$(EXEC_NAME)
 	make clean
 

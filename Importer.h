@@ -40,6 +40,8 @@ class Importer
                                 vector<vec2> &texCoordList,
                                 vector<vec3> &normalList);
 
+        string findPath();
+
     private:
 
         Mesh* m_mesh;
