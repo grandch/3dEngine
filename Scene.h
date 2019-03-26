@@ -33,13 +33,15 @@ class Scene
         void mainLoop();
         bool initScene();
 
+        void screenshot();
+
     private:
 
         string m_windowTitle;
         int m_wWidth;
         int m_wHeight;
 
-        SDL_Window * m_window;
+        SDL_Window* m_window;
         SDL_GLContext m_openGLContext;
         SDL_Event m_events;
         Input m_input;

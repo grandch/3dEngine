@@ -62,7 +62,6 @@ bool Scene::initWindow()
     return true;
 }
 
-
 bool Scene::initGL()
 {
     //init glew (windows) TO DO
@@ -71,7 +70,6 @@ bool Scene::initGL()
 
     return true;
 }
-
 
 void Scene::mainLoop()
 {
@@ -99,8 +97,10 @@ void Scene::mainLoop()
         m_input.updateEvent();
 
         if(m_input.getKey(SDL_SCANCODE_ESCAPE))
+        {
+            screenshot();
             break;
-        
+        }
         camera.move(m_input);
 
         if(m_input.getKey(SDL_SCANCODE_LEFT))
@@ -137,7 +137,6 @@ void Scene::mainLoop()
     }
 }
 
-
 bool Scene::initScene()
 {
     if (this->initWindow() == false)
@@ -147,4 +146,25 @@ bool Scene::initScene()
     return false;
 
     return true;
+}
+
+void Scene::screenshot()
+{
+    string filename = "screenshot.tga";
+
+    const int numberOfPixels = m_wWidth * m_wHeight * 3;
+    unsigned char pixels[numberOfPixels];
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadBuffer(GL_FRONT);
+    glReadPixels(0, 0, m_wWidth, m_wHeight, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+    FILE *outputFile = fopen(filename.c_str(), "w");
+    short header[] = {0, 2, 0, 0, 0, 0, (short) m_wWidth, (short) m_wHeight, 24};
+
+    fwrite(&header, sizeof(header), 1, outputFile);
+    fwrite(pixels, numberOfPixels, 1, outputFile);
+    fclose(outputFile);
+
+    printf("Finish writing to file.\n");
 }
