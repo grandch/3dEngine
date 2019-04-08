@@ -15,6 +15,7 @@
 #include "Shaders/Shader.h"
 #include "Inputs/Input.h"
 #include "Camera.h"
+#include "Importer.h"
 
 #include <GLES3/gl3.h>
 
@@ -28,9 +29,12 @@ class Scene
         Scene(string title, int width, int height);
         ~Scene();
 
+        void initModel(string file);
         bool initWindow();
         bool initGL();
+
         void mainLoop();
+
         bool initScene();
 
         void screenshot();
@@ -45,5 +49,7 @@ class Scene
         SDL_GLContext m_openGLContext;
         SDL_Event m_events;
         Input m_input;
+
+        Mesh* m_mesh;
 };
 #endif

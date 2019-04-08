@@ -11,6 +11,18 @@ Scene::~Scene()
 }
 
 
+void Scene::initModel(string file)
+{
+    m_mesh = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+
+    Importer importer(m_mesh);
+    importer.loadObjFile(file);
+
+    m_mesh->loadMesh();
+
+    cout << "Mesh loaded" << endl << endl;
+}
+
 bool Scene::initWindow()
 {
     int depthSize = 24;
@@ -86,8 +98,6 @@ void Scene::mainLoop()
     m_input.showCursor(false);
     m_input.cursorCapture(true);
 
-    Mesh mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
-
     float angleY(0.0);
 
     while (!m_input.end())
@@ -98,9 +108,14 @@ void Scene::mainLoop()
 
         if(m_input.getKey(SDL_SCANCODE_ESCAPE))
         {
-            screenshot();
             break;
         }
+
+        if(m_input.getKey(SDL_SCANCODE_RETURN))
+        {
+            screenshot();
+        }
+
         camera.move(m_input);
 
         if(m_input.getKey(SDL_SCANCODE_LEFT))
@@ -121,9 +136,7 @@ void Scene::mainLoop()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
         camera.lookAt(modelview); //init the camera
 
-        //modelview = rotate(modelview, angleY, vec3(0, 1, 0));
-
-        mesh.draw(projection, modelview);
+        m_mesh->draw(projection, modelview);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -139,11 +152,18 @@ void Scene::mainLoop()
 
 bool Scene::initScene()
 {
+    string file;
+
+    cout << "OBJ file path : ";
+    cin >> file;
+
     if (this->initWindow() == false)
     return false;
 
     if (this->initGL() == false)
     return false;
+
+    initModel(file);
 
     return true;
 }

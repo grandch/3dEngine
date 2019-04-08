@@ -82,6 +82,18 @@ void Camera::move(Input const &input)
         m_position -= m_lateralAxis * 0.3f;
         m_target = m_position + m_orientation;
     }
+
+    if(input.getKey(SDL_SCANCODE_Q))
+    {
+        m_position -= m_verticalAxis * 0.3f;
+        m_target = m_position + m_orientation;
+    }
+
+    if(input.getKey(SDL_SCANCODE_E))
+    {
+        m_position += m_verticalAxis * 0.3f;
+        m_target = m_position + m_orientation;
+    }
 }
 
 void Camera::lookAt(mat4 &modelview)

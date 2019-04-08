@@ -5,13 +5,25 @@
 #include "MeshTriangle.h"
 #include "MeshEdge.h"
 
-#include "../Importer.h" //no previous declaration
-
 Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader)
+{}
+
+Mesh::~Mesh()
 {
-    Importer importer(this);
-    importer.loadObjFile(importer.findPath());
-    cout << "Mesh loaded" << endl << endl;
+    glDeleteBuffers(1, &m_vertexVboId);
+    glDeleteBuffers(1, &m_colorVboId);
+    glDeleteBuffers(1, &m_faceIndexVboId);
+    glDeleteBuffers(1, &m_edgeIndexVboId);
+}
+
+
+void Mesh::loadMesh()
+{
+    loadVBO(); 
+    loadVAO();
+    loadEdgeVAO();
+
+    m_shader.load();
 
     cout << "Vertex List :" << endl;
     for(MeshVertex* vertex: m_vertexList)
@@ -27,22 +39,7 @@ Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, f
         cout << triangle->getVertex1()->getName() << endl;
         cout << triangle->getVertex2()->getName() << endl << endl;
     }
-
-    loadVBO(); 
-    loadVAO();
-    loadEdgeVAO();
-
-    m_shader.load();
 }
-
-Mesh::~Mesh()
-{
-    glDeleteBuffers(1, &m_vertexVboId);
-    glDeleteBuffers(1, &m_colorVboId);
-    glDeleteBuffers(1, &m_faceIndexVboId);
-    glDeleteBuffers(1, &m_edgeIndexVboId);
-}
-
 
 void Mesh::draw(mat4 &projection, mat4 &modelview)
 {

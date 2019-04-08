@@ -30,7 +30,9 @@
 *.exe
 *.out
 *.app
-engine
+3dEngine/*
 
 # Images
 *.tga
+
+.vscode

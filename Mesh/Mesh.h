@@ -30,6 +30,8 @@ class Mesh
         Mesh(string vertexShader, string fragmentShader);
         ~Mesh();
 
+        void loadMesh();
+
         void draw(mat4 &projection, mat4 &modelview);
 
         void loadVBO();

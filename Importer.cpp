@@ -116,13 +116,3 @@ MeshVertex* Importer::findOrCreateVertex(char* nvntnn,
 
     return vertex;
 }
-
-string Importer::findPath()
-{
-    string file;
-
-    cout << "OBJ file path : ";
-    cin >> file;
-
-    return file;
-}
