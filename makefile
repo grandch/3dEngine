@@ -1,11 +1,23 @@
 CC = g++
 CFLAGS = -Wall
 EXEC_NAME = engine
-INCLUDES = main.cpp Scene.cpp Camera.cpp Importer.cpp Shaders/Shader.cpp Models/Cube.cpp Inputs/Input.cpp Mesh/Mesh.cpp Mesh/MeshVertex.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshEdge.cpp
+INCLUDES = main.cpp Scene.cpp Camera.cpp Importer/Importer.cpp Shaders/Shader.cpp Models/Cube.cpp Inputs/Input.cpp Mesh/Mesh.cpp Mesh/MeshVertex.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshEdge.cpp
 LIBS = -lGL -lSDL2
 OBJ_FILES = main.o Scene.o Camera.o Importer.o Shader.o Cube.o Input.o Mesh.o MeshVertex.o MeshHalfEdge.o MeshTriangle.o MeshEdge.o
 
 all :
+	if [ ! -d "./3dEngine/" ];then\
+        mkdir 3dEngine/;\
+    fi
+
+	if [ ! -d "./3dEngine/Models/" ];then\
+        mkdir 3dEngine/Models/;\
+    fi
+
+	if [ ! -d "./3dEngine/Shaders/" ];then\
+        mkdir 3dEngine/Shaders/;\
+    fi
+	
 	$(CC) $(CFLAGS) -c $(INCLUDES)
 	$(CC) -o 3dEngine/$(EXEC_NAME) $(OBJ_FILES) $(LIBS)
 

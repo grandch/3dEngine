@@ -1,6 +1,6 @@
 #include "Importer.h"
 
-#include "Mesh/Mesh.h"
+#include "../Mesh/Mesh.h"
 
 Importer::Importer(Mesh* mesh): m_mesh(mesh)
 {}

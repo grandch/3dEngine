@@ -8,10 +8,10 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Mesh/MeshTriangle.h"
-#include "Mesh/MeshHalfEdge.h"
-#include "Mesh/MeshEdge.h"
-#include "Mesh/MeshVertex.h"
+#include "../Mesh/MeshTriangle.h"
+#include "../Mesh/MeshHalfEdge.h"
+#include "../Mesh/MeshEdge.h"
+#include "../Mesh/MeshVertex.h"
 
 #include <string>
 #include <sstream>
