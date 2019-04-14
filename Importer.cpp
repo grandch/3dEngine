@@ -40,7 +40,7 @@ void Importer::loadObjFile(string fileName)
             string name = ss.str();
             MeshVertex* vertex = new MeshVertex(m_mesh, name);
             vertex->setCoord(vec3(x, y, z));
-            vertex->setColor(vec3(1.0, 1.0, 1.0));
+            vertex->setColor(vec3(1.0, 1.0, 1.0)); //white color for a AWESOME render
         }
         else if(strcmp(word, "vt") == 0)
         {
@@ -61,21 +61,27 @@ void Importer::loadObjFile(string fileName)
         }
         if(strcmp(word, "f") == 0)
         {
+            vector<MeshVertex*> vertex;
+
             //first vertex index
             word = strtok(NULL, " ");
             MeshVertex* v1 = findOrCreateVertex(word, vertexList, coordList, texCoordList, normalList);
+            vertex.push_back(v1);
 
             //second vertex index
             word = strtok(NULL, " ");
             MeshVertex* v2 = findOrCreateVertex(word, vertexList, coordList, texCoordList, normalList);
+            vertex.push_back(v2);
 
             //other vertex index
             while((word = strtok(NULL, " ")))
             {
                 MeshVertex* v3 = findOrCreateVertex(word, vertexList, coordList, texCoordList, normalList);
-                m_mesh->addTriangle(v1, v2, v3);
+                vertex.push_back(v3);
+                //m_mesh->addTriangle(v1, v2, v3); //to do : use mesh->addPolygon() function instead
                 v2 = v3;
             }
+            m_mesh->addPolygon(vertex);
         }
     }
     inputStream.close();

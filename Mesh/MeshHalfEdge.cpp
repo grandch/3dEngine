@@ -30,10 +30,10 @@ MeshHalfEdge::MeshHalfEdge(Mesh* mesh, MeshVertex* origin, MeshVertex* target, M
         m_edge = m_opposite->m_edge;
     }
 
-    if(m_edge == nullptr)
+    /*if(m_edge == nullptr)
     {
         m_edge = new MeshEdge(mesh, origin, target);
-    }
+    }*/
 
     origin->linkSibling(this);
 }

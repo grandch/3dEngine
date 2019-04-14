@@ -192,6 +192,22 @@ GLuint Mesh::makeShortVBO(vector<GLushort> values, int vboType, GLenum usage)
     return id;
 }
 
+void Mesh::addPolygon(vector<MeshVertex*> vertex)
+{
+    MeshVertex* pivot = vertex[0];
+    int count = vertex.size();
+
+    for(int i = 0; i < count - 2; i++) //faces
+    {
+        this->addTriangle(pivot, vertex[i+1], vertex[i+2]);
+    }
+
+    for(int i = 0; i < count - 1; i++) //edges
+    {
+        new MeshEdge(this, vertex[i], vertex[i+1]);
+    }
+}
+
 MeshTriangle* Mesh::addTriangle(MeshVertex* v1, MeshVertex* v2, MeshVertex* v3)
 {
     MeshTriangle* triangle = new MeshTriangle(this, v1, v2, v3);

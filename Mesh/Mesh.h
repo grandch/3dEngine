@@ -42,6 +42,8 @@ class Mesh
         GLuint makeFloatVBO(vector<GLfloat> values, int vboType, GLenum usage);
         GLuint makeShortVBO(vector<GLushort> values, int vboType, GLenum usage);
 
+        void addPolygon(vector<MeshVertex*> vertex);
+
         MeshTriangle* addTriangle(MeshVertex* v1, MeshVertex* v2, MeshVertex* v3);
         void pushTriangle(MeshTriangle* triangle);
         void popTriangle(MeshTriangle* triangle);
