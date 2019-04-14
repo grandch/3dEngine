@@ -14,7 +14,7 @@
 #include "Mesh/Mesh.h"
 #include "Shaders/Shader.h"
 #include "Inputs/Input.h"
-#include "Camera.h"
+#include "Camera/Camera.h"
 #include "Importer/Importer.h"
 
 #include <GLES3/gl3.h>
