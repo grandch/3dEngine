@@ -186,5 +186,7 @@ void Scene::screenshot()
     fwrite(pixels, numberOfPixels, 1, outputFile);
     fclose(outputFile);
 
+    system("sh convert.sh");
+
     printf("Finish writing to file.\n");
 }

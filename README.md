@@ -22,10 +22,11 @@ Run the executable named "engine" in a terminal. Write the relative path of the 
 Move the camera with the WSAD or ZQSD key. Move it up and down with the Q or A key and the E key.
 Rotate it with the mouse.
 
-Presse Enter to save a .tga screenshot in the directory of the executable.
+Presse Enter to save a .png screenshot in the directory of the executable.
 
 Presse Escape to quit.
 
 ### Compatibility
 
 .obj files only, with no texture coordinate (uv). Files with a number of vertex > 1000 can be slow to load (a few seconds).
+Including materials is useless for now.

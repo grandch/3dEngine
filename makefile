@@ -25,6 +25,8 @@ all :
 	cp Shaders/*.frag 3dEngine/Shaders/
 	cp Models/*.obj 3dEngine/Models/
 
+	cp convert.sh 3dEngine/
+
 	make clean
 
 run : all
