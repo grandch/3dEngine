@@ -13,8 +13,6 @@
 
 #include "../Shaders/Shader.h"
 
-//#define GLM_ENABLE_EXPERIMENTAL
-
 class MeshHalfEdge;
 class MeshVertex;
 class MeshTriangle;
@@ -30,7 +28,7 @@ class Mesh
         Mesh(string vertexShader, string fragmentShader);
         ~Mesh();
 
-        void loadMesh();
+        void loadMesh(); //load the shader and the vbo/vao
 
         void draw(mat4 &projection, mat4 &modelview);
 

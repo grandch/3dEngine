@@ -35,12 +35,6 @@ void Importer::loadObjFile(string fileName)
             float z = atof(strtok(NULL, " "));
 
             coordList.push_back(vec3(x, y, z));
-            stringstream ss;
-            ss << "v(" << x << ", " << y << ", " << z << ")";
-            string name = ss.str();
-            MeshVertex* vertex = new MeshVertex(m_mesh, name);
-            vertex->setCoord(vec3(x, y, z));
-            vertex->setColor(vec3(1.0, 1.0, 1.0)); //white color for a AWESOME render
         }
         else if(strcmp(word, "vt") == 0)
         {
@@ -78,7 +72,6 @@ void Importer::loadObjFile(string fileName)
             {
                 MeshVertex* v3 = findOrCreateVertex(word, vertexList, coordList, texCoordList, normalList);
                 vertex.push_back(v3);
-                //m_mesh->addTriangle(v1, v2, v3); //to do : use mesh->addPolygon() function instead
                 v2 = v3;
             }
             m_mesh->addPolygon(vertex);
@@ -94,31 +87,35 @@ MeshVertex* Importer::findOrCreateVertex(char* nvntnn,
                                          vector<vec3> &normalList)
 {
     //index extracting
-    int nv, nn;
+    int nv, nt, nn;
     sscanf(nvntnn, "%d//%d", &nv, &nn);
     nv--; nn--;
 
+    nt =  0;
+
     //vertex name
     stringstream ss;
-    ss << "v(" << coordList[nv].x << ", " << coordList[nv].y << ", " << coordList[nv].z << ")";
+    ss << "v(" << nv << ", " << nt << ", " << nn << ")";
     string name = ss.str();
 
-    //find vertex
+    //search vertex in vertexList
     for(MeshVertex* s: vertexList[nv])
     {
         if(name == s->getName())
         {
-            cout << "vertex found" << endl;
             return s;
         }
     }
 
     //create vertex
     MeshVertex* vertex = m_mesh->addVertex(name);
-    //vertexList[nv].push_front(vertex);
-    //vertex->setCoord(coordList[nv]);
-    //vertex->setTexCoord(texCoordList[nt]);
-    //vertex->setNormal(normalList[nn]);
+    vertexList[nv].push_front(vertex);
 
-    return vertex;
+    //vertex settings
+    vertex->setCoord(coordList[nv]);
+    //vertex->setTexCoord(texCoordList[nt]); //need to implement texture support before activating this line
+    vertex->setNormal(normalList[nn]);
+    vertex->setColor(vec3(1.0, 1.0, 1.0)); //white color for an AWESOME render
+
+    return vertex; //to construct polygon
 }

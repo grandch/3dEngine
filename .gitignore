@@ -34,5 +34,6 @@
 
 # Images
 *.tga
+*.png
 
 .vscode

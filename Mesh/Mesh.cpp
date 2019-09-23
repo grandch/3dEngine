@@ -25,7 +25,7 @@ void Mesh::loadMesh()
 
     m_shader.load();
 
-    cout << "Vertex List :" << endl;
+    /*cout << "Vertex List :" << endl;
     for(MeshVertex* vertex: m_vertexList)
     {
         cout << vertex->getName() << endl;
@@ -38,7 +38,7 @@ void Mesh::loadMesh()
         cout << triangle->getVertex0()->getName() << endl;
         cout << triangle->getVertex1()->getName() << endl;
         cout << triangle->getVertex2()->getName() << endl << endl;
-    }
+    }*/
 }
 
 void Mesh::draw(mat4 &projection, mat4 &modelview)
@@ -55,6 +55,7 @@ void Mesh::draw(mat4 &projection, mat4 &modelview)
 
         glBindVertexArray(0); //unlock the vao
 
+        //same for the edges
         glBindVertexArray(m_edgeVaoId);
 
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "modelview"), 1, GL_FALSE, value_ptr(modelview));
@@ -194,7 +195,7 @@ GLuint Mesh::makeShortVBO(vector<GLushort> values, int vboType, GLenum usage)
 
 void Mesh::addPolygon(vector<MeshVertex*> vertex)
 {
-    MeshVertex* pivot = vertex[0];
+    MeshVertex* pivot = vertex[0]; //center of the triangle fan
     int count = vertex.size();
 
     for(int i = 0; i < count - 2; i++) //faces

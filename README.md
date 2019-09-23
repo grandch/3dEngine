@@ -1,19 +1,22 @@
 # 3dEngine
 
-3dEngine is a 3d graphic engine written in c++ using OpenGL and the SDL.
+3dEngine is a 3d graphic engine written in C++ using OpenGL and the SDL2.
 
-### How to build it  
+### Informations
+
+Current openGL version : 3.3 core.
+
+### How to build it
 
 3dEngine can only be built on a linux os.
 
-To build it, you will need some library :
+To build it, you will need some libraries :
 
 - OpenGL (usualy already installed with common linux distrib)
 - SDL2
 - GLM
 
-Once you have installed all the libraries, download the repo and use make to build it.
-The executable is in a directory named 3dEngine/. There are also two other directories : Models/ and Shader/. Shader/ is needed to run the executable. Models/ is not needed but there are .obj example files in it.
+Once you have installed all the libraries, download the repo and use make to build it. The executable is in a directory named 3dEngine/. There are also two other directories : Models/ and Shader/. Shader/ is needed to run the executable. Models/ is not needed but there are .obj example files in it.
 
 ### How to use it
 
@@ -22,7 +25,7 @@ Run the executable named "engine" in a terminal. Write the relative path of the 
 Move the camera with the WSAD or ZQSD key. Move it up and down with the Q or A key and the E key.
 Rotate it with the mouse.
 
-Presse Enter to save a .png screenshot in the directory of the executable.
+Presse Enter to save a .png screenshot in the directory from where you run the engine.
 
 Presse Escape to quit.
 
