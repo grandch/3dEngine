@@ -52,7 +52,7 @@ bool Scene::initWindow()
 
     if (m_window == 0)
     {
-        cout << "Error while loading the window : " << SDL_GetError() << endl;
+        cout << "Failed to load the window : " << SDL_GetError() << endl;
         SDL_Quit();
 
         return false;
@@ -64,7 +64,7 @@ bool Scene::initWindow()
 
     if (m_openGLContext == 0)
     {
-        cout << "Error while loading OpenGL context : " << SDL_GetError() << endl;
+        cout << "Failed to load OpenGL context : " << SDL_GetError() << endl;
         SDL_DestroyWindow(m_window);
         SDL_Quit();
 
@@ -76,8 +76,6 @@ bool Scene::initWindow()
 
 bool Scene::initGL()
 {
-    //init glew (windows) TO DO
-
     glEnable(GL_DEPTH_TEST); //depth buffer activation
 
     return true;
@@ -94,7 +92,7 @@ void Scene::mainLoop()
     projection = perspective(70.0, (double) m_wWidth / m_wHeight, 1.0, 100.0); //init the camera
     modelview = mat4(0.1);
 
-    Camera camera(vec3(3, 3, 3), vec3(0, 0, 0), vec3(0, 1, 0));
+    Camera camera(vec3(10, 10, 10), vec3(0, 0, 0), vec3(0, 1, 0));
     m_input.showCursor(false);
     m_input.cursorCapture(true);
 
