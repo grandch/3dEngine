@@ -155,10 +155,10 @@ void Scene::mainLoop()
 
 bool Scene::initScene()
 {
-    string file;
+    //string file;
 
-    cout << "OBJ file path : ";
-    cin >> file;
+    //cout << "OBJ file path : ";
+    //cin >> file;
 
     if (this->initWindow() == false)
     return false;
@@ -166,8 +166,13 @@ bool Scene::initScene()
     if (this->initGL() == false)
     return false;
 
-    initModel(file);
+    //initModel(file);
     m_axis->loadAxis();
+    //initModel(file);
+
+    Bezier* b = new Bezier(vec3(0,0,0), vec3(0,0,1), vec3(0.5, 0.5, 0.5));
+    
+    m_mesh = b->compute(2);
 
     m_bezier = new Bezier(vec3(0,-5,0), vec3(0,10,0), vec3(3, 1, 5));
     m_bezier->compute(4);
