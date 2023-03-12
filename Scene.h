@@ -11,6 +11,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Bezier/Bezier.h"
 #include "Mesh/Mesh.h"
 #include "Shaders/Shader.h"
 #include "Inputs/Input.h"
