@@ -154,6 +154,11 @@ void Scene::mainLoop()
 
 bool Scene::initScene()
 {
+    //string file;
+
+    //cout << "OBJ file path : ";
+    //cin >> file;
+
     if (this->initWindow() == false)
     return false;
 
