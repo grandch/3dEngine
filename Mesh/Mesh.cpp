@@ -155,6 +155,11 @@ void Mesh::loadEdgeVAO()
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(0);
 
+        glBindBuffer(GL_ARRAY_BUFFER, m_colorVboId);
+
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(1);
+
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_edgeIndexVboId);
         
     glBindVertexArray(0);
