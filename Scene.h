@@ -52,5 +52,6 @@ class Scene
         Input m_input;
 
         Mesh* m_mesh;
+        Bezier* m_bezier;
 };
 #endif

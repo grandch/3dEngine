@@ -3,6 +3,9 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <string>
+#include <iostream>
+
 using namespace glm;
 
 class Mesh;
