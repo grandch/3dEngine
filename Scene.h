@@ -17,6 +17,7 @@
 #include "Inputs/Input.h"
 #include "Camera/Camera.h"
 #include "Importer/Importer.h"
+#include "Axis/Axis.h"
 
 #include <GLES3/gl3.h>
 
@@ -53,5 +54,6 @@ class Scene
 
         Mesh* m_mesh;
         Bezier* m_bezier;
+        Axis* m_axis;
 };
 #endif

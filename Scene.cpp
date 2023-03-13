@@ -1,10 +1,13 @@
 #include "Scene.h"
 
 Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidth(width), m_wHeight(height), m_window(0), m_openGLContext(0), m_input()
-{}
+{
+    m_axis = new Axis();
+}
 
 Scene::~Scene()
 {
+    free(m_axis);
     SDL_GL_DeleteContext(m_openGLContext);
     SDL_DestroyWindow(m_window);
     SDL_Quit();
@@ -136,6 +139,7 @@ void Scene::mainLoop()
 
         m_mesh->draw(projection, modelview);
         m_bezier->draw(projection, modelview);
+        m_axis->draw(projection, modelview);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -163,6 +167,7 @@ bool Scene::initScene()
     return false;
 
     initModel(file);
+    m_axis->loadAxis();
 
     m_bezier = new Bezier(vec3(0,-5,0), vec3(0,10,0), vec3(3, 1, 5));
     m_bezier->compute(4);
