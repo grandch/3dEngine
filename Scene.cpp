@@ -140,6 +140,7 @@ void Scene::mainLoop()
         m_mesh->draw(projection, modelview);
         m_bezier->draw(projection, modelview);
         m_axis->draw(projection, modelview);
+        m_bezier->draw(projection, modelview);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -155,10 +156,10 @@ void Scene::mainLoop()
 
 bool Scene::initScene()
 {
-    //string file;
+    string file;
 
-    //cout << "OBJ file path : ";
-    //cin >> file;
+    cout << "OBJ file path : ";
+    cin >> file;
 
     if (this->initWindow() == false)
     return false;
@@ -169,10 +170,10 @@ bool Scene::initScene()
     //initModel(file);
     m_axis->loadAxis();
     //initModel(file);
+    initModel(file);
 
-    Bezier* b = new Bezier(vec3(0,0,0), vec3(0,0,1), vec3(0.5, 0.5, 0.5));
-    
-    m_mesh = b->compute(2);
+    m_bezier = new Bezier(vec3(0,-5,0), vec3(0,10,0), vec3(3, 1, 5));
+    m_bezier->compute(4);
 
     m_bezier = new Bezier(vec3(0,-5,0), vec3(0,10,0), vec3(3, 1, 5));
     m_bezier->compute(4);
