@@ -137,10 +137,8 @@ void Scene::mainLoop()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
         camera.lookAt(modelview); //init the camera
 
-        m_mesh->draw(projection, modelview);
         m_bezier->draw(projection, modelview);
         m_axis->draw(projection, modelview);
-        m_bezier->draw(projection, modelview);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -156,24 +154,13 @@ void Scene::mainLoop()
 
 bool Scene::initScene()
 {
-    string file;
-
-    cout << "OBJ file path : ";
-    cin >> file;
-
     if (this->initWindow() == false)
     return false;
 
     if (this->initGL() == false)
     return false;
 
-    //initModel(file);
     m_axis->loadAxis();
-    //initModel(file);
-    initModel(file);
-
-    m_bezier = new Bezier(vec3(0,-5,0), vec3(0,10,0), vec3(3, 1, 5));
-    m_bezier->compute(4);
 
     m_bezier = new Bezier(vec3(0,-5,0), vec3(0,10,0), vec3(3, 1, 5));
     m_bezier->compute(4);
