@@ -139,6 +139,7 @@ void Scene::mainLoop()
 
         m_bezierS->draw(projection, modelview);
         m_axis->draw(projection, modelview);
+        m_bezier->draw(projection, modelview);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -154,10 +155,10 @@ void Scene::mainLoop()
 
 bool Scene::initScene()
 {
-    //string file;
+    string file;
 
-    //cout << "OBJ file path : ";
-    //cin >> file;
+    cout << "OBJ file path : ";
+    cin >> file;
 
     if (this->initWindow() == false)
     return false;

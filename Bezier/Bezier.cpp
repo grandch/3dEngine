@@ -11,6 +11,7 @@ Bezier::~Bezier()
 
 vec3 Bezier::b(float t)
 {
+    cout << t << endl;
     float x = pow(1-t, 2) * m_p1[0] + 2 * (1-t) * t * m_pc[0] + pow(t, 2) * m_p2[0];
     float y = pow(1-t, 2) * m_p1[1] + 2 * (1-t) * t * m_pc[1] + pow(t, 2) * m_p2[1];
     float z = pow(1-t, 2) * m_p1[2] + 2 * (1-t) * t * m_pc[2] + pow(t, 2) * m_p2[2];
@@ -26,7 +27,7 @@ Mesh* Bezier::compute(int nbPoints)
 
     m_mesh = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
     
-    float u = 1/nbPoints;
+    float u = 1.0/nbPoints;
     
     MeshVertex* v1 = new MeshVertex(m_mesh, "0");
     v1->setCoord(b(0));
@@ -35,10 +36,14 @@ Mesh* Bezier::compute(int nbPoints)
     for(int i = 1; i < nbPoints; i++)
     {
         v2 = new MeshVertex(m_mesh, std::to_string(i));
-        v2->setCoord(b(i*u));
+
+        v2->setCoord(b(u*i));
+
         new MeshEdge(m_mesh, v1, v2);
         v1 = v2;
     }
+
+    m_mesh->loadMesh();
 
     return m_mesh;
 }
