@@ -140,6 +140,7 @@ void Scene::mainLoop()
         m_bezierS->draw(projection, modelview);
         m_axis->draw(projection, modelview);
         m_bezier->draw(projection, modelview);
+        m_axis->draw(projection, modelview);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -166,6 +167,7 @@ bool Scene::initScene()
     if (this->initGL() == false)
     return false;
 
+    initModel(file);
     m_axis->loadAxis();
 
     m_bezier = new BezierCurve(vec3(0,-5,0), vec3(2, 1, 3), vec3(-2, 2, 2), vec3(0,3,0));
