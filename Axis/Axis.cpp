@@ -23,20 +23,28 @@ void Axis::loadAxis()
     m_meshY = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
     m_meshZ = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
 
+    // add axis color to vertex
+
     MeshVertex* vX1 = new MeshVertex(m_meshX, "vx1");
     vX1->setCoord(vec3(-10, 0, 0));
+    vX1->setColor(vec3(1, 0, 0));
     MeshVertex* vX2 = new MeshVertex(m_meshX, "vx2");
-    vX1->setCoord(vec3(10, 0, 0));
+    vX2->setCoord(vec3(10, 0, 0));
+    vX2->setColor(vec3(1, 0, 0));
 
     MeshVertex* vY1 = new MeshVertex(m_meshY, "vy1");
     vY1->setCoord(vec3(0, -10, 0));
+    vY1->setColor(vec3(0, 0, 1));
     MeshVertex* vY2 = new MeshVertex(m_meshY, "vy2");
-    vY1->setCoord(vec3(0, 10, 0));
+    vY2->setCoord(vec3(0, 10, 0));
+    vY2->setColor(vec3(0, 0, 1));
 
     MeshVertex* vZ1 = new MeshVertex(m_meshZ, "vz1");
     vZ1->setCoord(vec3(0, 0, -10));
+    vZ1->setColor(vec3(0, 1, 0));
     MeshVertex* vZ2 = new MeshVertex(m_meshZ, "vz2");
-    vZ1->setCoord(vec3(0, 0, 10));
+    vZ2->setCoord(vec3(0, 0, 10));
+    vZ2->setColor(vec3(0, 1, 0));
 
     MeshEdge* eX = new MeshEdge(m_meshX, vX1, vX2);
     MeshEdge* eY = new MeshEdge(m_meshY, vY1, vY2);
