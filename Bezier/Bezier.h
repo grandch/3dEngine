@@ -17,7 +17,9 @@ class Bezier
         Bezier(vec3 p1, vec3 p2, vec3 pc1, vec3 pc2);
         ~Bezier();
 
-        Mesh* compute(int nbPoints);
+        void addSegment(vec3 p2, vec3 pc1, vec3 pc2);
+
+        void compute(int nbPoints);
         void draw(mat4 &projection, mat4 &modelview);
 
     private:
@@ -30,4 +32,6 @@ class Bezier
         vec3 m_pc2;
         Mesh* m_meshCurve;
         Mesh* m_meshControlPolygon;
+
+        Bezier* m_next;
 };

@@ -3,7 +3,7 @@
 #include "../Mesh/MeshEdge.h"
 #include "../Mesh/MeshVertex.h"
 
-Bezier::Bezier(vec3 p1, vec3 p2, vec3 pc1, vec3 pc2): m_p1(p1), m_p2(p2), m_pc1(pc1), m_pc2(pc2), m_meshCurve(nullptr), m_meshControlPolygon(nullptr)
+Bezier::Bezier(vec3 p1, vec3 p2, vec3 pc1, vec3 pc2): m_p1(p1), m_p2(p2), m_pc1(pc1), m_pc2(pc2), m_meshCurve(nullptr), m_meshControlPolygon(nullptr), m_next(nullptr)
 {
     m_meshControlPolygon = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
 
@@ -30,6 +30,18 @@ Bezier::Bezier(vec3 p1, vec3 p2, vec3 pc1, vec3 pc2): m_p1(p1), m_p2(p2), m_pc1(
 Bezier::~Bezier()
 {}
 
+void Bezier::addSegment(vec3 p2, vec3 pc1, vec3 pc2)
+{
+    if(m_next != nullptr)
+    {
+        m_next->addSegment(p2, pc1, pc2);
+    }
+    else
+    {
+        m_next = new Bezier(m_p2, p2, pc1, pc2);
+    }
+}
+
 vec3 Bezier::b(float t)
 {
     float x = m_p1[0] * pow(1-t, 3) + 3 * m_pc1[0] * t * pow(1-t, 3) + 3 * m_pc2[0] * pow(t,2) * (1-t) + m_p2[0] * pow(t,3);
@@ -38,7 +50,7 @@ vec3 Bezier::b(float t)
     return vec3(x, y, z);
 }
 
-Mesh* Bezier::compute(int nbPoints)
+void Bezier::compute(int nbPoints)
 {
     if(m_meshCurve != nullptr)
     {
@@ -68,11 +80,19 @@ Mesh* Bezier::compute(int nbPoints)
 
     m_meshCurve->loadMesh();
 
-    return m_meshCurve;
+    if(m_next != nullptr)
+    {
+        m_next->compute(nbPoints);
+    }
 }
 
 void Bezier::draw(mat4 &projection, mat4 &modelview)
 {
     m_meshCurve->draw(projection, modelview);
     m_meshControlPolygon->draw(projection, modelview);
+
+    if(m_next != nullptr)
+    {
+        m_next->draw(projection, modelview);
+    }
 }

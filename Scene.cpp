@@ -95,7 +95,7 @@ void Scene::mainLoop()
     projection = perspective(70.0, (double) m_wWidth / m_wHeight, 1.0, 100.0); //init the camera
     modelview = mat4(0.1);
 
-    Camera camera(vec3(10, 10, 10), vec3(0, 0, 0), vec3(0, 1, 0));
+    Camera camera(vec3(-15, 10, 10), vec3(0, 0, 0), vec3(0, 1, 0));
     m_input.showCursor(false);
     m_input.cursorCapture(true);
 
@@ -117,7 +117,7 @@ void Scene::mainLoop()
             screenshot();
         }
 
-        camera.move(m_input);
+        //camera.move(m_input);
 
         if(m_input.getKey(SDL_SCANCODE_LEFT))
             angleY -= 0.01;
@@ -162,7 +162,8 @@ bool Scene::initScene()
 
     m_axis->loadAxis();
 
-    m_bezier = new Bezier(vec3(0,-5,0), vec3(0,10,0), vec3(3, 1, 5), vec3(-2, 2, 2));
+    m_bezier = new Bezier(vec3(0,-5,0), vec3(0,3,0), vec3(2, 1, 3), vec3(-2, 2, 2));
+    m_bezier->addSegment(vec3(0, 5, 0), vec3(1, 1, 1), vec3(3, 3, 3));
     m_bezier->compute(16);
 
     return true;
