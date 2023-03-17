@@ -162,8 +162,8 @@ bool Scene::initScene()
 
     m_axis->loadAxis();
 
-    m_bezier = new Bezier(vec3(0,-5,0), vec3(0,10,0), vec3(3, 1, 5));
-    m_bezier->compute(4);
+    m_bezier = new Bezier(vec3(0,-5,0), vec3(0,10,0), vec3(3, 1, 5), vec3(-2, 2, 2));
+    m_bezier->compute(16);
 
     return true;
 }

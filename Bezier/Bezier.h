@@ -14,7 +14,7 @@ class Bezier
 {
     public:
 
-        Bezier(vec3 p1, vec3 p2, vec3 pc);
+        Bezier(vec3 p1, vec3 p2, vec3 pc1, vec3 pc2);
         ~Bezier();
 
         Mesh* compute(int nbPoints);
@@ -26,6 +26,8 @@ class Bezier
 
         vec3 m_p1;
         vec3 m_p2;
-        vec3 m_pc;
-        Mesh* m_mesh;
+        vec3 m_pc1;
+        vec3 m_pc2;
+        Mesh* m_meshCurve;
+        Mesh* m_meshControlPolygon;
 };
