@@ -35,12 +35,15 @@ Mesh* Bezier::compute(int nbPoints)
     for(int i = 1; i < nbPoints; i++)
     {
         v2 = new MeshVertex(m_mesh, std::to_string(i));
-
         v2->setCoord(b(u*i));
-
         new MeshEdge(m_mesh, v1, v2);
         v1 = v2;
     }
+
+    v2 = new MeshVertex(m_mesh, std::to_string(nbPoints));
+    v2->setCoord(b(1));
+    new MeshEdge(m_mesh, v1, v2);
+
 
     m_mesh->loadMesh();
 
