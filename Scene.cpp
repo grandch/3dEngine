@@ -95,7 +95,7 @@ void Scene::mainLoop()
     projection = perspective(70.0, (double) m_wWidth / m_wHeight, 1.0, 100.0); //init the camera
     modelview = mat4(0.1);
 
-    Camera camera(vec3(10, 10, 10), vec3(0, 0, 0), vec3(0, 1, 0));
+    Camera camera(vec3(-15, 10, 10), vec3(0, 0, 0), vec3(0, 1, 0));
     m_input.showCursor(false);
     m_input.cursorCapture(true);
 
@@ -135,9 +135,10 @@ void Scene::mainLoop()
         
         glClearColor(0.5, 0.5, 0.5, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
-        camera.lookAt(modelview); //init the camera
+        camera.lookAt(modelview);
 
-        m_mesh->draw(projection, modelview);
+        m_bezierS->draw(projection, modelview);
+        m_bezier->draw(projection, modelview);
         m_axis->draw(projection, modelview);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
@@ -154,19 +155,26 @@ void Scene::mainLoop()
 
 bool Scene::initScene()
 {
-    string file;
-
-    cout << "OBJ file path : ";
-    cin >> file;
-
     if (this->initWindow() == false)
     return false;
 
     if (this->initGL() == false)
     return false;
 
-    initModel(file);
+    //initModel(file);
     m_axis->loadAxis();
+
+    m_bezier = new BezierCurve(vec3(0,-5,0), vec3(2, 1, 3), vec3(-2, 2, 2), vec3(0,3,0));
+    m_bezier->addSegment(vec3(1, 1, 1), vec3(3, 3, 3), vec3(0, 5, 0));
+    m_bezier->compute(16);
+
+    BezierCurve* b0 = new BezierCurve(vec3(-1.5, 0, -1.5), vec3(-1.5, 0, -0.5), vec3(-1.5, 0, 0.5), vec3(-1.5, 0, 1.5));
+    BezierCurve* b1 = new BezierCurve(vec3(-0.5, 0, -1.5), vec3(-0.5, 0, -0.5), vec3(-0.5, 0, 0.5), vec3(-0.5, 0, 1.5));
+    BezierCurve* b2 = new BezierCurve(vec3(0.5, 0, -1.5), vec3(0.5, 0, -0.5), vec3(0.5, 0, 0.5), vec3(0.5, 0, 1.5));
+    BezierCurve* b3 = new BezierCurve(vec3(1.5, 0, -1.5), vec3(1.5, 0, -0.5), vec3(1.5, 0, 0.5), vec3(1.5, 0, 1.5));
+
+    m_bezierS = new BezierSurface(b0, b1, b2, b3);
+    m_bezierS->compute(8, 8);
 
     return true;
 }
