@@ -40,42 +40,32 @@ void BezierSurface::compute(int s, int t)
         ps.push_back(bcs->compute(s));   
     }
 
-    for(int i = 0; i < t; i++)
+    for(int i = 0; i < t-1; i++)
     {
-        for(int j = 0; j < s; j++)
+        for(int j = 0; j < s-1; j++)
         {
-            MeshVertex* v = new MeshVertex(m_mesh, std::to_string(i)+std::to_string(j));
-            v->setCoord(ps[i][j]);
-            v->setColor(vec3(1));
+            vector<MeshVertex*> vertex;
+            MeshVertex* v0 = new MeshVertex(m_mesh, std::to_string(i)+std::to_string(j));
+            v0->setCoord(ps[i][j]);
+            v0->setColor(vec3(1));
+            vertex.push_back(v0);
 
-            if(i>0)
-            {
-                MeshVertex* v2 = new MeshVertex(m_mesh, std::to_string(i-1)+std::to_string(j));
-                v2->setCoord(ps[i-1][j]);
-                v2->setColor(vec3(1));
-                new MeshEdge(m_mesh, v, v2);
-            }
-            if(i<t-1)
-            {
-                MeshVertex* v2 = new MeshVertex(m_mesh, std::to_string(i+1)+std::to_string(j));
-                v2->setCoord(ps[i+1][j]);
-                v2->setColor(vec3(1));
-                new MeshEdge(m_mesh, v, v2);
-            }
-            if(j>0)
-            {
-                MeshVertex* v2 = new MeshVertex(m_mesh, std::to_string(i)+std::to_string(j-1));
-                v2->setCoord(ps[i][j-1]);
-                v2->setColor(vec3(1));
-                new MeshEdge(m_mesh, v, v2);
-            }
-            if(j<s-1)
-            {
-                MeshVertex* v2 = new MeshVertex(m_mesh, std::to_string(i)+std::to_string(j+1));
-                v2->setCoord(ps[i][j+1]);
-                v2->setColor(vec3(1));
-                new MeshEdge(m_mesh, v, v2);
-            }
+            MeshVertex* v1 = new MeshVertex(m_mesh, std::to_string(i+1)+std::to_string(j));
+            v1->setCoord(ps[i+1][j]);
+            v1->setColor(vec3(1));
+            vertex.push_back(v1);
+            
+            MeshVertex* v2 = new MeshVertex(m_mesh, std::to_string(i+1)+std::to_string(j+1));
+            v2->setCoord(ps[i+1][j+1]);
+            v2->setColor(vec3(1));
+            vertex.push_back(v2);
+            
+            MeshVertex* v3 = new MeshVertex(m_mesh, std::to_string(i)+std::to_string(j+1));
+            v3->setCoord(ps[i][j+1]);
+            v3->setColor(vec3(1));
+            vertex.push_back(v3);
+
+            m_mesh->addPolygon(vertex);
         }
     }
 

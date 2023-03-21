@@ -117,7 +117,7 @@ void Scene::mainLoop()
             screenshot();
         }
 
-        camera.move(m_input);
+        //camera.move(m_input);
 
         if(m_input.getKey(SDL_SCANCODE_LEFT))
             angleY -= 0.01;
