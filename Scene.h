@@ -57,7 +57,5 @@ class Scene
         BezierCurve* m_bezier;
         BezierSurface* m_bezierS;
         Axis* m_axis;
-        Bezier* m_bezier;
-        Axis* m_axis;
 };
 #endif

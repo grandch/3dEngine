@@ -117,7 +117,7 @@ void Scene::mainLoop()
             screenshot();
         }
 
-        //camera.move(m_input);
+        camera.move(m_input);
 
         if(m_input.getKey(SDL_SCANCODE_LEFT))
             angleY -= 0.01;
@@ -139,6 +139,7 @@ void Scene::mainLoop()
 
         m_bezierS->draw(projection, modelview);
         m_bezier->draw(projection, modelview);
+        m_bezierS->draw(projection, modelview);
         m_axis->draw(projection, modelview);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
