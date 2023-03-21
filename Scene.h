@@ -11,7 +11,8 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Bezier/Bezier.h"
+#include "Bezier/BezierCurve.h"
+#include "Bezier/BezierSurface.h"
 #include "Mesh/Mesh.h"
 #include "Shaders/Shader.h"
 #include "Inputs/Input.h"
@@ -53,7 +54,8 @@ class Scene
         Input m_input;
 
         Mesh* m_mesh;
-        Bezier* m_bezier;
+        BezierCurve* m_bezier;
+        BezierSurface* m_bezierS;
         Axis* m_axis;
 };
 #endif

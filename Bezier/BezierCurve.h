@@ -2,36 +2,39 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include <vector>
 #include <string>
 #include <iostream>
 
 using namespace glm;
+using namespace std;
 
 class Mesh;
 
-class Bezier
+class BezierCurve
 {
     public:
 
-        Bezier(vec3 p1, vec3 p2, vec3 pc1, vec3 pc2);
-        ~Bezier();
+        BezierCurve(vec3 p0, vec3 p1, vec3 p2, vec3 p3);
+        ~BezierCurve();
 
-        void addSegment(vec3 p2, vec3 pc1, vec3 pc2);
+        vec3 getPoint(int i);
 
-        void compute(int nbPoints);
+        vec3 b(float t);
+
+        void addSegment(vec3 p1, vec3 p2, vec3 p3);
+
+        vector<vec3> compute(int nbPoints);
         void draw(mat4 &projection, mat4 &modelview);
 
     private:
 
-        vec3 b(float t);
-
+        vec3 m_p0;
+        vec3 m_p3;
         vec3 m_p1;
         vec3 m_p2;
-        vec3 m_pc1;
-        vec3 m_pc2;
         Mesh* m_meshCurve;
         Mesh* m_meshControlPolygon;
 
-        Bezier* m_next;
+        BezierCurve* m_next;
 };
