@@ -34,42 +34,23 @@ MeshVertex::~MeshVertex()
     }
 }
 
-
-void MeshVertex::processTrianglesAround1()
+vector<MeshTriangle*> MeshVertex::getTrianglesAround()
 {
     MeshHalfEdge* halfEdge = m_halfEdge; //starting half edge
 
-    while(halfEdge != nullptr)
-    {
-        //MeshTriangle* triangle = halfEdge->getTriangle();
-
-        //do something with the triangle
-
-        halfEdge = halfEdge->getSibling();
-
-        if(halfEdge->getOpposite() != nullptr)
-        {
-            halfEdge = halfEdge->getOpposite()->getNext();
-        }
-        else
-        {
-            halfEdge = nullptr;
-        }
-    }
-}
-
-void MeshVertex::processTrianglesAround2()
-{
-    MeshHalfEdge* halfEdge = m_halfEdge; //starting half edge
+    vector<MeshTriangle*> triangles;
+    MeshTriangle* triangle;
 
     while(halfEdge != nullptr)
     {
-        //MeshTriangle* triangle = halfEdge->getTriangle();
+        triangle = halfEdge->getTriangle();
 
-        //do something with the triangle
+        triangles.push_back(triangle);
 
         halfEdge = halfEdge->getSibling();
     }
+
+    return triangles;
 }
 
 int MeshVertex::getNumber()
@@ -108,6 +89,20 @@ MeshVertex* MeshVertex::setNormal(vec3 normal)
 {
     m_attributes[2] = vec4(normal.x, normal.y, normal.z, 1.0f);
     return this;
+}
+
+void MeshVertex::computeNormal()
+{
+    vector<MeshTriangle*> faces = getTrianglesAround();
+    
+    vec3 normal = vec3(0);
+    for(MeshTriangle* face: faces)
+    {
+        normal += face->getNormal();
+    }
+    
+    setNormal(normalize(normal));
+    setColor(normalize(normal));
 }
 
 MeshHalfEdge* MeshVertex::getHalfEdgeTo(MeshVertex* vertex)

@@ -169,8 +169,8 @@ bool Scene::initScene()
     m_bezier->compute(16);
 
     BezierCurve* b0 = new BezierCurve(vec3(-1.5, 0, -1.5), vec3(-1.5, 0, -0.5), vec3(-1.5, 0, 0.5), vec3(-1.5, 0, 1.5));
-    BezierCurve* b1 = new BezierCurve(vec3(-0.5, 0, -1.5), vec3(-0.5, 0, -0.5), vec3(-0.5, 0, 0.5), vec3(-0.5, 0, 1.5));
-    BezierCurve* b2 = new BezierCurve(vec3(0.5, 0, -1.5), vec3(0.5, 0, -0.5), vec3(0.5, 0, 0.5), vec3(0.5, 0, 1.5));
+    BezierCurve* b1 = new BezierCurve(vec3(-0.5, 0, -1.5), vec3(-0.5, 1, -0.5), vec3(-0.5, 0, 0.5), vec3(-0.5, 0, 1.5));
+    BezierCurve* b2 = new BezierCurve(vec3(0.5, 0, -1.5), vec3(0.5, 0, -0.5), vec3(0.5, -5, 0.5), vec3(0.5, 0, 1.5));
     BezierCurve* b3 = new BezierCurve(vec3(1.5, 0, -1.5), vec3(1.5, 0, -0.5), vec3(1.5, 0, 0.5), vec3(1.5, 0, 1.5));
 
     m_bezierS = new BezierSurface(b0, b1, b2, b3);

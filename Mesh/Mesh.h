@@ -56,6 +56,8 @@ class Mesh
         void pushVertex(MeshVertex* vertex);
         void popVertex(MeshVertex* vertex);
 
+        void computeNormals();
+
     private:
 
         vector<MeshTriangle*> m_triangleList;
