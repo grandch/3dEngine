@@ -33,11 +33,25 @@ void BezierSurface::compute(int s, int t)
     }
 
     vector<vector<vec3>> ps;
+    vector<vector<MeshVertex*>> vs;
 
     for(int i = 0; i < t; i++)
     {
         BezierCurve* bcs = new BezierCurve(pt[0][i], pt[1][i], pt[2][i], pt[3][i]);
-        ps.push_back(bcs->compute(s));   
+        //ps.push_back(bcs->compute(s));
+
+        vector<vec3> p = bcs->compute(s);
+        vector<MeshVertex*> v;
+
+        for(vec3 pp: p)
+        {
+            MeshVertex* vv = new MeshVertex(m_mesh, "v");
+            vv->setCoord(pp);
+            vv->setColor(vec3(1));
+            v.push_back(vv);
+        }
+
+        vs.push_back(v);
     }
 
     for(int i = 0; i < t-1; i++)
@@ -45,31 +59,18 @@ void BezierSurface::compute(int s, int t)
         for(int j = 0; j < s-1; j++)
         {
             vector<MeshVertex*> vertex;
-            MeshVertex* v0 = new MeshVertex(m_mesh, std::to_string(i)+std::to_string(j));
-            v0->setCoord(ps[i][j]);
-            v0->setColor(vec3(1));
-            vertex.push_back(v0);
-
-            MeshVertex* v1 = new MeshVertex(m_mesh, std::to_string(i+1)+std::to_string(j));
-            v1->setCoord(ps[i+1][j]);
-            v1->setColor(vec3(1));
-            vertex.push_back(v1);
+            vertex.push_back(vs[i][j]);
+            vertex.push_back(vs[i+1][j]);
+            vertex.push_back(vs[i+1][j+1]);
+            vertex.push_back(vs[i][j+1]);
             
-            MeshVertex* v2 = new MeshVertex(m_mesh, std::to_string(i+1)+std::to_string(j+1));
-            v2->setCoord(ps[i+1][j+1]);
-            v2->setColor(vec3(1));
-            vertex.push_back(v2);
-            
-            MeshVertex* v3 = new MeshVertex(m_mesh, std::to_string(i)+std::to_string(j+1));
-            v3->setCoord(ps[i][j+1]);
-            v3->setColor(vec3(1));
-            vertex.push_back(v3);
-
             m_mesh->addPolygon(vertex);
         }
     }
 
+    cout << "load mesh" << endl;
     m_mesh->loadMesh();
+    cout << "end load mesh" << endl;
 }
 
 void BezierSurface::draw(mat4 &projection, mat4 &modelview)

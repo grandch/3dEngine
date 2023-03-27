@@ -19,26 +19,12 @@ Mesh::~Mesh()
 
 void Mesh::loadMesh()
 {
-    loadVBO(); 
+    computeNormals();
+    loadVBO();
     loadVAO();
     loadEdgeVAO();
 
     m_shader.load();
-
-    /*cout << "Vertex List :" << endl;
-    for(MeshVertex* vertex: m_vertexList)
-    {
-        cout << vertex->getName() << endl;
-    }
-    cout << endl;
-
-    cout << "Triangle List :" << endl << endl;
-    for(MeshTriangle* triangle: m_triangleList)
-    {
-        cout << triangle->getVertex0()->getName() << endl;
-        cout << triangle->getVertex1()->getName() << endl;
-        cout << triangle->getVertex2()->getName() << endl << endl;
-    }*/
 }
 
 void Mesh::draw(mat4 &projection, mat4 &modelview)
@@ -313,4 +299,12 @@ void Mesh::popVertex(MeshVertex* vertex)
     }
 
     m_vertexList.erase(m_vertexList.begin() + i);
+}
+
+void Mesh::computeNormals()
+{
+    for(MeshVertex* v: m_vertexList)
+    {
+        v->computeNormal();
+    }
 }

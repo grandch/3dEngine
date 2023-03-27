@@ -1,5 +1,4 @@
 #include "MeshTriangle.h"
-
 #include "MeshHalfEdge.h"
 #include "Mesh.h"
 #include "MeshVertex.h"
@@ -21,6 +20,11 @@ MeshTriangle::MeshTriangle(Mesh* mesh, MeshVertex* v1, MeshVertex* v2, MeshVerte
     he31->setNext(he12);
 
     m_halfEdge = he12;
+
+    //vectors of the triangle
+    vec3 vec0 = v1->getAttribute(0) - v2->getAttribute(0);
+    vec3 vec1 = v1->getAttribute(0) - v3->getAttribute(0);
+    m_normal = normalize(cross(vec0, vec1));
 }
 
 MeshTriangle::~MeshTriangle()
@@ -60,4 +64,9 @@ MeshVertex* MeshTriangle::getVertex1()
 MeshVertex* MeshTriangle::getVertex2()
 {
     return m_halfEdge->getNext()->getNext()->getOrigin();
+}
+
+vec3 MeshTriangle::getNormal()
+{
+    return m_normal;
 }

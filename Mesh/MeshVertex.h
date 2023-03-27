@@ -24,8 +24,7 @@ class MeshVertex
         MeshVertex(Mesh* mesh, string name);
         ~MeshVertex();
 
-        void processTrianglesAround1();
-        void processTrianglesAround2();
+        vector<MeshTriangle*> getTrianglesAround();
 
         int getNumber();
         void setNumber(int number);
@@ -36,6 +35,7 @@ class MeshVertex
         MeshVertex* setCoord(vec3 coord);
         MeshVertex* setColor(vec3 color);
         MeshVertex* setNormal(vec3 normal);
+        void computeNormal();
 
         MeshHalfEdge* getHalfEdgeTo(MeshVertex* vertex);
 
@@ -51,6 +51,7 @@ class MeshVertex
         vector<vec4> m_attributes;
 
         MeshHalfEdge* m_halfEdge;
+        vector<MeshTriangle*> m_faces;
 
         GLushort m_number;
 };
