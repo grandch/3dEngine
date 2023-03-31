@@ -16,7 +16,7 @@ Scene::~Scene()
 
 void Scene::initModel(string file)
 {
-    m_mesh = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+    m_mesh = new Mesh("Shaders/BRDFDiffuse.vert", "Shaders/BRDFDiffuse.frag");
 
     Importer importer(m_mesh);
     importer.loadObjFile(file);
@@ -117,7 +117,13 @@ void Scene::mainLoop()
             screenshot();
         }
 
-        camera.move(m_input);
+        if(m_input.getKey(SDL_SCANCODE_C))
+        {
+            m_mesh->compileShaders();
+            m_bezierS->getMesh()->compileShaders();
+        }
+
+        //camera.move(m_input);
 
         if(m_input.getKey(SDL_SCANCODE_LEFT))
             angleY -= 0.01;

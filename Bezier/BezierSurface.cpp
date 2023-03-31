@@ -23,7 +23,7 @@ void BezierSurface::compute(int s, int t)
         free(m_mesh);
     }
 
-    m_mesh = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+    m_mesh = new Mesh("Shaders/BRDFDiffuse.vert", "Shaders/BRDFDiffuse.frag");
 
     vector<vector<vec3>> pt;
 
@@ -76,4 +76,9 @@ void BezierSurface::compute(int s, int t)
 void BezierSurface::draw(mat4 &projection, mat4 &modelview)
 {
     m_mesh->draw(projection, modelview);
+}
+
+Mesh* BezierSurface::getMesh()
+{
+    return m_mesh;
 }

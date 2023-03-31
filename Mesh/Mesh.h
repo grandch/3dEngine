@@ -57,6 +57,7 @@ class Mesh
         void popVertex(MeshVertex* vertex);
 
         void computeNormals();
+        void compileShaders();
 
     private:
 
@@ -69,6 +70,8 @@ class Mesh
 
         GLuint m_vertexVboId;
         GLuint m_colorVboId;
+        GLuint m_normalVboId;
+
         GLuint m_faceIndexVboId;
         GLuint m_edgeIndexVboId;
 

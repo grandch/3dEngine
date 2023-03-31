@@ -102,7 +102,6 @@ void MeshVertex::computeNormal()
     }
     
     setNormal(normalize(normal));
-    setColor(normalize(normal));
 }
 
 MeshHalfEdge* MeshVertex::getHalfEdgeTo(MeshVertex* vertex)

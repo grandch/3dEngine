@@ -5,7 +5,7 @@
 
 BezierCurve::BezierCurve(vec3 p0, vec3 p1, vec3 p2, vec3 p3): m_p0(p0), m_p3(p3), m_p1(p1), m_p2(p2), m_meshCurve(nullptr), m_meshControlPolygon(nullptr), m_next(nullptr)
 {
-    m_meshControlPolygon = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+    m_meshControlPolygon = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
 
     MeshVertex* v1 = new MeshVertex(m_meshControlPolygon, "V1");
     v1->setCoord(p0);
@@ -72,7 +72,7 @@ vector<vec3> BezierCurve::compute(int nbPoints)
         free(m_meshCurve);
     }
 
-    m_meshCurve = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+    m_meshCurve = new Mesh("Shaders/BRDFDiffuse.vert", "Shaders/BRDFDiffuse.frag");
     
     vector<vec3> p;
     p.push_back(b(0));

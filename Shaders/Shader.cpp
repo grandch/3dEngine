@@ -40,7 +40,6 @@ GLuint Shader::getProgramID() const
 bool Shader::load()
 {
     GLint linkError(0);
-
     if(glIsShader(m_vertexID) == GL_TRUE)
     {
         glDeleteShader(m_vertexID);
@@ -53,7 +52,7 @@ bool Shader::load()
     {
         glDeleteProgram(m_programID);
     }
-
+    
     if(!shaderCompile(m_vertexID, GL_VERTEX_SHADER, m_vertexPath))
     {
         return false;
@@ -61,7 +60,7 @@ bool Shader::load()
     if(!shaderCompile(m_fragmentID, GL_FRAGMENT_SHADER, m_fragmentPath))
     {
         return false;
-    }   
+    } 
 
     m_programID = glCreateProgram();
 
