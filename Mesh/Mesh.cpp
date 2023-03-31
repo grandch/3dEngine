@@ -60,12 +60,13 @@ void Mesh::loadVBO()
     //array to send
     vector<GLfloat> vertex;
     vector<GLfloat> colors;
+    vector<GLfloat> normals;
 
     int number = 0;
 
     for(MeshVertex* top: m_vertexList)
     {
-        top->setNumber(number); //location in the vbo (index)
+        top->setNumber(number); // index in the vbo
         number++;
 
         vertex.push_back(top->getAttribute(0)[0]);
@@ -75,6 +76,10 @@ void Mesh::loadVBO()
         colors.push_back(top->getAttribute(1)[0]);
         colors.push_back(top->getAttribute(1)[1]);
         colors.push_back(top->getAttribute(1)[2]);
+
+        normals.push_back(top->getAttribute(2)[0]);
+        normals.push_back(top->getAttribute(2)[1]);
+        normals.push_back(top->getAttribute(2)[2]);
     }
 
     vector<GLushort> faceIndexList;
@@ -101,6 +106,7 @@ void Mesh::loadVBO()
 
     m_vertexVboId = makeFloatVBO(vertex, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     m_colorVboId = makeFloatVBO(colors, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    m_normalVboId = makeFloatVBO(normals, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
     m_faceIndexVboId = makeShortVBO(faceIndexList, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
     m_edgeIndexVboId = makeShortVBO(edgeIndexList, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
@@ -121,6 +127,11 @@ void Mesh::loadVAO()
 
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(1);
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_normalVboId);
+
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(2);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_faceIndexVboId);
         
@@ -307,4 +318,9 @@ void Mesh::computeNormals()
     {
         v->computeNormal();
     }
+}
+
+void Mesh::compileShaders()
+{
+    m_shader.load();
 }

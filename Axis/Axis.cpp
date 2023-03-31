@@ -19,9 +19,9 @@ void Axis::loadAxis()
     if(m_meshY != nullptr){free(m_meshY);}
     if(m_meshZ != nullptr){free(m_meshZ);}
 
-    m_meshX = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
-    m_meshY = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
-    m_meshZ = new Mesh("Shaders/couleur3D.vert", "Shaders/couleur3D.frag");
+    m_meshX = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshY = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshZ = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
 
     // add axis color to vertex
 
