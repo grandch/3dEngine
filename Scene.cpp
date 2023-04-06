@@ -168,7 +168,7 @@ bool Scene::initScene()
     if (this->initGL() == false)
     return false;
 
-    initModel("Models/cube.obj");
+    initModel("Models/vase.obj");
     m_axis->loadAxis();
 
     m_bezier = new BezierCurve(vec3(0,-5,0), vec3(2, 1, 3), vec3(-2, 2, 2), vec3(0,3,0));
