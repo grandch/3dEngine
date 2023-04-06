@@ -96,6 +96,7 @@ void Scene::mainLoop()
     view = mat4(0.1);
 
     Camera camera(vec3(-15, 10, 10), vec3(0, 0, 0), vec3(0, 1, 0));
+    camera.lookAt(view);
     m_input.showCursor(false);
     m_input.cursorCapture(true);
 
