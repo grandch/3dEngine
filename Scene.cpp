@@ -90,10 +90,10 @@ void Scene::mainLoop()
     Uint32 loopBeg(0), loopEnd(0), time(0);
 
     mat4 projection;
-    mat4 modelview;
+    mat4 view;
 
     projection = perspective(70.0, (double) m_wWidth / m_wHeight, 1.0, 100.0); //init the camera
-    modelview = mat4(0.1);
+    view = mat4(0.1);
 
     Camera camera(vec3(-15, 10, 10), vec3(0, 0, 0), vec3(0, 1, 0));
     m_input.showCursor(false);
@@ -123,7 +123,7 @@ void Scene::mainLoop()
             m_bezierS->getMesh()->compileShaders();
         }
 
-        //camera.move(m_input);
+        camera.move(m_input);
 
         if(m_input.getKey(SDL_SCANCODE_LEFT))
             angleY -= 0.01;
@@ -141,11 +141,12 @@ void Scene::mainLoop()
         
         glClearColor(0.5, 0.5, 0.5, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
-        camera.lookAt(modelview);
+        camera.lookAt(view);
 
-        m_bezierS->draw(projection, modelview);
-        m_bezier->draw(projection, modelview);
-        m_axis->draw(projection, modelview);
+        m_bezierS->draw(projection, view);
+        //m_bezier->draw(projection, view);
+        m_axis->draw(projection, view);
+        m_mesh->draw(projection, view);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -167,7 +168,7 @@ bool Scene::initScene()
     if (this->initGL() == false)
     return false;
 
-    //initModel(file);
+    initModel("Models/cube.obj");
     m_axis->loadAxis();
 
     m_bezier = new BezierCurve(vec3(0,-5,0), vec3(2, 1, 3), vec3(-2, 2, 2), vec3(0,3,0));
@@ -180,7 +181,7 @@ bool Scene::initScene()
     BezierCurve* b3 = new BezierCurve(vec3(1.5, 0, -1.5), vec3(1.5, 0, -0.5), vec3(1.5, 0, 0.5), vec3(1.5, 0, 1.5));
 
     m_bezierS = new BezierSurface(b0, b1, b2, b3);
-    m_bezierS->compute(8, 8);
+    m_bezierS->compute(16, 16);
 
     return true;
 }

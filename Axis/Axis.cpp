@@ -20,8 +20,11 @@ void Axis::loadAxis()
     if(m_meshZ != nullptr){free(m_meshZ);}
 
     m_meshX = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshX->setDrawEdges(true);
     m_meshY = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshY->setDrawEdges(true);
     m_meshZ = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshZ->setDrawEdges(true);
 
     // add axis color to vertex
 
@@ -55,9 +58,9 @@ void Axis::loadAxis()
     m_meshZ->loadMesh();
 }
 
-void Axis::draw(mat4 &projection, mat4 &modelview)
+void Axis::draw(mat4 &projection, mat4 &view)
 {
-    m_meshX->draw(projection, modelview);
-    m_meshY->draw(projection, modelview);
-    m_meshZ->draw(projection, modelview);
+    m_meshX->draw(projection, view);
+    m_meshY->draw(projection, view);
+    m_meshZ->draw(projection, view);
 }

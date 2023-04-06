@@ -96,7 +96,7 @@ void Camera::move(Input const &input)
     }
 }
 
-void Camera::lookAt(mat4 &modelview)
+void Camera::lookAt(mat4 &view)
 {
-    modelview = glm::lookAt(m_position, m_target, m_verticalAxis);
+    view = glm::lookAt(m_position, m_target, m_verticalAxis);
 }

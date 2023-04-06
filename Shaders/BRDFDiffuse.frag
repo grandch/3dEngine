@@ -4,6 +4,7 @@ in vec3 ambient;
 in vec3 normal;
 in vec3 fragPos;
 in vec3 objectColor;
+in vec3 lightPos;
 
 out vec4 out_Color;
 
@@ -11,7 +12,6 @@ out vec4 out_Color;
 
 void main()
 {
-    vec3 lightPos = vec3(1,10,1);
     vec3 lightColor = vec3(1);
 
     vec3 norm = normalize(normal);

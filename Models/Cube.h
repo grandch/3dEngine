@@ -29,7 +29,7 @@ class Cube
         Cube(float scale, string const vertexShader, string const fragmentShader);
         ~Cube();
 
-        void draw(mat4 &projection, mat4 &modelview);
+        void draw(mat4 &projection, mat4 &view);
 
         void load();
 

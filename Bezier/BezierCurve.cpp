@@ -6,6 +6,7 @@
 BezierCurve::BezierCurve(vec3 p0, vec3 p1, vec3 p2, vec3 p3): m_p0(p0), m_p3(p3), m_p1(p1), m_p2(p2), m_meshCurve(nullptr), m_meshControlPolygon(nullptr), m_next(nullptr)
 {
     m_meshControlPolygon = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshControlPolygon->setDrawEdges(true);
 
     MeshVertex* v1 = new MeshVertex(m_meshControlPolygon, "V1");
     v1->setCoord(p0);
@@ -73,6 +74,7 @@ vector<vec3> BezierCurve::compute(int nbPoints)
     }
 
     m_meshCurve = new Mesh("Shaders/BRDFDiffuse.vert", "Shaders/BRDFDiffuse.frag");
+    m_meshCurve->setDrawEdges(true);
     
     vector<vec3> p;
     p.push_back(b(0));
@@ -109,13 +111,13 @@ vector<vec3> BezierCurve::compute(int nbPoints)
     return p;
 }
 
-void BezierCurve::draw(mat4 &projection, mat4 &modelview)
+void BezierCurve::draw(mat4 &projection, mat4 &view)
 {
-    m_meshCurve->draw(projection, modelview);
-    m_meshControlPolygon->draw(projection, modelview);
+    m_meshCurve->draw(projection, view);
+    m_meshControlPolygon->draw(projection, view);
 
     if(m_next != nullptr)
     {
-        m_next->draw(projection, modelview);
+        m_next->draw(projection, view);
     }
 }
