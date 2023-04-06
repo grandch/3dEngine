@@ -68,14 +68,12 @@ void BezierSurface::compute(int s, int t)
         }
     }
 
-    cout << "load mesh" << endl;
     m_mesh->loadMesh();
-    cout << "end load mesh" << endl;
 }
 
-void BezierSurface::draw(mat4 &projection, mat4 &modelview)
+void BezierSurface::draw(mat4 &projection, mat4 &view)
 {
-    m_mesh->draw(projection, modelview);
+    m_mesh->draw(projection, view);
 }
 
 Mesh* BezierSurface::getMesh()

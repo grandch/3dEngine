@@ -56,14 +56,14 @@ Cube::~Cube()
 }
 
 
-void Cube::draw(mat4 &projection, mat4 &modelview)
+void Cube::draw(mat4 &projection, mat4 &view)
 {
     glUseProgram(m_shader.getProgramID()); //load the current shader
 
         glBindVertexArray(m_vaoId); //lock the vao
 
             //send matrix to shaders
-            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "modelview"), 1, GL_FALSE, value_ptr(modelview));
+            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "view"), 1, GL_FALSE, value_ptr(view));
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
 
             glDrawArrays(GL_TRIANGLES, 0, 36); //draw the vertex

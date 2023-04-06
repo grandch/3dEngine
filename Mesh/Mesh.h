@@ -30,7 +30,7 @@ class Mesh
 
         void loadMesh(); //load the shader and the vbo/vao
 
-        void draw(mat4 &projection, mat4 &modelview);
+        void draw(mat4 &projection, mat4 &view);
 
         void loadVBO();
         void loadVAO();
@@ -59,7 +59,11 @@ class Mesh
         void computeNormals();
         void compileShaders();
 
+        void setDrawEdges(bool de);
+
     private:
+
+        mat4 m_model;
 
         vector<MeshTriangle*> m_triangleList;
         vector<MeshHalfEdge*> m_halfEdgeList;
@@ -77,5 +81,7 @@ class Mesh
 
         GLuint m_vaoId;
         GLuint m_edgeVaoId;
+
+        bool m_drawEdges;
 };
 #endif

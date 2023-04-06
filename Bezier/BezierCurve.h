@@ -25,7 +25,7 @@ class BezierCurve
         void addSegment(vec3 p1, vec3 p2, vec3 p3);
 
         vector<vec3> compute(int nbPoints);
-        void draw(mat4 &projection, mat4 &modelview);
+        void draw(mat4 &projection, mat4 &view);
 
     private:
 

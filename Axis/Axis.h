@@ -8,7 +8,7 @@ class Axis
         ~Axis();
 
         void loadAxis();
-        void draw(mat4 &projection, mat4 &modelview);
+        void draw(mat4 &projection, mat4 &view);
     
     private:
 

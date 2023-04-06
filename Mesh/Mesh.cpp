@@ -5,7 +5,7 @@
 #include "MeshTriangle.h"
 #include "MeshEdge.h"
 
-Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader)
+Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader), m_drawEdges(false), m_model(glm::mat4(1.0f))
 {}
 
 Mesh::~Mesh()
@@ -27,14 +27,15 @@ void Mesh::loadMesh()
     m_shader.load();
 }
 
-void Mesh::draw(mat4 &projection, mat4 &modelview)
+void Mesh::draw(mat4 &projection, mat4 &view)
 {
     glUseProgram(m_shader.getProgramID());
 
         glBindVertexArray(m_vaoId); //lock the vao
 
             //send matrix to shaders
-            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "modelview"), 1, GL_FALSE, value_ptr(modelview));
+            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "model"), 1, GL_FALSE, value_ptr(m_model));
+            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "view"), 1, GL_FALSE, value_ptr(view));
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
             
             glDrawElements(GL_TRIANGLES, m_triangleList.size()*3, GL_UNSIGNED_SHORT, 0);
@@ -42,15 +43,20 @@ void Mesh::draw(mat4 &projection, mat4 &modelview)
         glBindVertexArray(0); //unlock the vao
 
         //same for the edges
-        glBindVertexArray(m_edgeVaoId);
+        if(m_drawEdges)
+        {
+            glBindVertexArray(m_edgeVaoId);
 
-            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "modelview"), 1, GL_FALSE, value_ptr(modelview));
-            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
+                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "model"), 1, GL_FALSE, value_ptr(m_model));
+                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "view"), 1, GL_FALSE, value_ptr(view));
+                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
 
-            glLineWidth(1.5);
-            glDrawElements(GL_LINES, m_edgeList.size()*2, GL_UNSIGNED_SHORT, 0);
+                glLineWidth(1.5);
+                glDrawElements(GL_LINES, m_edgeList.size()*2, GL_UNSIGNED_SHORT, 0);
 
-        glBindVertexArray(0);
+            glBindVertexArray(0);
+        }
+        
 
     glUseProgram(0);
 }       
@@ -323,4 +329,9 @@ void Mesh::computeNormals()
 void Mesh::compileShaders()
 {
     m_shader.load();
+}
+
+void Mesh::setDrawEdges(bool de)
+{
+    m_drawEdges = de;
 }

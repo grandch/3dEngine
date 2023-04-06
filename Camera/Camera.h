@@ -20,7 +20,7 @@ class Camera
 
         void orientate(int xRel, int yRel);
         void move(Input const &input);
-        void lookAt(mat4 &modelview);
+        void lookAt(mat4 &view);
 
     private:
 

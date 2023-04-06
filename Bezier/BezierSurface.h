@@ -13,7 +13,7 @@ class BezierSurface
         ~BezierSurface();
 
         void compute(int s, int t);
-        void draw(mat4 &projection, mat4 &modelview);
+        void draw(mat4 &projection, mat4 &view);
 
         Mesh* getMesh();
     
