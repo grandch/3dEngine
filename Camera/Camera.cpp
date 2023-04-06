@@ -54,7 +54,7 @@ void Camera::orientate(int xRel, int yRel)
 
 void Camera::move(Input const &input)
 {
-    if(input.getMouseMovement())
+    if(input.getMouseMovement() && input.getMouseButton(2))
     {
         orientate(input.getXRel(), input.getYRel());
     }
