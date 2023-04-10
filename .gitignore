@@ -30,7 +30,7 @@
 *.exe
 *.out
 *.app
-3dEngine/*
+build/
 
 # Images
 *.tga
