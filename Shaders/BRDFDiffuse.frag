@@ -5,29 +5,27 @@ in vec3 normal;
 in vec3 fragPos;
 in vec3 objectColor;
 in vec3 lightPos;
+in vec3 diffuse_color;
+in vec3 specular_color;
+in float shnn;
+in float specStrength;
 
 out vec4 out_Color;
 
-//uniform vec3 lightPos;
-
 void main()
 {
-    vec3 lightColor = vec3(1);
-
     vec3 norm = normalize(normal);
     vec3 lightDir = normalize(lightPos - fragPos);
 
     // diffuse
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
+    vec3 diffuse = diff * diffuse_color;
 
     //specular
-    float specularStrength = 0.5;
-    int shininess = 32;
     vec3 viewDir = normalize(-fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-    vec3 specular = specularStrength * spec * lightColor;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shnn);
+    vec3 specular = specStrength * spec * specular_color;
 
 
 

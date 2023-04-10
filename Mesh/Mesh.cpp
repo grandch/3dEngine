@@ -5,7 +5,7 @@
 #include "MeshTriangle.h"
 #include "MeshEdge.h"
 
-Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader), m_drawEdges(false), m_model(glm::mat4(1.0f))
+Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader, vec3(1), vec3(1), vec3(1), 0.1, 0.5, 32), m_drawEdges(false), m_model(glm::mat4(1.0f))
 {}
 
 Mesh::~Mesh()
@@ -33,10 +33,17 @@ void Mesh::draw(mat4 &projection, mat4 &view)
 
         glBindVertexArray(m_vaoId); //lock the vao
 
-            //send matrix to shaders
+            //send matrix uniforms to shaders
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "model"), 1, GL_FALSE, value_ptr(m_model));
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "view"), 1, GL_FALSE, value_ptr(view));
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
+
+            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "diffuseColor"), 1, value_ptr(m_shader.getMaterial()->diffuseColor));
+            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "specularColor"), 1, value_ptr(m_shader.getMaterial()->specularColor));
+            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "ambientColor"), 1, value_ptr(m_shader.getMaterial()->ambientColor));
+            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "specularStrength"), m_shader.getMaterial()->specularStrength);
+            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "ambientStrength"), m_shader.getMaterial()->ambientStrength);
+            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "shininess"), m_shader.getMaterial()->shininess);
             
             glDrawElements(GL_TRIANGLES, m_triangleList.size()*3, GL_UNSIGNED_SHORT, 0);
 
@@ -334,4 +341,9 @@ void Mesh::compileShaders()
 void Mesh::setDrawEdges(bool de)
 {
     m_drawEdges = de;
+}
+
+void Mesh::setMaterial(vec3 diffuseColor, vec3 specularColor, vec3 ambientColor, float specularStrength, float ambientStrength, float shininess)
+{
+    m_shader.setMaterial(diffuseColor, specularColor, ambientColor, specularStrength, ambientStrength, shininess);
 }

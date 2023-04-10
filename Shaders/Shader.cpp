@@ -3,13 +3,21 @@
 Shader::Shader(): m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexPath(), m_fragmentPath()
 {}
 
-Shader::Shader(string vertexPath, string fragmentPath): m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexPath(vertexPath), m_fragmentPath(fragmentPath)
-{}
+Shader::Shader(string vertexPath, string fragmentPath, vec3 diffuseColor, vec3 specularColor, vec3 ambientColor, float specularStrength, float ambientStrength, float shininess): m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexPath(vertexPath), m_fragmentPath(fragmentPath), m_material(new Material)
+{
+    m_material->diffuseColor = diffuseColor;
+    m_material->specularColor = specularColor;
+    m_material->ambientColor = ambientColor;
+    m_material->specularStrength = specularStrength;
+    m_material->ambientStrength = ambientStrength;
+    m_material->shininess = shininess;
+}
 
 Shader::Shader(Shader const &toCopyShader)
 {
     m_vertexPath = toCopyShader.m_vertexPath;
     m_fragmentPath = toCopyShader.m_fragmentPath;
+    m_material = toCopyShader.m_material;
 
     load();
 }
@@ -35,6 +43,21 @@ Shader::~Shader()
 GLuint Shader::getProgramID() const
 {
     return m_programID;
+}
+
+Material* Shader::getMaterial()
+{
+    return m_material;
+}
+
+void Shader::setMaterial(vec3 diffuseColor, vec3 specularColor, vec3 ambientColor, float specularStrength, float ambientStrength, float shininess)
+{
+    m_material->diffuseColor = diffuseColor;
+    m_material->specularColor = specularColor;
+    m_material->ambientColor = ambientColor;
+    m_material->specularStrength = specularStrength;
+    m_material->ambientStrength = ambientStrength;
+    m_material->shininess = shininess;
 }
 
 bool Shader::load()
