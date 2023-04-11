@@ -3,6 +3,7 @@
 
 #include <GLES3/gl3.h>
 #include <glm/gtc/type_ptr.hpp>
+#include "../lib/stb_image.h"
 
 #include <iostream>
 #include <string>
@@ -39,6 +40,9 @@ class Shader
         bool load();
         bool shaderCompile(GLuint &shader, GLenum type, string const &filePath);
 
+        void loadTexture(const char* path);
+        unsigned int getTexture();
+
     private:
 
         GLuint m_vertexID;
@@ -49,6 +53,7 @@ class Shader
         string m_fragmentPath;
 
         Material* m_material;
+        unsigned int m_texture;
 };
 
 #endif
