@@ -16,7 +16,7 @@ Scene::~Scene()
 
 void Scene::initModel(string file)
 {
-    m_mesh = new Mesh("Shaders/BRDFDiffuse.vert", "Shaders/BRDFDiffuse.frag");
+    m_mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDF.frag");
 
     Importer importer(m_mesh);
     importer.loadObjFile(file);
