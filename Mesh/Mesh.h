@@ -76,6 +76,7 @@ class Mesh
         GLuint m_vertexVboId;
         GLuint m_colorVboId;
         GLuint m_normalVboId;
+        GLuint m_uvVboId;
 
         GLuint m_faceIndexVboId;
         GLuint m_edgeIndexVboId;

@@ -32,9 +32,11 @@ class MeshVertex
         string getName();
 
         vec4 getAttribute(int index);
+        vec2 getUv();
         MeshVertex* setCoord(vec3 coord);
         MeshVertex* setColor(vec3 color);
         MeshVertex* setNormal(vec3 normal);
+        MeshVertex* setUv(vec2 uv);
         void computeNormal();
 
         MeshHalfEdge* getHalfEdgeTo(MeshVertex* vertex);
@@ -49,6 +51,7 @@ class MeshVertex
         Mesh* m_mesh;
 
         vector<vec4> m_attributes;
+        vec2 m_uv;
 
         MeshHalfEdge* m_halfEdge;
         vector<MeshTriangle*> m_faces;

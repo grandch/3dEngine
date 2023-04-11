@@ -73,7 +73,7 @@ vector<vec3> BezierCurve::compute(int nbPoints)
         free(m_meshCurve);
     }
 
-    m_meshCurve = new Mesh("Shaders/BRDFDiffuse.vert", "Shaders/BRDFDiffuse.frag");
+    m_meshCurve = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
     m_meshCurve->setDrawEdges(true);
     
     vector<vec3> p;

@@ -4,7 +4,7 @@
 #include "MeshTriangle.h"
 #include "Mesh.h"
 
-MeshVertex::MeshVertex(Mesh* mesh, string name): m_name(name), m_mesh(mesh), m_halfEdge(nullptr) //p150
+MeshVertex::MeshVertex(Mesh* mesh, string name): m_name(name), m_mesh(mesh), m_halfEdge(nullptr), m_uv(vec2(0))
 {
     if(mesh != nullptr)
     {
@@ -73,6 +73,11 @@ vec4 MeshVertex::getAttribute(int index)
     return m_attributes[index];
 }
 
+vec2 MeshVertex::getUv()
+{
+    return m_uv;
+}
+
 MeshVertex* MeshVertex::setCoord(vec3 coord) //p151
 {
     m_attributes[0] = vec4(coord.x, coord.y, coord.z, 1.0f);
@@ -88,6 +93,12 @@ MeshVertex* MeshVertex::setColor(vec3 color)
 MeshVertex* MeshVertex::setNormal(vec3 normal)
 {
     m_attributes[2] = vec4(normal.x, normal.y, normal.z, 1.0f);
+    return this;
+}
+
+MeshVertex *MeshVertex::setUv(vec2 uv)
+{
+    m_uv = uv;
     return this;
 }
 

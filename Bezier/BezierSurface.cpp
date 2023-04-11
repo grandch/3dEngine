@@ -23,7 +23,7 @@ void BezierSurface::compute(int s, int t)
         free(m_mesh);
     }
 
-    m_mesh = new Mesh("Shaders/BRDFDiffuse.vert", "Shaders/BRDFDiffuse.frag");
+    m_mesh = new Mesh("Shaders/TextureBRDF.vert", "Shaders/TextureBRDF.frag");
 
     vector<vector<vec3>> pt;
 
@@ -59,9 +59,17 @@ void BezierSurface::compute(int s, int t)
         for(int j = 0; j < s-1; j++)
         {
             vector<MeshVertex*> vertex;
+
+            vs[i][j]->setUv(vec2(((float)i)/t, ((float)j)/s));
             vertex.push_back(vs[i][j]);
+
+            vs[i+1][j]->setUv(vec2(((float)i+1)/t, ((float)j)/s));
             vertex.push_back(vs[i+1][j]);
+
+            vs[i+1][j+1]->setUv(vec2(((float)i+1)/t, ((float)j+1)/s));
             vertex.push_back(vs[i+1][j+1]);
+
+            vs[i][j+1]->setUv(vec2(((float)i)/t, ((float)j+1)/s));
             vertex.push_back(vs[i][j+1]);
             
             m_mesh->addPolygon(vertex);

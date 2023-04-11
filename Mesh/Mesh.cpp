@@ -12,6 +12,7 @@ Mesh::~Mesh()
 {
     glDeleteBuffers(1, &m_vertexVboId);
     glDeleteBuffers(1, &m_colorVboId);
+    glDeleteBuffers(1, &m_uvVboId);
     glDeleteBuffers(1, &m_faceIndexVboId);
     glDeleteBuffers(1, &m_edgeIndexVboId);
 }
@@ -74,6 +75,7 @@ void Mesh::loadVBO()
     vector<GLfloat> vertex;
     vector<GLfloat> colors;
     vector<GLfloat> normals;
+    vector<GLfloat> uvs;
 
     int number = 0;
 
@@ -93,6 +95,9 @@ void Mesh::loadVBO()
         normals.push_back(top->getAttribute(2)[0]);
         normals.push_back(top->getAttribute(2)[1]);
         normals.push_back(top->getAttribute(2)[2]);
+
+        uvs.push_back(top->getUv()[0]);
+        uvs.push_back(top->getUv()[1]);
     }
 
     vector<GLushort> faceIndexList;
@@ -120,6 +125,7 @@ void Mesh::loadVBO()
     m_vertexVboId = makeFloatVBO(vertex, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     m_colorVboId = makeFloatVBO(colors, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     m_normalVboId = makeFloatVBO(normals, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    m_uvVboId = makeFloatVBO(uvs, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
     m_faceIndexVboId = makeShortVBO(faceIndexList, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
     m_edgeIndexVboId = makeShortVBO(edgeIndexList, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW);
@@ -145,6 +151,11 @@ void Mesh::loadVAO()
 
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(2);
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_uvVboId);
+
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(3);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_faceIndexVboId);
         
