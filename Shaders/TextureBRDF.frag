@@ -11,6 +11,8 @@ in float shnn;
 in float specStrength;
 in vec2 out_uv;
 
+uniform sampler2D uniTexture;
+
 out vec4 out_Color;
 
 void main()
@@ -20,7 +22,7 @@ void main()
 
     // diffuse
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * diffuse_color;
+    vec3 diffuse = diff * vec3(texture(uniTexture, out_uv));
 
     //specular
     vec3 viewDir = normalize(-fragPos);
@@ -28,8 +30,6 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shnn);
     vec3 specular = specStrength * spec * specular_color;
 
-
-
-    vec3 result = (ambient + diffuse + specular) * objectColor;
+    vec3 result = (ambient + diffuse + specular) * vec3(texture(uniTexture, out_uv));
     out_Color = vec4(result, 1.0);
 }

@@ -25,6 +25,7 @@ void Mesh::loadMesh()
     loadVAO();
     loadEdgeVAO();
 
+    m_shader.loadTexture("Shaders/container.jpg");
     m_shader.load();
 }
 
@@ -45,7 +46,12 @@ void Mesh::draw(mat4 &projection, mat4 &view)
             glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "specularStrength"), m_shader.getMaterial()->specularStrength);
             glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "ambientStrength"), m_shader.getMaterial()->ambientStrength);
             glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "shininess"), m_shader.getMaterial()->shininess);
+
+            //send textures
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, m_shader.getTexture());
             
+            //draw
             glDrawElements(GL_TRIANGLES, m_triangleList.size()*3, GL_UNSIGNED_SHORT, 0);
 
         glBindVertexArray(0); //unlock the vao

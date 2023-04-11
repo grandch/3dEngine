@@ -147,7 +147,7 @@ void Scene::mainLoop()
         m_bezierS->draw(projection, view);
         m_bezier->draw(projection, view);
         m_axis->draw(projection, view);
-        m_mesh->draw(projection, view);
+        //m_mesh->draw(projection, view);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
