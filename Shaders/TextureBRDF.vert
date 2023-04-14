@@ -8,12 +8,8 @@ in vec2 in_uv;
 uniform mat4 projection;
 uniform mat4 model;
 uniform mat4 view;
-uniform vec3 diffuseColor;
-uniform vec3 specularColor;
 uniform vec3 ambientColor;
-uniform float specularStrength;
 uniform float ambientStrength;
-uniform float shininess;
 
 out vec3 ambient;
 out vec3 normal;
@@ -21,10 +17,6 @@ out vec3 fragPos;
 out vec3 objectColor;
 out vec2 out_uv;
 out vec3 lightPos;
-out vec3 diffuse_color;
-out vec3 specular_color;
-out float shnn;
-out float specStrength;
 
 
 vec3 ambientClr()
@@ -38,14 +30,10 @@ void main()
 {
     gl_Position = projection * model * view * vec4(in_Vertex, 1.0);
 
-    lightPos = vec3(1,10,1);
+    lightPos = vec3(3,10,4);
     ambient = ambientClr();
     normal = vec3(mat3(transpose(inverse(model))) * in_normal);
     fragPos = vec3(model * view * vec4(in_Vertex, 1.0));
     objectColor = in_Color;
-    diffuse_color = diffuseColor;
-    specular_color = specularColor;
-    shnn = shininess;
-    specStrength = specularStrength;
     out_uv = in_uv;
 }

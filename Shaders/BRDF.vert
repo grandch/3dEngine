@@ -19,10 +19,6 @@ out vec3 normal;
 out vec3 fragPos;
 out vec3 objectColor;
 out vec3 lightPos;
-out vec3 diffuse_color;
-out vec3 specular_color;
-out float shnn;
-out float specStrength;
 
 
 vec3 ambientClr()
@@ -41,8 +37,4 @@ void main()
     normal = vec3(mat3(transpose(inverse(model))) * in_normal);
     fragPos = vec3(model * view * vec4(in_Vertex, 1.0));
     objectColor = in_Color;
-    diffuse_color = diffuseColor;
-    specular_color = specularColor;
-    shnn = shininess;
-    specStrength = specularStrength;
 }
