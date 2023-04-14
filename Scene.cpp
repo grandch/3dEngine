@@ -147,7 +147,7 @@ void Scene::mainLoop()
         m_bezierS->draw(projection, view);
         m_bezier->draw(projection, view);
         m_axis->draw(projection, view);
-        //m_mesh->draw(projection, view);
+        m_mesh->draw(projection, view);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -177,13 +177,13 @@ bool Scene::initScene()
     m_bezier->addSegment(vec3(1, 1, 1), vec3(3, 3, 3), vec3(0, 5, 0));
     m_bezier->compute(16);
 
-    BezierCurve* b0 = new BezierCurve(vec3(-1.5, 0, -1.5), vec3(-1.5, 0, -0.5), vec3(-1.5, 0, 0.5), vec3(-1.5, 0, 1.5));
-    BezierCurve* b1 = new BezierCurve(vec3(-0.5, 0, -1.5), vec3(-0.5, 1, -0.5), vec3(-0.5, 0, 0.5), vec3(-0.5, 0, 1.5));
-    BezierCurve* b2 = new BezierCurve(vec3(0.5, 0, -1.5), vec3(0.5, 0, -0.5), vec3(0.5, -5, 0.5), vec3(0.5, 0, 1.5));
-    BezierCurve* b3 = new BezierCurve(vec3(1.5, 0, -1.5), vec3(1.5, 0, -0.5), vec3(1.5, 0, 0.5), vec3(1.5, 0, 1.5));
+    BezierCurve* b0 = new BezierCurve(vec3(-1.5, 0, 0), vec3(-0.5, 0, -1), vec3(0.5, 0, 0), vec3(1.5, 0, 0));
+    BezierCurve* b1 = new BezierCurve(vec3(-1.5, 1, 0), vec3(-0.5, 1, 1), vec3(0.5, 3, 1), vec3(1.5, 1, 0));
+    BezierCurve* b2 = new BezierCurve(vec3(-1.5, 2, 0), vec3(-0.5, 2, 0), vec3(0.5, 5, 2), vec3(1.5, 2, 0));
+    BezierCurve* b3 = new BezierCurve(vec3(-1.5, 3, 0), vec3(-0.5, 3, 0), vec3(0.5, 3, 0), vec3(1.5, 3, 0));
 
     m_bezierS = new BezierSurface(b0, b1, b2, b3);
-    m_bezierS->compute(16, 16);
+    m_bezierS->compute(64, 64);
 
     return true;
 }
