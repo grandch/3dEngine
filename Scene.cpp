@@ -147,7 +147,7 @@ void Scene::mainLoop()
         m_bezierS->draw(projection, view);
         m_bezier->draw(projection, view);
         m_axis->draw(projection, view);
-        m_mesh->draw(projection, view);
+        // m_mesh->draw(projection, view);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -169,8 +169,8 @@ bool Scene::initScene()
     if (this->initGL() == false)
     return false;
 
-    initModel("Models/vase.obj");
-    m_mesh->setMaterial(vec3(1,0,0.3), vec3(0,1,0.3), vec3(0,0.3,1), 1, 0.3, 128);
+    // initModel("Models/vase.obj");
+    // m_mesh->setMaterial(vec3(1,0,0.3), vec3(0,1,0.3), vec3(0,0.3,1), 1, 0.3, 128);
     m_axis->loadAxis();
 
     m_bezier = new BezierCurve(vec3(0,-5,0), vec3(2, 1, 3), vec3(-2, 2, 2), vec3(0,3,0));
@@ -184,6 +184,10 @@ bool Scene::initScene()
 
     m_bezierS = new BezierSurface(b0, b1, b2, b3);
     m_bezierS->compute(64, 64);
+
+    m_bezierS->getMesh()->getShader()->loadDiffuseTexture("Shaders/wood_floor_deck_diff.jpg");
+    m_bezierS->getMesh()->getShader()->loadRoughnessTexture("Shaders/wood_floor_deck_rough.jpg");
+    m_bezierS->getMesh()->getShader()->loadSpecularTexture("Shaders/wood_floor_deck_spec.jpg");
 
     return true;
 }

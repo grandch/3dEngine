@@ -40,8 +40,14 @@ class Shader
         bool load();
         bool shaderCompile(GLuint &shader, GLenum type, string const &filePath);
 
-        void loadTexture(const char* path);
-        unsigned int getTexture();
+        void loadDiffuseTexture(const char* path);
+        unsigned int getDiffuseTexture();
+
+        void loadSpecularTexture(const char* path);
+        unsigned int getSpecularTexture();
+
+        void loadRoughnessTexture(const char* path);
+        unsigned int getRoughnessTexture();
 
     private:
 
@@ -53,7 +59,9 @@ class Shader
         string m_fragmentPath;
 
         Material* m_material;
-        unsigned int m_texture;
+        unsigned int m_diffuseTexture;
+        unsigned int m_specularTexture;
+        unsigned int m_roughnessTexture;
 };
 
 #endif
