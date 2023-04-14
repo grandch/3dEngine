@@ -18,7 +18,6 @@ out vec3 objectColor;
 out vec2 out_uv;
 out vec3 lightPos;
 
-
 vec3 ambientClr()
 {
     vec3 ambient = ambientColor * ambientStrength;

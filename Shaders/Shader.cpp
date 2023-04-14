@@ -177,15 +177,15 @@ bool Shader::shaderCompile(GLuint &shader, GLenum type, string const &filePath)
     return true;
 }
 
-void Shader::loadTexture(const char* path)
+void Shader::loadDiffuseTexture(const char* path)
 {
     int width, height, nrChannels;
     unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
 
     if(data)
     {
-        glGenTextures(1, &m_texture);
-        glBindTexture(GL_TEXTURE_2D, m_texture);
+        glGenTextures(1, &m_diffuseTexture);
+        glBindTexture(GL_TEXTURE_2D, m_diffuseTexture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -198,7 +198,59 @@ void Shader::loadTexture(const char* path)
     }
 }
 
-unsigned int Shader::getTexture()
+unsigned int Shader::getDiffuseTexture()
 {
-    return m_texture;
+    return m_diffuseTexture;
+}
+
+void Shader::loadSpecularTexture(const char *path)
+{
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
+
+    if(data)
+    {
+        glGenTextures(1, &m_specularTexture);
+        glBindTexture(GL_TEXTURE_2D, m_specularTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+}
+
+unsigned int Shader::getSpecularTexture()
+{
+    return m_specularTexture;
+}
+
+void Shader::loadRoughnessTexture(const char *path)
+{
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
+
+    if(data)
+    {
+        glGenTextures(1, &m_roughnessTexture);
+        glBindTexture(GL_TEXTURE_2D, m_roughnessTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+}
+
+unsigned int Shader::getRoughnessTexture()
+{
+    return m_roughnessTexture;
 }

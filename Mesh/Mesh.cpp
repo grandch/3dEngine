@@ -25,7 +25,6 @@ void Mesh::loadMesh()
     loadVAO();
     loadEdgeVAO();
 
-    m_shader.loadTexture("Shaders/container.jpg");
     m_shader.load();
 }
 
@@ -49,7 +48,13 @@ void Mesh::draw(mat4 &projection, mat4 &view)
 
             //send textures
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, m_shader.getTexture());
+            glBindTexture(GL_TEXTURE_2D, m_shader.getDiffuseTexture());
+
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, m_shader.getSpecularTexture());
+
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, m_shader.getRoughnessTexture());
             
             //draw
             glDrawElements(GL_TRIANGLES, m_triangleList.size()*3, GL_UNSIGNED_SHORT, 0);
@@ -365,7 +370,7 @@ void Mesh::setMaterial(vec3 diffuseColor, vec3 specularColor, vec3 ambientColor,
     m_shader.setMaterial(diffuseColor, specularColor, ambientColor, specularStrength, ambientStrength, shininess);
 }
 
-mat4* Mesh::getTransform()
+Shader *Mesh::getShader()
 {
-    return &m_model;
+    return &m_shader;
 }
