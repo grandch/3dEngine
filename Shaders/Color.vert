@@ -12,6 +12,6 @@ out vec3 objectColor;
 
 void main()
 {
-    gl_Position = projection * model * view * vec4(in_Vertex, 1.0);
+    gl_Position = projection * view * model * vec4(in_Vertex, 1.0);
     objectColor = in_Color;
 }

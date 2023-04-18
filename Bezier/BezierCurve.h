@@ -27,6 +27,8 @@ class BezierCurve
         vector<vec3> compute(int nbPoints);
         void draw(mat4 &projection, mat4 &view);
 
+        void transform(mat4 transf);
+
     private:
 
         vec3 m_p0;

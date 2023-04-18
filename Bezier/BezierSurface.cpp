@@ -16,14 +16,14 @@ BezierSurface::BezierSurface(BezierCurve* bc0, BezierCurve* bc1, BezierCurve* bc
 BezierSurface::~BezierSurface()
 {}
 
-void BezierSurface::compute(int s, int t)
+void BezierSurface::compute(int s, int t, string vertexShader, string fragmentShader)
 {
     if(m_mesh != nullptr)
     {
         free(m_mesh);
     }
 
-    m_mesh = new Mesh("Shaders/TextureBRDF.vert", "Shaders/TextureBRDF.frag");
+    m_mesh = new Mesh(vertexShader, fragmentShader);
 
     vector<vector<vec3>> pt;
 
@@ -82,6 +82,21 @@ void BezierSurface::compute(int s, int t)
 void BezierSurface::draw(mat4 &projection, mat4 &view)
 {
     m_mesh->draw(projection, view);
+
+    for(BezierCurve* bc : m_bcT)
+    {
+        bc->draw(projection, view);
+    }
+}
+
+void BezierSurface::transform(mat4 transf)
+{
+    m_mesh->translate(transf);
+
+    for(BezierCurve* bc : m_bcT)
+    {
+        bc->transform(transf);
+    }
 }
 
 Mesh* BezierSurface::getMesh()

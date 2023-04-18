@@ -64,6 +64,10 @@ class Mesh
 
         Shader* getShader();
 
+        void rotate(mat4 rotation);
+        void translate(mat4 translation);
+        void scale(mat4 scaleMat);
+
     private:
 
         mat4 m_model;
