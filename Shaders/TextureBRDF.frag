@@ -39,8 +39,8 @@ vec3 specular(vec4 lightPos, vec3 color, float strength)
     vec3 lightDir = normalize(lightPos.xyz - fragPos);
     vec3 viewDir = normalize(-fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), pow(2, 7*float(texture(roughnessTexture, out_uv))));
-    return float(texture(specularTexture, out_uv)) * spec * specularColor * att(lightPos, strength) * color;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), pow(2, 4*float(texture(roughnessTexture, out_uv))));
+    return 2*float(texture(specularTexture, out_uv)) * spec * specularColor * att(lightPos, strength) * color;
 }
 
 void main()

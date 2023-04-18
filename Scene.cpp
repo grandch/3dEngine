@@ -145,9 +145,10 @@ void Scene::mainLoop()
         camera.lookAt(view);
 
         m_bezierS->draw(projection, view);
-        // m_bezier->draw(projection, view);
+        m_bezierST->draw(projection, view);
+        m_bezier->draw(projection, view);
         m_axis->draw(projection, view);
-        // m_mesh->draw(projection, view);
+        m_mesh->draw(projection, view);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -169,13 +170,16 @@ bool Scene::initScene()
     if (this->initGL() == false)
     return false;
 
-    initModel("Models/vase.obj");
-    m_mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), vec3(0,0.3,1), 1, 0.3, 128);
-    m_axis->loadAxis();
-
     m_bezier = new BezierCurve(vec3(0,-5,0), vec3(2, 1, 3), vec3(-2, 2, 2), vec3(0,3,0));
     m_bezier->addSegment(vec3(1, 1, 1), vec3(3, 3, 3), vec3(0, 5, 0));
     m_bezier->compute(16);
+    m_bezier->transform(translate(vec3(10,0,0)));
+    printf("seg\n");
+
+    initModel("Models/vase.obj");
+    m_mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), vec3(0,0.3,1), 1, 0.3, 128);
+
+    m_axis->loadAxis();
 
     BezierCurve* b0 = new BezierCurve(vec3(-1.5, 0, 0), vec3(-0.5, 0, -1), vec3(0.5, 0, 0), vec3(1.5, 0, 0));
     BezierCurve* b1 = new BezierCurve(vec3(-1.5, 1, 0), vec3(-0.5, 1, 1), vec3(0.5, 3, 1), vec3(1.5, 1, 0));
@@ -183,11 +187,21 @@ bool Scene::initScene()
     BezierCurve* b3 = new BezierCurve(vec3(-1.5, 3, 0), vec3(-0.5, 3, 0), vec3(0.5, 3, 0), vec3(1.5, 3, 0));
 
     m_bezierS = new BezierSurface(b0, b1, b2, b3);
-    m_bezierS->compute(64, 64);
+    m_bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
+    m_bezierS->transform(translate(vec3(5,0,0)));
 
-    m_bezierS->getMesh()->getShader()->loadDiffuseTexture("Shaders/wood_floor_deck_diff.jpg");
-    m_bezierS->getMesh()->getShader()->loadRoughnessTexture("Shaders/wood_floor_deck_rough.jpg");
-    m_bezierS->getMesh()->getShader()->loadSpecularTexture("Shaders/wood_floor_deck_spec.jpg");
+    b0 = new BezierCurve(vec3(-1.5, 0, 0), vec3(-0.5, 0, 0), vec3(0.5, 0, 0), vec3(1.5, 0, 0));
+    b1 = new BezierCurve(vec3(-1.5, 1, 0), vec3(-0.5, 1, 0), vec3(0.5, 1, 1), vec3(1.5, 1, 0));
+    b2 = new BezierCurve(vec3(-1.5, 2, 0), vec3(-0.5, 2, 0), vec3(0.5, 2, 2), vec3(1.5, 2, 0));
+    b3 = new BezierCurve(vec3(-1.5, 3, 0), vec3(-0.5, 3, 0), vec3(0.5, 3, 0), vec3(1.5, 3, 0));
+
+    m_bezierST = new BezierSurface(b0, b1, b2, b3);
+    m_bezierST->compute(64, 64, "Shaders/TextureBRDF.vert", "Shaders/TextureBRDF.frag");
+    m_bezierST->transform(translate(vec3(-5,0,0)));
+
+    m_bezierST->getMesh()->getShader()->loadDiffuseTexture("Shaders/metal_plate_diff.jpg");
+    m_bezierST->getMesh()->getShader()->loadRoughnessTexture("Shaders/metal_plate_rough.jpg");
+    m_bezierST->getMesh()->getShader()->loadSpecularTexture("Shaders/metal_plate_spec.jpg");
 
     return true;
 }

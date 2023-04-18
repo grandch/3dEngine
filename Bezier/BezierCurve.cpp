@@ -121,3 +121,14 @@ void BezierCurve::draw(mat4 &projection, mat4 &view)
         m_next->draw(projection, view);
     }
 }
+
+void BezierCurve::transform(mat4 transf)
+{
+    m_meshControlPolygon->translate(transf);
+    m_meshCurve->translate(transf);
+
+    if(m_next != nullptr)
+    {
+        m_next->transform(transf);
+    }
+}

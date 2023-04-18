@@ -29,10 +29,10 @@ vec3 ambientClr()
 
 void main()
 {
-    gl_Position = projection * model * view * vec4(in_Vertex, 1.0);
+    gl_Position = projection *  view * model * vec4(in_Vertex, 1.0);
 
     ambient = ambientClr();
-    normal = vec3(mat3(transpose(inverse(model))) * in_normal);
-    fragPos = vec3(model * view * vec4(in_Vertex, 1.0));
+    normal = mat3(transpose(inverse(model))) * in_normal, 0.0;
+    fragPos = vec3(view * model * vec4(in_Vertex, 1.0));
     objectColor = in_Color;
 }

@@ -56,6 +56,7 @@ class Scene
         Mesh* m_mesh;
         BezierCurve* m_bezier;
         BezierSurface* m_bezierS;
+        BezierSurface* m_bezierST;
         Axis* m_axis;
 };
 #endif
