@@ -145,7 +145,7 @@ void Scene::mainLoop()
         camera.lookAt(view);
 
         m_bezierS->draw(projection, view);
-        m_bezier->draw(projection, view);
+        // m_bezier->draw(projection, view);
         m_axis->draw(projection, view);
         // m_mesh->draw(projection, view);
 
@@ -169,8 +169,8 @@ bool Scene::initScene()
     if (this->initGL() == false)
     return false;
 
-    // initModel("Models/vase.obj");
-    // m_mesh->setMaterial(vec3(1,0,0.3), vec3(0,1,0.3), vec3(0,0.3,1), 1, 0.3, 128);
+    initModel("Models/vase.obj");
+    m_mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), vec3(0,0.3,1), 1, 0.3, 128);
     m_axis->loadAxis();
 
     m_bezier = new BezierCurve(vec3(0,-5,0), vec3(2, 1, 3), vec3(-2, 2, 2), vec3(0,3,0));
