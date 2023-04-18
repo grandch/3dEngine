@@ -4,31 +4,42 @@ in vec3 ambient;
 in vec3 normal;
 in vec3 fragPos;
 in vec3 objectColor;
-in vec3 lightPos;
 
 uniform vec3 diffuseColor;
 uniform vec3 specularColor;
 uniform float specularStrength;
 uniform float ambientStrength;
 uniform float shininess;
+uniform mat4 view;
 
 out vec4 out_Color;
 
-void main()
+float att(vec4 lightPos, float strength)
+{
+    float dist = distance(lightPos.xyz, fragPos);
+    return strength / (1.0 + 0.022 * dist + 0.0019 * pow(dist, 2));
+}
+
+vec3 diffuse(vec4 lightPos, vec3 color, float strength)
 {
     vec3 norm = normalize(normal);
-    vec3 lightDir = normalize(lightPos - fragPos);
-
-    // diffuse
+    vec3 lightDir = normalize(lightPos.xyz - fragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * diffuseColor;
+    return diff * diffuseColor * att(lightPos, strength) * color;
+}
 
-    //specular
+vec3 specular(vec4 lightPos, vec3 color, float strength)
+{
+    vec3 norm = normalize(normal);
+    vec3 lightDir = normalize(lightPos.xyz - fragPos);
     vec3 viewDir = normalize(-fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-    vec3 specular = specularStrength * spec * specularColor;
+    return specularStrength * spec * specularColor * att(lightPos, strength) * color;
+}
 
-    vec3 result = (ambient + diffuse + specular);
+void main()
+{
+    vec3 result = ambient + diffuse(view * vec4(4,10,4,1), vec3(1,0.95,0.9), 1.0) + specular(view * vec4(4,10,4,1), vec3(1,0.95,0.9), 1.0) + diffuse(view * vec4(-4,5,4,1), vec3(1,0.6,0.3), 0.4) + specular(view * vec4(-4,5,4,1), vec3(1,0.6,0.3), 0.4) + diffuse(view * vec4(0,5,-3,1), vec3(0.6,0.9,1), 0.6) + specular(view * vec4(0,5,-3,1), vec3(0.6,0.9,1), 0.6);
     out_Color = vec4(result, 1.0);
 }

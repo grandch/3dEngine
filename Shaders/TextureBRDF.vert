@@ -16,7 +16,6 @@ out vec3 normal;
 out vec3 fragPos;
 out vec3 objectColor;
 out vec2 out_uv;
-out vec3 lightPos;
 
 vec3 ambientClr()
 {
@@ -29,7 +28,6 @@ void main()
 {
     gl_Position = projection * model * view * vec4(in_Vertex, 1.0);
 
-    lightPos = vec3(3,10,4);
     ambient = ambientClr();
     normal = vec3(mat3(transpose(inverse(model))) * in_normal);
     fragPos = vec3(model * view * vec4(in_Vertex, 1.0));
