@@ -12,6 +12,7 @@
 #include <string>
 
 #include "../Shaders/Shader.h"
+#include "../Light/LightManager.h"
 
 class MeshHalfEdge;
 class MeshVertex;
@@ -30,7 +31,7 @@ class Mesh
 
         void loadMesh(); //load the shader and the vbo/vao
 
-        void draw(mat4 &projection, mat4 &view);
+        void draw(mat4 &projection, mat4 &view, LightManager* lightManager);
 
         void loadVBO();
         void loadVAO();

@@ -28,7 +28,7 @@ void Mesh::loadMesh()
     m_shader.load();
 }
 
-void Mesh::draw(mat4 &projection, mat4 &view)
+void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
 {
     glUseProgram(m_shader.getProgramID());
 
