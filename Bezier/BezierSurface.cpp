@@ -2,6 +2,7 @@
 #include "BezierCurve.h"
 #include "../Mesh/MeshVertex.h"
 #include "../Mesh/MeshEdge.h"
+#include "../Light/LightManager.h"
 
 #include <vector>
 
@@ -81,7 +82,7 @@ void BezierSurface::compute(int s, int t, string vertexShader, string fragmentSh
 
 void BezierSurface::draw(mat4 &projection, mat4 &view)
 {
-    m_mesh->draw(projection, view);
+    m_mesh->draw(projection, view, new LightManager());
 
     for(BezierCurve* bc : m_bcT)
     {

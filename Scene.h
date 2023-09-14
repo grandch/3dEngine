@@ -19,6 +19,8 @@
 #include "Camera/Camera.h"
 #include "Importer/Importer.h"
 #include "Axis/Axis.h"
+#include "Light/PointLight.h"
+#include "Light/LightManager.h"
 
 #include <GLES3/gl3.h>
 
@@ -58,5 +60,7 @@ class Scene
         BezierSurface* m_bezierS;
         BezierSurface* m_bezierST;
         Axis* m_axis;
+
+        LightManager m_lightManager;
 };
 #endif
