@@ -3,11 +3,13 @@
 Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidth(width), m_wHeight(height), m_window(0), m_openGLContext(0), m_input()
 {
     m_axis = new Axis();
+    m_lightManager = new LightManager();
 }
 
 Scene::~Scene()
 {
     free(m_axis);
+    free(m_lightManager);
     SDL_GL_DeleteContext(m_openGLContext);
     SDL_DestroyWindow(m_window);
     SDL_Quit();
@@ -144,11 +146,11 @@ void Scene::mainLoop()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
         camera.lookAt(view);
 
-        m_bezierS->draw(projection, view);
-        m_bezierST->draw(projection, view);
+        m_bezierS->draw(projection, view, m_lightManager);
+        m_bezierST->draw(projection, view, m_lightManager);
         m_bezier->draw(projection, view);
         m_axis->draw(projection, view);
-        m_mesh->draw(projection, view, &m_lightManager);
+        m_mesh->draw(projection, view, m_lightManager);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -203,9 +205,13 @@ bool Scene::initScene()
     m_bezierST->getMesh()->getShader()->loadRoughnessTexture("Shaders/metal_plate_rough.jpg");
     m_bezierST->getMesh()->getShader()->loadSpecularTexture("Shaders/metal_plate_spec.jpg");
 
-    m_lightManager.addLight(new PointLight(vec3(4,10,4), vec4(1,0.95,0.9,0.1)));
-    m_lightManager.addLight(new PointLight(vec3(-4,5,4), vec4(1,0.6,0.3,0.1)));
-    m_lightManager.addLight(new PointLight(vec3(0,5,-3), vec4(0.6,0.9,1,0.1)));
+    PointLight p1 = PointLight(vec4(4,10,4,1), vec3(1,0.95,0.9));
+    PointLight p2 = PointLight(vec4(-4,5,4,1), vec3(1,0.6,0.3));
+    PointLight p3 = PointLight(vec4(0,5,-3,1), vec3(0.6,0.9,1));
+
+    m_lightManager->addLight(new PointLight(vec4(4,10,4,1), vec3(1,0.95,0.9)));
+    m_lightManager->addLight(new PointLight(vec4(-4,5,4,1), vec3(1,0.6,0.3)));
+    m_lightManager->addLight(new PointLight(vec4(0,5,-3,1), vec3(0.6,0.9,1)));
 
     return true;
 }

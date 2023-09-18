@@ -11,17 +11,17 @@ using namespace glm;
 class PointLight 
 {
     public:
-        PointLight(vec3 location = {0,0,0}, vec4 color = {0.7,0.7,0.7,1}) : m_location(location), m_color(color) {}
+        PointLight(vec4 location = {0,0,0,1}, vec3 color = {0.7,0.7,0.7}) : m_location(location), m_color(color) {}
         ~PointLight() = default;
 
-        vec3 getLocation(); 
-        vec4 getColor(); 
+        vec4 getLocation(); 
+        vec3 getColor(); 
 
-        void setLocation(vec3 location); 
-        void setColor(vec4 color);
+        void setLocation(vec4 location); 
+        void setColor(vec3 color);
 
     private:
-        vec3 m_location;
-        vec4 m_color;
+        vec4 m_location;
+        vec3 m_color;
 };
 #endif
