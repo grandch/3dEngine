@@ -61,7 +61,7 @@ class Mesh
         void compileShaders();
 
         void setDrawEdges(bool de);
-        void setMaterial(vec3 diffuseColor, vec3 specularColor, vec3 ambientColor, float specularStrength, float ambientStrength, float shininess);
+        void setMaterial(vec3 diffuseColor, vec3 specularColor, float specularStrength, float shininess);
 
         Shader* getShader();
 

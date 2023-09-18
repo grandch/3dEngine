@@ -15,9 +15,7 @@ using namespace std;
 struct Material {
     vec3 diffuseColor;
     vec3 specularColor;
-    vec3 ambientColor;
     float specularStrength;
-    float ambientStrength;
     float shininess;
 };
 
@@ -28,14 +26,14 @@ class Shader
         Shader();
         ~Shader();
 
-        Shader(string vertexPath, string fragmentPath, vec3 diffuseColor, vec3 specularColor, vec3 ambientColor, float specularStrength, float ambientStrength, float shininess);
+        Shader(string vertexPath, string fragmentPath, vec3 diffuseColor, vec3 specularColor, float specularStrength, float shininess);
         Shader(Shader const &toCopyShader);
 
         Shader& operator=(Shader const &toCopyShader);
 
         GLuint getProgramID() const;
         Material* getMaterial();
-        void setMaterial(vec3 diffuseColor, vec3 specularColor, vec3 ambientColor, float specularStrength, float ambientStrength, float shininess);
+        void setMaterial(vec3 diffuseColor, vec3 specularColor, float specularStrength, float shininess);
 
         bool load();
         bool shaderCompile(GLuint &shader, GLenum type, string const &filePath);
