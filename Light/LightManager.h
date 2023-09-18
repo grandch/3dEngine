@@ -1,6 +1,8 @@
 #ifndef LIGHTMANAGER
 #define LIGHTMANAGER
 
+#include <GLES3/gl3.h>
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -16,16 +18,18 @@ using namespace std;
 class LightManager
 {
     public:
-        LightManager() = default;
-        ~LightManager() = default;
+        LightManager();
+        ~LightManager();
 
         void addLight(PointLight* pLight);
-        inline vector<vec3> getLocations() {return m_locations;}
-        inline vector<vec4> getColors() {return m_colors;}
+        GLfloat* getLocations();
+        GLfloat* getColors();
+        int getNbLights();
         
     private:
-        vector<vec3> m_locations;
-        vector<vec4> m_colors;
+        GLfloat m_locations[40];
+        GLfloat m_colors[30];
+        int m_nbLight;
 };
 
 #endif

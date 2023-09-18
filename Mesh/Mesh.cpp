@@ -34,11 +34,17 @@ void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
 
         glBindVertexArray(m_vaoId); //lock the vao
 
-            //send matrix uniforms to shaders
+            //send transform matrices uniforms to shaders
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "model"), 1, GL_FALSE, value_ptr(m_model));
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "view"), 1, GL_FALSE, value_ptr(view));
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
 
+            //send lights data
+            glUniform4fv(glGetUniformLocation(m_shader.getProgramID(), "pointLightsLocations"), 10, lightManager->getLocations());
+            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "pointLightsColors"), 10, lightManager->getColors());
+            glUniform1i(glGetUniformLocation(m_shader.getProgramID(), "nbPointLights"), lightManager->getNbLights());
+
+            //send material data
             glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "diffuseColor"), 1, value_ptr(m_shader.getMaterial()->diffuseColor));
             glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "specularColor"), 1, value_ptr(m_shader.getMaterial()->specularColor));
             glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "ambientColor"), 1, value_ptr(m_shader.getMaterial()->ambientColor));

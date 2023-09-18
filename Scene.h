@@ -61,6 +61,6 @@ class Scene
         BezierSurface* m_bezierST;
         Axis* m_axis;
 
-        LightManager m_lightManager;
+        LightManager* m_lightManager;
 };
 #endif
