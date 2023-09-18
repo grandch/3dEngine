@@ -3,13 +3,11 @@
 Shader::Shader(): m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexPath(), m_fragmentPath()
 {}
 
-Shader::Shader(string vertexPath, string fragmentPath, vec3 diffuseColor, vec3 specularColor, vec3 ambientColor, float specularStrength, float ambientStrength, float shininess): m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexPath(vertexPath), m_fragmentPath(fragmentPath), m_material(new Material)
+Shader::Shader(string vertexPath, string fragmentPath, vec3 diffuseColor, vec3 specularColor, float specularStrength, float shininess): m_vertexID(0), m_fragmentID(0), m_programID(0), m_vertexPath(vertexPath), m_fragmentPath(fragmentPath), m_material(new Material)
 {
     m_material->diffuseColor = diffuseColor;
     m_material->specularColor = specularColor;
-    m_material->ambientColor = ambientColor;
     m_material->specularStrength = specularStrength;
-    m_material->ambientStrength = ambientStrength;
     m_material->shininess = shininess;
 }
 
@@ -50,13 +48,11 @@ Material* Shader::getMaterial()
     return m_material;
 }
 
-void Shader::setMaterial(vec3 diffuseColor, vec3 specularColor, vec3 ambientColor, float specularStrength, float ambientStrength, float shininess)
+void Shader::setMaterial(vec3 diffuseColor, vec3 specularColor, float specularStrength, float shininess)
 {
     m_material->diffuseColor = diffuseColor;
     m_material->specularColor = specularColor;
-    m_material->ambientColor = ambientColor;
     m_material->specularStrength = specularStrength;
-    m_material->ambientStrength = ambientStrength;
     m_material->shininess = shininess;
 }
 

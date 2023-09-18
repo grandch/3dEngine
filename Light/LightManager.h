@@ -25,11 +25,18 @@ class LightManager
         GLfloat* getLocations();
         GLfloat* getColors();
         int getNbLights();
+
+        void setAmbientLight(vec3 color, float strength);
+        vec3 getAmbientColor();
+        float getAmbientStrength();
         
     private:
         GLfloat m_locations[40];
         GLfloat m_colors[30];
         int m_nbLight;
+
+        vec3 m_ambientColor;
+        float m_ambientStrength;
 };
 
 #endif

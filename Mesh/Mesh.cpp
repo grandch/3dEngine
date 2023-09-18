@@ -5,7 +5,7 @@
 #include "MeshTriangle.h"
 #include "MeshEdge.h"
 
-Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader, vec3(1), vec3(1), vec3(1), 1, 0.1, 64), m_drawEdges(false), m_model(glm::mat4(1.0f))
+Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader, vec3(1), vec3(1), 1, 64), m_drawEdges(false), m_model(glm::mat4(1.0f))
 {}
 
 Mesh::~Mesh()
@@ -43,13 +43,13 @@ void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
             glUniform4fv(glGetUniformLocation(m_shader.getProgramID(), "pointLightsLocations"), 10, lightManager->getLocations());
             glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "pointLightsColors"), 10, lightManager->getColors());
             glUniform1i(glGetUniformLocation(m_shader.getProgramID(), "nbPointLights"), lightManager->getNbLights());
+            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "ambientStrength"), lightManager->getAmbientStrength());
+            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "ambientColor"), 1, value_ptr(lightManager->getAmbientColor()));
 
             //send material data
             glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "diffuseColor"), 1, value_ptr(m_shader.getMaterial()->diffuseColor));
             glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "specularColor"), 1, value_ptr(m_shader.getMaterial()->specularColor));
-            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "ambientColor"), 1, value_ptr(m_shader.getMaterial()->ambientColor));
             glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "specularStrength"), m_shader.getMaterial()->specularStrength);
-            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "ambientStrength"), m_shader.getMaterial()->ambientStrength);
             glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "shininess"), m_shader.getMaterial()->shininess);
 
             //send textures
@@ -371,9 +371,9 @@ void Mesh::setDrawEdges(bool de)
     m_drawEdges = de;
 }
 
-void Mesh::setMaterial(vec3 diffuseColor, vec3 specularColor, vec3 ambientColor, float specularStrength, float ambientStrength, float shininess)
+void Mesh::setMaterial(vec3 diffuseColor, vec3 specularColor, float specularStrength, float shininess)
 {
-    m_shader.setMaterial(diffuseColor, specularColor, ambientColor, specularStrength, ambientStrength, shininess);
+    m_shader.setMaterial(diffuseColor, specularColor, specularStrength, shininess);
 }
 
 Shader *Mesh::getShader()

@@ -179,7 +179,7 @@ bool Scene::initScene()
     printf("seg\n");
 
     initModel("Models/vase.obj");
-    m_mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), vec3(0,0.3,1), 1, 0.3, 128);
+    m_mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 128);
 
     m_axis->loadAxis();
 
@@ -212,6 +212,7 @@ bool Scene::initScene()
     m_lightManager->addLight(new PointLight(vec4(4,10,4,1), vec3(1,0.95,0.9)));
     m_lightManager->addLight(new PointLight(vec4(-4,5,4,1), vec3(1,0.6,0.3)));
     m_lightManager->addLight(new PointLight(vec4(0,5,-3,1), vec3(0.6,0.9,1)));
+    m_lightManager->setAmbientLight(vec3(0,0.3,1), 0.3);
 
     return true;
 }

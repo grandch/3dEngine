@@ -41,3 +41,19 @@ int LightManager::getNbLights()
 {
     return m_nbLight;
 }
+
+void LightManager::setAmbientLight(vec3 color, float strength)
+{
+    m_ambientColor = color;
+    m_ambientStrength = strength;
+}
+
+vec3 LightManager::getAmbientColor()
+{
+    return m_ambientColor;
+}
+
+float LightManager::getAmbientStrength()
+{
+    return m_ambientStrength;
+}
