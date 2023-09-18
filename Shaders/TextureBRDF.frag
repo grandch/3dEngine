@@ -6,6 +6,10 @@ in vec3 fragPos;
 in vec3 objectColor;
 in vec2 out_uv;
 
+uniform vec4 pointLightsLocations[10];
+uniform vec3 pointLightsColors[10];
+uniform int nbPointLights;
+
 uniform vec3 diffuseColor;
 uniform vec3 specularColor;
 uniform float specularStrength;
@@ -45,6 +49,13 @@ vec3 specular(vec4 lightPos, vec3 color, float strength)
 
 void main()
 {
-    vec3 result = ambient + diffuse(view * vec4(4,10,4,1), vec3(1,0.95,0.9), 1.0) + specular(view * vec4(4,10,4,1), vec3(1,0.95,0.9), 1.0) + diffuse(view * vec4(-4,5,4,1), vec3(1,0.6,0.3), 0.4) + specular(view * vec4(-4,5,4,1), vec3(1,0.6,0.3), 0.4) + diffuse(view * vec4(0,5,-3,1), vec3(0.6,0.9,1), 0.6) + specular(view * vec4(0,5,-3,1), vec3(0.6,0.9,1), 0.6);
+    vec3 result = ambient; 
+    
+    for(int i = 0; i < nbPointLights; i++)
+    {
+        result += diffuse(view * pointLightsLocations[i], pointLightsColors[i], 1.0);
+        result += specular(view * pointLightsLocations[i], pointLightsColors[i], 1.0);
+    }
+    
     out_Color = vec4(result, 1.0);
 }
