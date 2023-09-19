@@ -57,3 +57,12 @@ float LightManager::getAmbientStrength()
 {
     return m_ambientStrength;
 }
+
+void LightManager::sendDataToShader(Shader* shader)
+{
+    glUniform4fv(glGetUniformLocation(shader->getProgramID(), "lightManager.pointLightsLocations"), 10, &(m_locations[0]));
+    glUniform3fv(glGetUniformLocation(shader->getProgramID(), "lightManager.pointLightsColors"), 10, &(m_colors[0]));
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "lightManager.nbPointLights"), m_nbLight);
+    glUniform1f(glGetUniformLocation(shader->getProgramID(), "lightManager.ambientStrength"), m_ambientStrength);
+    glUniform3fv(glGetUniformLocation(shader->getProgramID(), "lightManager.ambientColor"), 1, value_ptr(m_ambientColor));
+}
