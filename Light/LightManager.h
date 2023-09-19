@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "PointLight.h"
+#include "../Shaders/Shader.h"
 
 using namespace glm;
 using namespace std;
@@ -29,6 +30,8 @@ class LightManager
         void setAmbientLight(vec3 color, float strength);
         vec3 getAmbientColor();
         float getAmbientStrength();
+
+        void sendDataToShader(Shader* shader);
         
     private:
         GLfloat m_locations[40];
