@@ -15,11 +15,22 @@ struct Material
     vec3 specularColor;
     float specularStrength;
     float shininess;
+
+    sampler2D diffuseColorTexture;
+    sampler2D specularColorTexture;
+    sampler2D shininessTexture;
+    sampler2D specularStrengthTexture;
+
+    bool hasDiffuseColorTexture;
+    bool hasSpecularColorTexture;
+    bool hasShininessTexture;
+    bool hasSpecularStrengthTexture;
 };
 
 in vec3 normal;
 in vec3 fragPos;
 in vec3 objectColor;
+in vec2 out_uv;
 
 uniform Material material;
 uniform LightManager lightManager;
@@ -46,6 +57,11 @@ vec3 diffuse(vec4 lightPos, vec3 color, float strength)
     vec3 norm = normalize(normal);
     vec3 lightDir = normalize(lightPos.xyz - fragPos);
     float diff = max(dot(norm, lightDir), 0.0);
+
+    if(material.hasDiffuseColorTexture)
+    {
+        return diff * vec3(texture(material.diffuseColorTexture, out_uv)) * att(lightPos, strength) * color;
+    }
     return diff * material.diffuseColor * att(lightPos, strength) * color;
 }
 
@@ -55,7 +71,19 @@ vec3 specular(vec4 lightPos, vec3 color, float strength)
     vec3 lightDir = normalize(lightPos.xyz - fragPos);
     vec3 viewDir = normalize(-fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+
+    float spec;
+    if(material.hasShininessTexture)
+    {
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), pow(2, 4*float(texture(material.shininessTexture, out_uv))));
+    } else {
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    }
+
+    if(material.hasSpecularColorTexture)
+    {
+        return 2*float(texture(material.specularColorTexture, out_uv)) * spec * att(lightPos, strength) * color;
+    }
     return material.specularStrength * spec * material.specularColor * att(lightPos, strength) * color;
 }
 
