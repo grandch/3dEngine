@@ -40,17 +40,17 @@ void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
 
             //send lights data
-            glUniform4fv(glGetUniformLocation(m_shader.getProgramID(), "pointLightsLocations"), 10, lightManager->getLocations());
-            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "pointLightsColors"), 10, lightManager->getColors());
-            glUniform1i(glGetUniformLocation(m_shader.getProgramID(), "nbPointLights"), lightManager->getNbLights());
-            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "ambientStrength"), lightManager->getAmbientStrength());
-            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "ambientColor"), 1, value_ptr(lightManager->getAmbientColor()));
+            glUniform4fv(glGetUniformLocation(m_shader.getProgramID(), "lightManager.pointLightsLocations"), 10, lightManager->getLocations());
+            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "lightManager.pointLightsColors"), 10, lightManager->getColors());
+            glUniform1i(glGetUniformLocation(m_shader.getProgramID(), "lightManager.nbPointLights"), lightManager->getNbLights());
+            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "lightManager.ambientStrength"), lightManager->getAmbientStrength());
+            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "lightManager.ambientColor"), 1, value_ptr(lightManager->getAmbientColor()));
 
             //send material data
-            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "diffuseColor"), 1, value_ptr(m_shader.getMaterial()->diffuseColor));
-            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "specularColor"), 1, value_ptr(m_shader.getMaterial()->specularColor));
-            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "specularStrength"), m_shader.getMaterial()->specularStrength);
-            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "shininess"), m_shader.getMaterial()->shininess);
+            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "material.diffuseColor"), 1, value_ptr(m_shader.getMaterial()->diffuseColor));
+            glUniform3fv(glGetUniformLocation(m_shader.getProgramID(), "material.specularColor"), 1, value_ptr(m_shader.getMaterial()->specularColor));
+            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "material.specularStrength"), m_shader.getMaterial()->specularStrength);
+            glUniform1f(glGetUniformLocation(m_shader.getProgramID(), "material.shininess"), m_shader.getMaterial()->shininess);
 
             //send textures
             glActiveTexture(GL_TEXTURE0);
