@@ -7,7 +7,7 @@ struct LightManager
     int nbPointLights;
     vec3 ambientColor;
     float ambientStrength;
-}
+};
 
 struct Material
 {
@@ -15,7 +15,7 @@ struct Material
     vec3 specularColor;
     float specularStrength;
     float shininess;
-}
+};
 
 in vec3 normal;
 in vec3 fragPos;
@@ -37,7 +37,7 @@ float att(vec4 lightPos, float strength)
 vec3 ambient()
 {
     vec3 amb = lightManager.ambientColor * lightManager.ambientStrength;
-    vec3 result = amb * in_Color;
+    vec3 result = amb * objectColor;
     return result;
 }
 
@@ -63,7 +63,7 @@ void main()
 {
     vec3 result = ambient();
     
-    for(int i = 0; i < nbPointLights; i++)
+    for(int i = 0; i < lightManager.nbPointLights; i++)
     {
         result += diffuse(view * lightManager.pointLightsLocations[i], lightManager.pointLightsColors[i], 1.0);
         result += specular(view * lightManager.pointLightsLocations[i], lightManager.pointLightsColors[i], 1.0);
