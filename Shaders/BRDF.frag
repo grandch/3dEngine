@@ -1,21 +1,29 @@
 #version 150 core
 
-precision mediump float;
+struct LightManager
+{
+    vec4 pointLightsLocations[10];
+    vec3 pointLightsColors[10];
+    int nbPointLights;
+    vec3 ambientColor;
+    float ambientStrength;
+}
 
-in vec3 ambient;
+struct Material
+{
+    vec3 diffuseColor;
+    vec3 specularColor;
+    float specularStrength;
+    float shininess;
+}
+
 in vec3 normal;
 in vec3 fragPos;
 in vec3 objectColor;
 
-uniform vec4 pointLightsLocations[10];
-uniform vec3 pointLightsColors[10];
-uniform int nbPointLights;
+uniform Material material;
+uniform LightManager lightManager;
 
-uniform vec3 diffuseColor;
-uniform vec3 specularColor;
-uniform float specularStrength;
-uniform float ambientStrength;
-uniform float shininess;
 uniform mat4 view;
 
 out vec4 out_Color;
@@ -26,12 +34,19 @@ float att(vec4 lightPos, float strength)
     return strength / (1.0 + 0.022 * dist + 0.0019 * pow(dist, 2));
 }
 
+vec3 ambient()
+{
+    vec3 amb = lightManager.ambientColor * lightManager.ambientStrength;
+    vec3 result = amb * in_Color;
+    return result;
+}
+
 vec3 diffuse(vec4 lightPos, vec3 color, float strength)
 {
     vec3 norm = normalize(normal);
     vec3 lightDir = normalize(lightPos.xyz - fragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    return diff * diffuseColor * att(lightPos, strength) * color;
+    return diff * material.diffuseColor * att(lightPos, strength) * color;
 }
 
 vec3 specular(vec4 lightPos, vec3 color, float strength)
@@ -40,18 +55,18 @@ vec3 specular(vec4 lightPos, vec3 color, float strength)
     vec3 lightDir = normalize(lightPos.xyz - fragPos);
     vec3 viewDir = normalize(-fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-    return specularStrength * spec * specularColor * att(lightPos, strength) * color;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    return material.specularStrength * spec * material.specularColor * att(lightPos, strength) * color;
 }
 
 void main()
 {
-    vec3 result = ambient; 
+    vec3 result = ambient();
     
     for(int i = 0; i < nbPointLights; i++)
     {
-        result += diffuse(view * pointLightsLocations[i], pointLightsColors[i], 1.0);
-        result += specular(view * pointLightsLocations[i], pointLightsColors[i], 1.0);
+        result += diffuse(view * lightManager.pointLightsLocations[i], lightManager.pointLightsColors[i], 1.0);
+        result += specular(view * lightManager.pointLightsLocations[i], lightManager.pointLightsColors[i], 1.0);
     }
     
     out_Color = vec4(result, 1.0);
