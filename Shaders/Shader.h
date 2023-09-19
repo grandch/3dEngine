@@ -17,6 +17,15 @@ struct Material {
     vec3 specularColor;
     float specularStrength;
     float shininess;
+
+    bool hasDiffuseColorTexture = false;
+    unsigned int diffuseColorTexture;
+    bool hasSpecularColorTexture = false;
+    unsigned int specularColorTexture;
+    bool hasShininessTexture = false;
+    unsigned int shininessTexture;
+    bool hasSpecularStrengthTexture = false;
+    unsigned int specularStrengthTexture;
 };
 
 class Shader
@@ -38,14 +47,19 @@ class Shader
         bool load();
         bool shaderCompile(GLuint &shader, GLenum type, string const &filePath);
 
-        void loadDiffuseTexture(const char* path);
-        unsigned int getDiffuseTexture();
+        void loadDiffuseColorTexture(const char* path);
+        unsigned int getDiffuseColorTexture();
 
-        void loadSpecularTexture(const char* path);
-        unsigned int getSpecularTexture();
+        void loadSpecularColorTexture(const char* path);
+        unsigned int getSpecularColorTexture();
 
-        void loadRoughnessTexture(const char* path);
-        unsigned int getRoughnessTexture();
+        void loadShininessTexture(const char* path);
+        unsigned int getShininessTexture();
+
+        void loadSpecularStrength(const char* path);
+        unsigned int getSpecularStrength();
+
+        void sendMaterialToShader();
 
     private:
 
@@ -57,9 +71,6 @@ class Shader
         string m_fragmentPath;
 
         Material* m_material;
-        unsigned int m_diffuseTexture;
-        unsigned int m_specularTexture;
-        unsigned int m_roughnessTexture;
 };
 
 #endif

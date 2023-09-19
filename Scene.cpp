@@ -198,12 +198,12 @@ bool Scene::initScene()
     b3 = new BezierCurve(vec3(-1.5, 3, 0), vec3(-0.5, 3, 0), vec3(0.5, 3, 0), vec3(1.5, 3, 0));
 
     m_bezierST = new BezierSurface(b0, b1, b2, b3);
-    m_bezierST->compute(64, 64, "Shaders/TextureBRDF.vert", "Shaders/TextureBRDF.frag");
+    m_bezierST->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
     m_bezierST->transform(translate(vec3(-5,0,0)));
 
-    m_bezierST->getMesh()->getShader()->loadDiffuseTexture("Shaders/metal_plate_diff.jpg");
-    m_bezierST->getMesh()->getShader()->loadRoughnessTexture("Shaders/metal_plate_rough.jpg");
-    m_bezierST->getMesh()->getShader()->loadSpecularTexture("Shaders/metal_plate_spec.jpg");
+    m_bezierST->getMesh()->getShader()->loadDiffuseColorTexture("Shaders/metal_plate_diff.jpg");
+    m_bezierST->getMesh()->getShader()->loadShininessTexture("Shaders/metal_plate_rough.jpg");
+    m_bezierST->getMesh()->getShader()->loadSpecularColorTexture("Shaders/metal_plate_spec.jpg");
 
     PointLight p1 = PointLight(vec4(4,10,4,1), vec3(1,0.95,0.9));
     PointLight p2 = PointLight(vec4(-4,5,4,1), vec3(1,0.6,0.3));

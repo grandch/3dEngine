@@ -173,20 +173,21 @@ bool Shader::shaderCompile(GLuint &shader, GLenum type, string const &filePath)
     return true;
 }
 
-void Shader::loadDiffuseTexture(const char* path)
+void Shader::loadDiffuseColorTexture(const char* path)
 {
     int width, height, nrChannels;
     unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
 
     if(data)
     {
-        glGenTextures(1, &m_diffuseTexture);
-        glBindTexture(GL_TEXTURE_2D, m_diffuseTexture);
+        glGenTextures(1, &(m_material->diffuseColorTexture));
+        glBindTexture(GL_TEXTURE_2D, m_material->diffuseColorTexture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         stbi_image_free(data);
+        m_material->hasDiffuseColorTexture = true;
     }
     else
     {
@@ -194,25 +195,26 @@ void Shader::loadDiffuseTexture(const char* path)
     }
 }
 
-unsigned int Shader::getDiffuseTexture()
+unsigned int Shader::getDiffuseColorTexture()
 {
-    return m_diffuseTexture;
+    return m_material->diffuseColorTexture;
 }
 
-void Shader::loadSpecularTexture(const char *path)
+void Shader::loadSpecularColorTexture(const char *path)
 {
     int width, height, nrChannels;
     unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
 
     if(data)
     {
-        glGenTextures(1, &m_specularTexture);
-        glBindTexture(GL_TEXTURE_2D, m_specularTexture);
+        glGenTextures(1, &(m_material->specularColorTexture));
+        glBindTexture(GL_TEXTURE_2D, m_material->specularColorTexture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         stbi_image_free(data);
+        m_material->hasSpecularColorTexture = true;
     }
     else
     {
@@ -220,25 +222,26 @@ void Shader::loadSpecularTexture(const char *path)
     }
 }
 
-unsigned int Shader::getSpecularTexture()
+unsigned int Shader::getSpecularColorTexture()
 {
-    return m_specularTexture;
+    return m_material->specularColorTexture;
 }
 
-void Shader::loadRoughnessTexture(const char *path)
+void Shader::loadShininessTexture(const char *path)
 {
     int width, height, nrChannels;
     unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
 
     if(data)
     {
-        glGenTextures(1, &m_roughnessTexture);
-        glBindTexture(GL_TEXTURE_2D, m_roughnessTexture);
+        glGenTextures(1, &(m_material->shininessTexture));
+        glBindTexture(GL_TEXTURE_2D, m_material->shininessTexture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         stbi_image_free(data);
+        m_material->hasShininessTexture = true;
     }
     else
     {
@@ -246,7 +249,73 @@ void Shader::loadRoughnessTexture(const char *path)
     }
 }
 
-unsigned int Shader::getRoughnessTexture()
+unsigned int Shader::getShininessTexture()
 {
-    return m_roughnessTexture;
+    return m_material->shininessTexture;
+}
+
+void Shader::loadSpecularStrength(const char *path)
+{
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
+
+    if(data)
+    {
+        glGenTextures(1, &(m_material->specularStrengthTexture));
+        glBindTexture(GL_TEXTURE_2D, m_material->specularStrengthTexture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        stbi_image_free(data);
+        m_material->hasSpecularStrengthTexture = true;
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+}
+
+unsigned int Shader::getSpecularStrength()
+{
+    return m_material->specularStrengthTexture;
+}
+
+void Shader::sendMaterialToShader()
+{ 
+    glUniform1i(glGetUniformLocation(m_programID, "material.hasDiffuseColorTexture"), m_material->hasDiffuseColorTexture);
+    if(m_material->hasDiffuseColorTexture)
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_material->diffuseColorTexture);
+    } else {
+        glUniform3fv(glGetUniformLocation(getProgramID(), "material.diffuseColor"), 1, value_ptr(m_material->diffuseColor));
+    }
+    
+    glUniform1i(glGetUniformLocation(m_programID, "material.hasSpecularColorTexture"), m_material->hasSpecularColorTexture);
+    if(m_material->hasSpecularColorTexture)
+    {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, m_material->specularColorTexture);
+    } else {
+        glUniform3fv(glGetUniformLocation(getProgramID(), "material.specularColor"), 1, value_ptr(m_material->specularColor));
+    }
+    
+    glUniform1i(glGetUniformLocation(m_programID, "material.hasShininessTexture"), m_material->hasShininessTexture);
+    if(m_material->hasShininessTexture)
+    {
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, m_material->shininessTexture);
+    } else {
+        glUniform1f(glGetUniformLocation(getProgramID(), "material.shininess"), m_material->shininess);
+    }
+    
+    glUniform1i(glGetUniformLocation(m_programID, "material.hasSpecularStrengthTexture"), m_material->hasSpecularStrengthTexture);
+    if(m_material->hasSpecularStrengthTexture)
+    {
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, m_material->specularStrengthTexture);
+    } else {
+        glUniform1f(glGetUniformLocation(getProgramID(), "material.specularStrength"), m_material->specularStrength);
+    }
 }
