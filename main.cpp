@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "Scene/Scene.h"
 
 int main(int argc, char **argv)
 {

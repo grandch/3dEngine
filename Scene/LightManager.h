@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include "PointLight.h"
+#include "../Light/PointLight.h"
 #include "../Shaders/Shader.h"
 
 using namespace glm;

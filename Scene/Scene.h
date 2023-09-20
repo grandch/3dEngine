@@ -11,16 +11,16 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Bezier/BezierCurve.h"
-#include "Bezier/BezierSurface.h"
-#include "Mesh/Mesh.h"
-#include "Shaders/Shader.h"
-#include "Inputs/Input.h"
-#include "Camera/Camera.h"
-#include "Importer/Importer.h"
+#include "../Bezier/BezierCurve.h"
+#include "../Bezier/BezierSurface.h"
+#include "../Mesh/Mesh.h"
+#include "../Shaders/Shader.h"
+#include "../Inputs/Input.h"
+#include "../Camera/Camera.h"
+#include "../Importer/Importer.h"
 #include "Axis/Axis.h"
-#include "Light/PointLight.h"
-#include "Light/LightManager.h"
+#include "../Light/PointLight.h"
+#include "LightManager.h"
 
 #include <GLES3/gl3.h>
 
