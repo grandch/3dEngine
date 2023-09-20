@@ -2,9 +2,9 @@ CC = g++
 CFLAGS = -Wall
 BUILD_DIR = build
 EXEC_NAME = engine
-INCLUDES = main.cpp Scene.cpp Camera/Camera.cpp Importer/Importer.cpp Shaders/Shader.cpp Inputs/Input.cpp Mesh/Mesh.cpp Mesh/MeshVertex.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshEdge.cpp Bezier/BezierCurve.cpp Bezier/BezierSurface.cpp Axis/Axis.cpp lib/stb_image.cpp Light/PointLight.cpp Light/LightManager.cpp
+INCLUDES = main.cpp Scene/Scene.cpp Camera/Camera.cpp Importer/Importer.cpp Shaders/Shader.cpp Inputs/Input.cpp Mesh/Mesh.cpp Mesh/MeshVertex.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshEdge.cpp Bezier/BezierCurve.cpp Bezier/BezierSurface.cpp Scene/Axis/Axis.cpp lib/stb_image.cpp Light/PointLight.cpp Scene/LightManager.cpp Scene/BezierManager.cpp Scene/MeshManager.cpp Scene/SceneManager.cpp
 LIBS = -lGL -lSDL2
-OBJ_FILES = main.o Scene.o Camera.o Importer.o Shader.o Input.o Mesh.o MeshVertex.o MeshHalfEdge.o MeshTriangle.o MeshEdge.o BezierCurve.o BezierSurface.o Axis.o stb_image.o PointLight.o LightManager.o
+OBJ_FILES = main.o Scene.o Camera.o Importer.o Shader.o Input.o Mesh.o MeshVertex.o MeshHalfEdge.o MeshTriangle.o MeshEdge.o BezierCurve.o BezierSurface.o Axis.o stb_image.o PointLight.o LightManager.o MeshManager.o BezierManager.o SceneManager.o
 
 all :
 	if [ ! -d "./$(BUILD_DIR)/" ];then\

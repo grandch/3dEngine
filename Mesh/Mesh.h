@@ -12,7 +12,7 @@
 #include <string>
 
 #include "../Shaders/Shader.h"
-#include "../Light/LightManager.h"
+#include "../Scene/LightManager.h"
 
 class MeshHalfEdge;
 class MeshVertex;
@@ -65,6 +65,7 @@ class Mesh
 
         Shader* getShader();
 
+        // TODO : merge into transform method
         void rotate(mat4 rotation);
         void translate(mat4 translation);
         void scale(mat4 scaleMat);

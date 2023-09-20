@@ -1,7 +1,7 @@
 #include "Axis.h"
-#include "../Mesh/MeshVertex.h"
-#include "../Mesh/MeshEdge.h"
-#include "../Light/LightManager.h"
+#include "../../Mesh/MeshVertex.h"
+#include "../../Mesh/MeshEdge.h"
+#include "../LightManager.h"
 
 
 Axis::Axis(): m_meshX(nullptr), m_meshY(nullptr), m_meshZ(nullptr)
