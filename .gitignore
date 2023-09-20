@@ -32,8 +32,4 @@
 *.app
 build/
 
-# Images
-*.tga
-*.png
-
 .vscode
