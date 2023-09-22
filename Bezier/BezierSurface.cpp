@@ -2,7 +2,7 @@
 #include "BezierCurve.h"
 #include "../Mesh/MeshVertex.h"
 #include "../Mesh/MeshEdge.h"
-#include "../Light/LightManager.h"
+#include "../Scene/LightManager.h"
 
 #include <vector>
 
@@ -92,7 +92,7 @@ void BezierSurface::draw(mat4 &projection, mat4 &view, LightManager* lightManage
 
 void BezierSurface::transform(mat4 transf)
 {
-    m_mesh->translate(transf);
+    m_mesh->transform(transf);
 
     for(BezierCurve* bc : m_bcT)
     {

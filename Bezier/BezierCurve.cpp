@@ -2,7 +2,7 @@
 #include "../Mesh/Mesh.h"
 #include "../Mesh/MeshEdge.h"
 #include "../Mesh/MeshVertex.h"
-#include "../Light/LightManager.h"
+#include "../Scene/LightManager.h"
 
 BezierCurve::BezierCurve(vec3 p0, vec3 p1, vec3 p2, vec3 p3): m_p0(p0), m_p3(p3), m_p1(p1), m_p2(p2), m_meshCurve(nullptr), m_meshControlPolygon(nullptr), m_next(nullptr)
 {
@@ -125,8 +125,8 @@ void BezierCurve::draw(mat4 &projection, mat4 &view)
 
 void BezierCurve::transform(mat4 transf)
 {
-    m_meshControlPolygon->translate(transf);
-    m_meshCurve->translate(transf);
+    m_meshControlPolygon->transform(transf);
+    m_meshCurve->transform(transf);
 
     if(m_next != nullptr)
     {

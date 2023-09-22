@@ -1,5 +1,5 @@
 #include "../Mesh/Mesh.h"
-#include "../Light/LightManager.h"
+#include "../Scene/LightManager.h"
 #include <vector>
 
 using namespace std;

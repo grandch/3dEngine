@@ -6,19 +6,25 @@ MeshManager::MeshManager()
 MeshManager::~MeshManager()
 {}
 
-void MeshManager::addMesh(char *name, Mesh *mesh)
+void MeshManager::addMesh(string name, Mesh *mesh)
 {
     m_meshes.insert({name, mesh});
+    mesh->loadMesh();
 }
 
-void MeshManager::removeMesh(char *name)
+Mesh* MeshManager::getMesh(string name)
+{
+    return m_meshes[name];
+}
+
+void MeshManager::removeMesh(string name)
 {
     m_meshes.erase(name);
 }
 
-void MeshManager::transformMesh(char *name, mat4 transform)
+void MeshManager::transformMesh(string name, mat4 transform)
 {
-    m_meshes[name]->translate(transform);
+    m_meshes[name]->transform(transform);
 }
 
 void MeshManager::draw(mat4 &projection, mat4 &view, LightManager *lightManager)

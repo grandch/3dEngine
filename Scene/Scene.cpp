@@ -4,6 +4,7 @@ Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidt
 {
     m_axis = new Axis();
     m_lightManager = new LightManager();
+    m_meshManager = new MeshManager();
 }
 
 Scene::~Scene()
@@ -16,16 +17,14 @@ Scene::~Scene()
 }
 
 
-void Scene::initModel(string file)
+void Scene::initModel(string file, string name)
 {
-    m_mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDF.frag");
+    Mesh* mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDF.frag");
 
-    Importer importer(m_mesh);
+    Importer importer(mesh);
     importer.loadObjFile(file);
 
-    m_mesh->loadMesh();
-
-    cout << "Mesh loaded" << endl << endl;
+    m_meshManager->addMesh(name, mesh);
 }
 
 bool Scene::initWindow()
@@ -122,7 +121,7 @@ void Scene::mainLoop()
 
         if(m_input.getKey(SDL_SCANCODE_C))
         {
-            m_mesh->compileShaders();
+            //m_mesh->compileShaders();
             m_bezierS->getMesh()->compileShaders();
         }
 
@@ -150,7 +149,7 @@ void Scene::mainLoop()
         m_bezierST->draw(projection, view, m_lightManager);
         m_bezier->draw(projection, view);
         m_axis->draw(projection, view);
-        m_mesh->draw(projection, view, m_lightManager);
+        m_meshManager->draw(projection, view, m_lightManager);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -176,10 +175,9 @@ bool Scene::initScene()
     m_bezier->addSegment(vec3(1, 1, 1), vec3(3, 3, 3), vec3(0, 5, 0));
     m_bezier->compute(16);
     m_bezier->transform(translate(vec3(10,0,0)));
-    printf("seg\n");
 
-    initModel("Models/vase.obj");
-    m_mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 128);
+    initModel("Models/vase.obj", "vase");
+    m_meshManager->getMesh("vase")->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 128);
 
     m_axis->loadAxis();
 

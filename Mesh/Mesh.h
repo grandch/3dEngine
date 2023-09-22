@@ -65,10 +65,7 @@ class Mesh
 
         Shader* getShader();
 
-        // TODO : merge into transform method
-        void rotate(mat4 rotation);
-        void translate(mat4 translation);
-        void scale(mat4 scaleMat);
+        void transform(mat4 transform);
 
     private:
 
