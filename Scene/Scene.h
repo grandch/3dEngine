@@ -22,6 +22,7 @@
 #include "../Light/PointLight.h"
 #include "LightManager.h"
 #include "MeshManager.h"
+#include "BezierManager.h"
 
 #include <GLES3/gl3.h>
 
@@ -56,12 +57,10 @@ class Scene
         SDL_Event m_events;
         Input m_input;
 
-        BezierCurve* m_bezier;
-        BezierSurface* m_bezierS;
-        BezierSurface* m_bezierST;
         Axis* m_axis;
 
         LightManager* m_lightManager;
         MeshManager* m_meshManager;
+        BezierManager* m_bezierManager;
 };
 #endif

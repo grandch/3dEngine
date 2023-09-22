@@ -1,3 +1,6 @@
+#ifndef BEZIERCURVE
+#define BEZIERCURVE
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -40,3 +43,5 @@ class BezierCurve
 
         BezierCurve* m_next;
 };
+
+#endif

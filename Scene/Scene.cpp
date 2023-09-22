@@ -5,6 +5,7 @@ Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidt
     m_axis = new Axis();
     m_lightManager = new LightManager();
     m_meshManager = new MeshManager();
+    m_bezierManager = new BezierManager();
 }
 
 Scene::~Scene()
@@ -121,8 +122,8 @@ void Scene::mainLoop()
 
         if(m_input.getKey(SDL_SCANCODE_C))
         {
-            //m_mesh->compileShaders();
-            m_bezierS->getMesh()->compileShaders();
+            // m_mesh->compileShaders();
+            // m_bezierS->getMesh()->compileShaders();
         }
 
         camera.move(m_input);
@@ -145,11 +146,9 @@ void Scene::mainLoop()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
         camera.lookAt(view);
 
-        m_bezierS->draw(projection, view, m_lightManager);
-        m_bezierST->draw(projection, view, m_lightManager);
-        m_bezier->draw(projection, view);
         m_axis->draw(projection, view);
         m_meshManager->draw(projection, view, m_lightManager);
+        m_bezierManager->draw(projection, view, m_lightManager);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
@@ -171,10 +170,11 @@ bool Scene::initScene()
     if (this->initGL() == false)
     return false;
 
-    m_bezier = new BezierCurve(vec3(0,-5,0), vec3(2, 1, 3), vec3(-2, 2, 2), vec3(0,3,0));
-    m_bezier->addSegment(vec3(1, 1, 1), vec3(3, 3, 3), vec3(0, 5, 0));
-    m_bezier->compute(16);
-    m_bezier->transform(translate(vec3(10,0,0)));
+    BezierCurve* bezier = new BezierCurve(vec3(0,-5,0), vec3(2, 1, 3), vec3(-2, 2, 2), vec3(0,3,0));
+    bezier->addSegment(vec3(1, 1, 1), vec3(3, 3, 3), vec3(0, 5, 0));
+    bezier->compute(16);
+    bezier->transform(translate(vec3(10,0,0)));
+    m_bezierManager->addCurve("curve", bezier);
 
     initModel("Models/vase.obj", "vase");
     m_meshManager->getMesh("vase")->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 128);
@@ -186,22 +186,24 @@ bool Scene::initScene()
     BezierCurve* b2 = new BezierCurve(vec3(-1.5, 2, 0), vec3(-0.5, 2, 0), vec3(0.5, 5, 2), vec3(1.5, 2, 0));
     BezierCurve* b3 = new BezierCurve(vec3(-1.5, 3, 0), vec3(-0.5, 3, 0), vec3(0.5, 3, 0), vec3(1.5, 3, 0));
 
-    m_bezierS = new BezierSurface(b0, b1, b2, b3);
-    m_bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
-    m_bezierS->transform(translate(vec3(5,0,0)));
+    BezierSurface* bezierS = new BezierSurface(b0, b1, b2, b3);
+    bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
+    bezierS->transform(translate(vec3(5,0,0)));
+
+    m_bezierManager->addSurface("surface1", bezierS);
 
     b0 = new BezierCurve(vec3(-1.5, 0, 0), vec3(-0.5, 0, 0), vec3(0.5, 0, 0), vec3(1.5, 0, 0));
     b1 = new BezierCurve(vec3(-1.5, 1, 0), vec3(-0.5, 1, 0), vec3(0.5, 1, 1), vec3(1.5, 1, 0));
     b2 = new BezierCurve(vec3(-1.5, 2, 0), vec3(-0.5, 2, 0), vec3(0.5, 2, 2), vec3(1.5, 2, 0));
     b3 = new BezierCurve(vec3(-1.5, 3, 0), vec3(-0.5, 3, 0), vec3(0.5, 3, 0), vec3(1.5, 3, 0));
 
-    m_bezierST = new BezierSurface(b0, b1, b2, b3);
-    m_bezierST->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
-    m_bezierST->transform(translate(vec3(-5,0,0)));
-
-    m_bezierST->getMesh()->getShader()->loadDiffuseColorTexture("Shaders/metal_plate_diff.jpg");
-    m_bezierST->getMesh()->getShader()->loadShininessTexture("Shaders/metal_plate_rough.jpg");
-    m_bezierST->getMesh()->getShader()->loadSpecularColorTexture("Shaders/metal_plate_spec.jpg");
+    bezierS = new BezierSurface(b0, b1, b2, b3);
+    bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
+    bezierS->transform(translate(vec3(-5,0,0)));
+    bezierS->getMesh()->getShader()->loadDiffuseColorTexture("Shaders/metal_plate_diff.jpg");
+    bezierS->getMesh()->getShader()->loadShininessTexture("Shaders/metal_plate_rough.jpg");
+    bezierS->getMesh()->getShader()->loadSpecularColorTexture("Shaders/metal_plate_spec.jpg");
+    m_bezierManager->addSurface("surface2", bezierS);
 
     PointLight p1 = PointLight(vec4(4,10,4,1), vec3(1,0.95,0.9));
     PointLight p2 = PointLight(vec4(-4,5,4,1), vec3(1,0.6,0.3));
