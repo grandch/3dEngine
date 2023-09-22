@@ -3,6 +3,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include <map>
+#include <string>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -17,14 +18,15 @@ class MeshManager
         MeshManager();
         ~MeshManager();
 
-        void addMesh(char* name, Mesh* mesh);
-        void removeMesh(char* name);
-        void transformMesh(char* name, mat4 transform);
+        void addMesh(string name, Mesh* mesh);
+        Mesh* getMesh(string name);
+        void removeMesh(string name);
+        void transformMesh(string name, mat4 transform);
 
         void draw(mat4 &projection, mat4 &view, LightManager* lightManager);
 
     private:
-        map<char*, Mesh*> m_meshes;
+        map<string, Mesh*> m_meshes;
 };
 
 #endif

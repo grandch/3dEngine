@@ -21,6 +21,7 @@
 #include "Axis/Axis.h"
 #include "../Light/PointLight.h"
 #include "LightManager.h"
+#include "MeshManager.h"
 
 #include <GLES3/gl3.h>
 
@@ -34,7 +35,7 @@ class Scene
         Scene(string title, int width, int height);
         ~Scene();
 
-        void initModel(string file);
+        void initModel(string file, string name);
         bool initWindow();
         bool initGL();
 
@@ -55,12 +56,12 @@ class Scene
         SDL_Event m_events;
         Input m_input;
 
-        Mesh* m_mesh;
         BezierCurve* m_bezier;
         BezierSurface* m_bezierS;
         BezierSurface* m_bezierST;
         Axis* m_axis;
 
         LightManager* m_lightManager;
+        MeshManager* m_meshManager;
 };
 #endif

@@ -361,17 +361,7 @@ Shader *Mesh::getShader()
     return &m_shader;
 }
 
-void Mesh::rotate(mat4 rotation)
+void Mesh::transform(mat4 transform)
 {
-    m_model = rotation * m_model;
-}
-
-void Mesh::translate(mat4 translation)
-{
-    m_model = translation * m_model;
-}
-
-void Mesh::scale(mat4 scaleMat)
-{
-    m_model = scaleMat * m_model;
+    m_model = transform * m_model;
 }
