@@ -36,6 +36,10 @@ class Scene
         Scene(string title, int width, int height);
         ~Scene();
 
+        LightManager* getLightManager();
+        MeshManager* getMeshManager();
+        BezierManager* getBezierManager();
+
         void initModel(string file, string name);
         bool initWindow();
         bool initGL();
