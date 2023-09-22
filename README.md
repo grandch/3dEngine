@@ -36,7 +36,7 @@ Presse Escape to quit.
 
 ### Compatibility
 
-.obj files only, with no texture coordinate (uv). Files with a number of vertex > 1000 can be slow to load (a few seconds).
+.obj files only. Files with a number of vertex > 1000 can be slow to load (a few seconds).
 Including materials is useless for now.
 
 ### Perspectives
