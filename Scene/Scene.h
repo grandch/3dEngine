@@ -40,7 +40,6 @@ class Scene
         MeshManager* getMeshManager();
         BezierManager* getBezierManager();
 
-        void initModel(string file, string name);
         bool initWindow();
         bool initGL();
 
