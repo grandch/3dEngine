@@ -31,8 +31,7 @@ Rotate it with the mouse while pressing the wheel. The first wheel input will ro
 
 Presse Escape to quit.
 
-3D objects and lights (only point light for now) can be instancited in the `Scene::initScene()` method and rendered in the `Scene::mainLoop()`. This is not conveniant and scene management will be ehanced soon (see [issue 13](https://github.com/grandch/3dEngine/issues/13)).
-
+3D objects and lights (only point light for now) can be instantiated and rendered in a main.cpp file throught a Scene and its managers. Check the project's main.cpp file to see how it works.
 3D objects can be Bezier curves, Bezier surfaces or meshes.
 
 ### Compatibility
