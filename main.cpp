@@ -27,8 +27,14 @@ int main(int argc, char **argv)
 
     Mesh* mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDF.frag");
     Importer importer(mesh);
-    importer.loadObjFile("Models/vase.obj");
+    importer.loadObjFile("Models/scurry.obj");
     mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 128);
+    meshManager->addMesh("scurry", mesh);
+
+    mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDF.frag");
+    Importer importer2(mesh);
+    importer2.loadObjFile("Models/vase.obj");
+    mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 32);
     meshManager->addMesh("vase", mesh);
 
     BezierCurve* b0 = new BezierCurve(vec3(-1.5, 0, 0), vec3(-0.5, 0, -1), vec3(0.5, 0, 0), vec3(1.5, 0, 0));

@@ -88,10 +88,27 @@ MeshVertex* Importer::findOrCreateVertex(char* nvntnn,
 {
     //index extracting
     int nv, nt, nn;
-    sscanf(nvntnn, "%d//%d", &nv, &nn);
-    nv--; nn--;
-
-    nt =  0;
+    int ssc = sscanf(nvntnn, "%d/%d/%d", &nv, &nt, &nn);
+    if( ssc == 2)
+    {
+        sscanf(nvntnn, "%d/%d/", &nv, &nt);
+        nn = 0;
+    }
+    else if (ssc == 1)
+    {
+        ssc = sscanf(nvntnn, "%d//%d", &nv, &nn);
+        if(ssc == 2)
+        {
+            nt = 0;
+        }
+        else
+        {
+            sscanf(nvntnn, "%d//", &nv);
+            nt = 0; nn = 0;
+        }
+    }
+    
+    nv--; nt--; nn--;    
 
     //vertex name
     stringstream ss;
@@ -106,15 +123,17 @@ MeshVertex* Importer::findOrCreateVertex(char* nvntnn,
             return s;
         }
     }
-
+    
     //create vertex
     MeshVertex* vertex = m_mesh->addVertex(name);
     vertexList[nv].push_front(vertex);
-
+    
     //vertex settings
     vertex->setCoord(coordList[nv]);
-    //vertex->setTexCoord(texCoordList[nt]); //need to implement texture support before activating this line
-    vertex->setNormal(normalList[nn]);
+    if(nt >= 0)
+        vertex->setUv(texCoordList[nt]);
+    if(nn >= 0)
+        vertex->setNormal(normalList[nn]);
     vertex->setColor(vec3(1.0, 1.0, 1.0)); //white color for an AWESOME render
 
     return vertex; //to construct polygon
