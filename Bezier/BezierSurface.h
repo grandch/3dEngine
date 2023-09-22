@@ -1,3 +1,6 @@
+#ifndef BEZIERSURFACE
+#define BEZIERSURFACE
+
 #include "../Mesh/Mesh.h"
 #include "../Scene/LightManager.h"
 #include <vector>
@@ -27,3 +30,5 @@ class BezierSurface
 
         Mesh* m_mesh;
 };
+
+#endif
