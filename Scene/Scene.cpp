@@ -17,6 +17,20 @@ Scene::~Scene()
     SDL_Quit();
 }
 
+LightManager *Scene::getLightManager()
+{
+    return m_lightManager;
+}
+
+MeshManager *Scene::getMeshManager()
+{
+    return m_meshManager;
+}
+
+BezierManager *Scene::getBezierManager()
+{
+    return m_bezierManager;
+}
 
 void Scene::initModel(string file, string name)
 {
