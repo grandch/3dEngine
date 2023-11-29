@@ -69,6 +69,10 @@ void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, int it)
     }
 
     // compute laplacian with rings
+    for(int i = 0; i < it; i++)
+    {
+        
+    }
 }
 
 int main(int argc, char **argv)
