@@ -44,6 +44,11 @@ class MeshVertex
         void linkSibling(MeshHalfEdge* halfEdge);
         void unlinkSibling(MeshHalfEdge* halfEdge);
 
+        // laplacian computing
+        float getLaplacian();
+        void setLaplacian(float laplacian);
+        void applyLaplacian();
+
     private:
 
         string m_name;
@@ -57,5 +62,9 @@ class MeshVertex
         vector<MeshTriangle*> m_faces;
 
         GLushort m_number;
+
+        // laplacian computing
+        float m_curentLaplacian;
+        float m_computedLaplacian;
 };
 #endif

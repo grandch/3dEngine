@@ -4,7 +4,7 @@
 #include "MeshTriangle.h"
 #include "Mesh.h"
 
-MeshVertex::MeshVertex(Mesh* mesh, string name): m_name(name), m_mesh(mesh), m_halfEdge(nullptr), m_uv(vec2(0))
+MeshVertex::MeshVertex(Mesh* mesh, string name): m_name(name), m_mesh(mesh), m_halfEdge(nullptr), m_uv(vec2(0)), m_curentLaplacian(0), m_computedLaplacian(0)
 {
     if(mesh != nullptr)
     {
@@ -156,4 +156,20 @@ void MeshVertex::unlinkSibling(MeshHalfEdge* halfEdge)
             other = other->getSibling();
         }
     }
+}
+
+float MeshVertex::getLaplacian()
+{
+    return m_curentLaplacian;
+}
+
+void MeshVertex::setLaplacian(float laplacian)
+{
+    m_computedLaplacian = laplacian;
+}
+
+void MeshVertex::applyLaplacian()
+{
+    m_curentLaplacian = m_computedLaplacian;
+    m_computedLaplacian = 0;
 }
