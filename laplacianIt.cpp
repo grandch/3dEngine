@@ -58,24 +58,24 @@ map<int, MeshVertex*> getNextRing(map<int, MeshVertex*> actualRing, map<int, Mes
     return nextRing;
 }
 
-void vertexLaplacian(MeshVertex* v)
+void vertexLaplacian(MeshVertex* v, float alpha)
 {
     vector<MeshVertex*> neighbors = getNeighbors(v);
 
     float sum = 0;
     for(MeshVertex* neighbor: neighbors)
     {
-        sum += neighbor->getLaplacian() - v->getLaplacian();
+        sum += neighbor->getLaplacian() + (1 - alpha) * v->getLaplacian();
     }
 
-    v->setLaplacian(sum / neighbors.size());
+    v->setLaplacian(alpha * sum / neighbors.size());
 }
 
-void ringLaplacian(map<int, MeshVertex*> ring)
+void ringLaplacian(map<int, MeshVertex*> ring, float alpha)
 {
     for(std::pair<int, MeshVertex*> v: ring)
     {
-        vertexLaplacian(v.second);
+        vertexLaplacian(v.second, alpha);
     }
 }
 
@@ -90,7 +90,7 @@ void applyLaplacian(vector<map<int, MeshVertex*>> rings)
     }
 }
 
-void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, int it)
+void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, int it, float alpha)
 {
     // init
     mesh->initLaplacian(heatVertex);
@@ -115,7 +115,7 @@ void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, int it)
         for(int j = 0; j <= i && j < rings.size(); j++)
         {
             map<int, MeshVertex*> curentRing = rings[j];
-            ringLaplacian(curentRing);
+            ringLaplacian(curentRing, alpha);
         }
         applyLaplacian(rings);
     }
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
 
     MeshVertex* heatVertex = mesh->getVertex("v(8, 8, 0)");
 
-    laplacianIt(mesh, heatVertex, 16);
+    laplacianIt(mesh, heatVertex, 32, 0.45);
 
     mesh->loadMesh();
 
