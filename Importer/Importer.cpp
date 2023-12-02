@@ -134,7 +134,7 @@ MeshVertex* Importer::findOrCreateVertex(char* nvntnn,
         vertex->setUv(texCoordList[nt]);
     if(nn >= 0)
         vertex->setNormal(normalList[nn]);
-    vertex->setColor(vec3(1.0, 1.0, 1.0)); //white color for an AWESOME render
+    vertex->setColor(vec3(1.0, 0.0, 0.0)); //white color for an AWESOME render
 
     return vertex; //to construct polygon
 }

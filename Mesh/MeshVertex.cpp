@@ -171,5 +171,5 @@ void MeshVertex::setLaplacian(float laplacian)
 void MeshVertex::applyLaplacian()
 {
     m_curentLaplacian = m_computedLaplacian;
-    m_computedLaplacian = 0;
+    m_attributes[1] = vec4(m_computedLaplacian, m_computedLaplacian, m_computedLaplacian, 1);
 }

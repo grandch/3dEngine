@@ -56,6 +56,8 @@ class Mesh
         MeshVertex* addVertex(string name);
         void pushVertex(MeshVertex* vertex);
         void popVertex(MeshVertex* vertex);
+        vector<MeshVertex*> getVertex(vec3 coord);
+        MeshVertex* getVertex(string name);
 
         void computeNormals();
         void compileShaders();
@@ -66,6 +68,10 @@ class Mesh
         Shader* getShader();
 
         void transform(mat4 transform);
+
+        // laplacian computing
+        void applyLaplacian();
+        void initLaplacian(MeshVertex* heatVertex);
 
     private:
 

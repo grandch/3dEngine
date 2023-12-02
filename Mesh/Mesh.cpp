@@ -173,6 +173,7 @@ void Mesh::loadEdgeVAO()
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(0);
 
+        // TODO: give it another color (eg setedge color) (another shader maybe)
         glBindBuffer(GL_ARRAY_BUFFER, m_colorVboId);
 
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -333,6 +334,32 @@ void Mesh::popVertex(MeshVertex* vertex)
     m_vertexList.erase(m_vertexList.begin() + i);
 }
 
+vector<MeshVertex*> Mesh::getVertex(vec3 coord)
+{
+    vec4 compCoord = vec4(coord, 1.0f);
+    vector<MeshVertex*> vertices;
+    for(MeshVertex* v: m_vertexList)
+    {
+        if(v->getAttribute(0) == compCoord)
+        {
+            vertices.push_back(v);
+        }
+    }
+    return vertices;
+}
+
+MeshVertex *Mesh::getVertex(string name)
+{
+    for(MeshVertex* v: m_vertexList)
+    {
+        if(v->getName() == name)
+        {
+            return v;
+        }
+    }
+    return nullptr;
+}
+
 void Mesh::computeNormals()
 {
     for(MeshVertex* v: m_vertexList)
@@ -364,4 +391,23 @@ Shader *Mesh::getShader()
 void Mesh::transform(mat4 transform)
 {
     m_model = transform * m_model;
+}
+
+void Mesh::applyLaplacian()
+{
+    for(MeshVertex* v: m_vertexList)
+    {
+        v->applyLaplacian();
+    }
+}
+
+void Mesh::initLaplacian(MeshVertex *heatVertex)
+{
+    for(MeshVertex* v: m_vertexList)
+    {
+        v->setLaplacian(0.0);
+        v->applyLaplacian();
+    }
+    heatVertex->setLaplacian(1.0);
+    heatVertex->applyLaplacian();
 }

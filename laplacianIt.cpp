@@ -5,13 +5,13 @@
 #include <vector>
 #include <map>
 
-vector<MeshVertex*> getVerticesArround(MeshVertex* v)
+vector<MeshVertex*> getNeighbors(MeshVertex* v)
 {
     vector<MeshVertex*> vertices;
     vector<MeshTriangle*> triangles = v->getTrianglesAround();
 
     // id verification
-    for(int i = 0; i < 3; i++)
+    for(int i = 0; i < triangles.size(); i++)
     {
         if(!triangles[i]->getVertex0()->getNumber() != v->getNumber())
         {
@@ -44,7 +44,7 @@ map<int, MeshVertex*> getNextRing(map<int, MeshVertex*> actualRing, map<int, Mes
 
     for(std::pair<int, MeshVertex*> actualV: actualRing)
     {
-        vector<MeshVertex*> vArround = getVerticesArround(actualV.second);
+        vector<MeshVertex*> vArround = getNeighbors(actualV.second);
         
         for(MeshVertex* arroundV: vArround)
         {
@@ -60,7 +60,7 @@ map<int, MeshVertex*> getNextRing(map<int, MeshVertex*> actualRing, map<int, Mes
 
 void vertexLaplacian(MeshVertex* v)
 {
-    vector<MeshVertex*> neighbors = getVerticesArround(v);
+    vector<MeshVertex*> neighbors = getNeighbors(v);
 
     float sum = 0;
     for(MeshVertex* neighbor: neighbors)
@@ -93,7 +93,7 @@ void applyLaplacian(vector<map<int, MeshVertex*>> rings)
 void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, int it)
 {
     // init
-    heatVertex->setColor(vec3(1,1,1));
+    mesh->initLaplacian(heatVertex);
     vector<map<int, MeshVertex*>> rings;
     map<int, MeshVertex*> heat; heat.insert({heatVertex->getNumber(), heatVertex});
     map<int, MeshVertex*> base;
@@ -106,10 +106,13 @@ void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, int it)
         rings.push_back(getNextRing(rings[i-1], rings[i-2]));
     }
 
+    // remove base and heat rings (no computing needed)
+    rings.erase(rings.begin(), rings.begin()+2);
+
     // compute laplacian with rings
     for(int i = 0; i < it; i++)
     {
-        for(int j = 0; j <= i; j++)
+        for(int j = 0; j <= i && j < rings.size(); j++)
         {
             map<int, MeshVertex*> curentRing = rings[j];
             ringLaplacian(curentRing);
@@ -126,5 +129,21 @@ int main(int argc, char **argv)
         return -1;
 
     MeshManager* meshManager = scene.getMeshManager();
-    LightManager* lightManager = scene.getLightManager();
+
+    Mesh* mesh = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    Importer importer(mesh);
+    importer.loadObjFile("Models/laplacianMesh.obj");
+    mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 128);
+    meshManager->addMesh("laplacianMesh", mesh);
+    mesh->setDrawEdges(true);
+
+    MeshVertex* heatVertex = mesh->getVertex("v(8, 8, 0)");
+
+    laplacianIt(mesh, heatVertex, 16);
+
+    mesh->loadMesh();
+
+    scene.mainLoop();
+
+    return 0;
 }
