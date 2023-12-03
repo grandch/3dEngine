@@ -360,6 +360,11 @@ MeshVertex *Mesh::getVertex(string name)
     return nullptr;
 }
 
+vector<MeshVertex *> Mesh::getVertices()
+{
+    return m_vertexList;
+}
+
 void Mesh::computeNormals()
 {
     for(MeshVertex* v: m_vertexList)

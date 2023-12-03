@@ -58,6 +58,7 @@ class Mesh
         void popVertex(MeshVertex* vertex);
         vector<MeshVertex*> getVertex(vec3 coord);
         MeshVertex* getVertex(string name);
+        vector<MeshVertex*> getVertices();
 
         void computeNormals();
         void compileShaders();
