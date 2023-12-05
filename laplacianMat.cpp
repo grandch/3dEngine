@@ -2,6 +2,13 @@
 #include "Mesh/MeshVertex.h"
 #include "Mesh/MeshTriangle.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+using namespace glm;
+
 #include <vector>
 #include <map>
 
@@ -90,34 +97,132 @@ void applyLaplacian(vector<map<int, MeshVertex*>> rings)
     }
 }
 
-void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, vector<MeshVertex> boundaries)
+bool isBoundarie(MeshVertex* v)
 {
-    // init matrix
-    int nVertices = mesh->getVertices().size();
+    return getNeighbors(v).size() < 6;
+}
 
-    // add heatpoints to matrix
-        // check if the vertex is on a boundarie
-            // apply the rule 
+bool areNeighbors(MeshVertex* v1, MeshVertex* v2)
+{
+    vector<MeshVertex*> neighbors = getNeighbors(v1);
+    for(MeshVertex* n: neighbors)
+    {
+        if(n->getName() == v2->getName())
+        {
+            return true;
+        }
+    }
 
-    map<int, MeshVertex*> ring = getNextRing(heatPoints, {});
-    map<int, MeshVertex*> previousRing = heatPoints;
+    return false;
+}
+
+std::pair<MeshVertex*, MeshVertex*> getSharedNeighbors(MeshVertex* v1, MeshVertex* v2)
+{
+    bool foundFirstOne = false;
+    std::pair<MeshVertex*, MeshVertex*> tr;
+    vector<MeshVertex*> neighbors1 = getNeighbors(v1);
+    vector<MeshVertex*> neighbors2 = getNeighbors(v2);
+
+    for(MeshVertex* n1: neighbors1)
+    {
+        for(MeshVertex* n2: neighbors2)
+        {
+            if(n1->getName() == n2->getName())
+            {
+                if(!foundFirstOne)
+                {
+                    tr.first = n1;
+                    foundFirstOne = true;
+                }
+                else
+                {
+                    tr.second = n1;
+                    return tr;
+                }
+            }
+        }
+    }
+
+    return {nullptr, nullptr};
+}
+
+void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex*> boundaries)
+{
+    // init rings
+    vector<map<int, MeshVertex*>> rings;
+    vector<MeshVertex*> vertices;
+
+    map<int, MeshVertex*> ring = heatPoints;
+    map<int, MeshVertex*> previousRing = {};
     map<int, MeshVertex*> nextRing;
 
-    int i = heatPoints.size();
-    while (i < nVertices)
+    while (ring.size() > 0)
     {
-        i += ring.size();
-        // add neighbors to matrix
-            // check if the vertex is on a boundarie
-                // apply the rule 
-        
         nextRing = getNextRing(ring, previousRing);
+        rings.push_back(nextRing);
+
+        // remove all boundaries for generating new ring
+        for(auto v = nextRing.begin(); v != nextRing.end();)
+        {
+            vertices.push_back(v->second);
+            if(isBoundarie(v->second) || mapContains(boundaries, v->first))
+                v = nextRing.erase(v);
+            else
+                v++;
+        }
+
         previousRing = ring;
         ring = nextRing;
     }
     
+    // init matrix
+    int nVertices = vertices.size();
+    float vertexFactors[nVertices][nVertices];
 
-    // init weights matrix
+    // construct weight matrix
+    for(int i = 0; i < nVertices; i++)
+    {
+        for (int j = i; j < nVertices; j++)
+        {
+            // TODO check if fill the matrix symetricaly or fill the second part with zeros
+            if(isBoundarie(vertices[i]) || mapContains(boundaries, vertices[i]->getNumber()))
+            {
+                if(i == j)
+                    vertexFactors[i][j] = 1;
+                else
+                {
+                    vertexFactors[i][j] = 0;
+                    vertexFactors[j][i] = 0;
+                }
+            }
+            else
+            {
+                if(i == j)
+                    vertexFactors[i][j] = -1;
+                else
+                {
+                    if(areNeighbors(vertices[i], vertices[j]))
+                    {
+                        std::pair<MeshVertex*, MeshVertex*> sharedNeighbors = getSharedNeighbors(vertices[i], vertices[j]);
+                        vec4 ca = vertices[i]->getAttribute(0) - sharedNeighbors.first->getAttribute(0);
+                        vec4 cb = vertices[j]->getAttribute(0) - sharedNeighbors.first->getAttribute(0);
+                        vec4 da = vertices[i]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
+                        vec4 db = vertices[j]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
+
+                        vertexFactors[i][j] = dot(ca, cb) + dot(da, db);
+                        vertexFactors[j][i] = dot(ca, cb) + dot(da, db);
+                    }
+                    else
+                    {
+                        vertexFactors[i][j] = 0;
+                        vertexFactors[j][i] = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    // init laplacian matrix
 
     // init values matrix
 
