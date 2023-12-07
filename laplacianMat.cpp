@@ -9,6 +9,8 @@
 
 using namespace glm;
 
+#include <Eigen/Dense>
+
 #include <vector>
 #include <map>
 
@@ -175,30 +177,35 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
         ring = nextRing;
     }
     
-    // init matrix
+    // init matrices
     int nVertices = vertices.size();
-    float vertexFactors[nVertices][nVertices];
+    Eigen::MatrixXf vertexFactors(nVertices,nVertices);
+    Eigen::VectorXf values(nVertices);
 
-    // construct weight matrix
+    // construct matrices
     for(int i = 0; i < nVertices; i++)
     {
+        if(mapContains(heatPoints, vertices[i]->getNumber()))
+            values[i] = 1.f;
+        else
+            values[i] = 0.f;
+
+        for (int j = 0; j < i; j++)
+            vertexFactors(i,j) = 0.f;
+
         for (int j = i; j < nVertices; j++)
         {
-            // TODO check if fill the matrix symetricaly or fill the second part with zeros
             if(isBoundarie(vertices[i]) || mapContains(boundaries, vertices[i]->getNumber()))
             {
                 if(i == j)
-                    vertexFactors[i][j] = 1;
+                    vertexFactors(i,j) = 1.f;
                 else
-                {
-                    vertexFactors[i][j] = 0;
-                    vertexFactors[j][i] = 0;
-                }
+                    vertexFactors(i,j) = 0.f;
             }
             else
             {
                 if(i == j)
-                    vertexFactors[i][j] = -1;
+                    vertexFactors(i,j) = -1.f;
                 else
                 {
                     if(areNeighbors(vertices[i], vertices[j]))
@@ -209,25 +216,28 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
                         vec4 da = vertices[i]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
                         vec4 db = vertices[j]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
 
-                        vertexFactors[i][j] = dot(ca, cb) + dot(da, db);
-                        vertexFactors[j][i] = dot(ca, cb) + dot(da, db);
+                        vertexFactors(i,j) = (float) (dot(ca, cb) + dot(da, db));
                     }
                     else
-                    {
-                        vertexFactors[i][j] = 0;
-                        vertexFactors[j][i] = 0;
-                    }
+                        vertexFactors(i,j) = 0.f;
                 }
             }
         }
     }
 
-    // init laplacian matrix
+    // compute X matrix
+    // LU decomposition of a
+    Eigen::FullPivLU<Eigen::MatrixXf> lu(vertexFactors);
 
-    // init values matrix
+    // solve linear system ax = b
+    Eigen::VectorXf x = lu.solve(values);
 
-    // compute matrix
-
+    // set laplacian value to vertices
+    for(int i = 0; i < nVertices; i++)
+    {
+        vertices[i]->setLaplacian(x[i]);
+        vertices[i]->applyLaplacian();
+    }
 }
 
 int main(int argc, char **argv)

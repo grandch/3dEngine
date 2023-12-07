@@ -19,7 +19,7 @@ all :
         mkdir $(BUILD_DIR)/Shaders/;\
     fi
 	
-	$(CC) $(CFLAGS) -c $(INCLUDES)
+	$(CC) $(CFLAGS) -c $(INCLUDES) -I /home/charlie/eigen
 	$(CC) -o $(BUILD_DIR)/$(EXEC_NAME) $(OBJ_FILES) $(LIBS)
 
 	cp Shaders/*.vert $(BUILD_DIR)/Shaders/
