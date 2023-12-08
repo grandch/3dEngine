@@ -151,17 +151,19 @@ std::pair<MeshVertex*, MeshVertex*> getSharedNeighbors(MeshVertex* v1, MeshVerte
 void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex*> boundaries)
 {
     // init rings
-    vector<map<int, MeshVertex*>> rings;
     vector<MeshVertex*> vertices;
 
     map<int, MeshVertex*> ring = heatPoints;
     map<int, MeshVertex*> previousRing = {};
     map<int, MeshVertex*> nextRing;
+    for(std::pair<int, MeshVertex*> v: heatPoints)
+    {
+        vertices.push_back(v.second);
+    }
 
     while (ring.size() > 0)
     {
         nextRing = getNextRing(ring, previousRing);
-        rings.push_back(nextRing);
 
         // remove all boundaries for generating new ring
         for(auto v = nextRing.begin(); v != nextRing.end();)
@@ -186,7 +188,9 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
     for(int i = 0; i < nVertices; i++)
     {
         if(mapContains(heatPoints, vertices[i]->getNumber()))
-            values[i] = 1.f;
+        {
+            values[i] = -1.f;
+        }
         else
             values[i] = 0.f;
 
@@ -197,6 +201,7 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
         {
             if(isBoundarie(vertices[i]) || mapContains(boundaries, vertices[i]->getNumber()))
             {
+                // 1 * /\ v + 0 * /\ n = 0
                 if(i == j)
                     vertexFactors(i,j) = 1.f;
                 else
@@ -204,6 +209,7 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
             }
             else
             {
+                // 
                 if(i == j)
                     vertexFactors(i,j) = -1.f;
                 else
@@ -216,7 +222,7 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
                         vec4 da = vertices[i]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
                         vec4 db = vertices[j]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
 
-                        vertexFactors(i,j) = (float) (dot(ca, cb) + dot(da, db));
+                        vertexFactors(i,j) = - (float) ((dot(ca, cb) + dot(da, db)));
                     }
                     else
                         vertexFactors(i,j) = 0.f;
@@ -225,12 +231,14 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
         }
     }
 
+    
     // compute X matrix
     // LU decomposition of a
     Eigen::FullPivLU<Eigen::MatrixXf> lu(vertexFactors);
 
     // solve linear system ax = b
     Eigen::VectorXf x = lu.solve(values);
+    cout << x << endl;
 
     // set laplacian value to vertices
     for(int i = 0; i < nVertices; i++)
@@ -251,14 +259,53 @@ int main(int argc, char **argv)
 
     Mesh* mesh = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
     Importer importer(mesh);
-    importer.loadObjFile("Models/laplacianMesh.obj");
+    importer.loadObjFile("Models/laplacianMeshIt.obj");
     mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 128);
     meshManager->addMesh("laplacianMesh", mesh);
     mesh->setDrawEdges(true);
 
-    MeshVertex* heatVertex = mesh->getVertex("v(8, 8, 0)");
+    // select boundaries vertices
+    map<int, MeshVertex*> boundaries;
+    float coords[] = {-0.5,0.5,0,
+                    -0.5,0.75,0,
+                    -0.25,0.75,0,
+                    0,0.5,0,
+                    0.25,0.5,0,
+                    0.5,0.5,0,
+                    0.75,0.5,0,
+                    0.75,0.25,0,
+                    1,0,0,
+                    0.75,0,0,
+                    0.5,0,0,
+                    0.25,0,0,
+                    0.25,-0.25,0,
+                    0,0.25,0,
+                    -0.25,0,0,
+                    -0.5,0.25,0,
+                    -0.75,0.5,0};
+    
+    for(int i = 0; i < 17*3; i+=3)
+    {
+        vec3 coord(coords[i], coords[i+1], coords[i+2]);
+        vector<MeshVertex*> vertices = mesh->getVertex(coord);
+        boundaries.insert({vertices[0]->getNumber(), vertices[0]});
+    }
 
-    // laplacian(mesh, heatVertex, 16);
+    // select heat vertices
+    map<int, MeshVertex*> heatPoints;
+    float coords2[] = {0,0,0,
+              0,0.25,0,
+              0,0.5,0};
+    
+    for(int i = 0; i < 3; i+=3)
+    {
+        vec3 coord(coords2[i], coords2[i+1], coords2[i+2]);
+        vector<MeshVertex*> vertices = mesh->getVertex(coord);
+        heatPoints.insert({vertices[0]->getNumber(), vertices[0]});
+    }
+
+    // compute laplacian
+    laplacian(mesh, heatPoints, boundaries);
 
     mesh->loadMesh();
 
