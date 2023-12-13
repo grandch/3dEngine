@@ -156,33 +156,73 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
     map<int, MeshVertex*> ring = heatPoints;
     map<int, MeshVertex*> previousRing = {};
     map<int, MeshVertex*> nextRing;
+
+    int nbHeatPoints, nbBoundaries, nVertices, nbVertices;
+
+    nbHeatPoints = heatPoints.size();
     for(std::pair<int, MeshVertex*> v: heatPoints)
     {
         vertices.push_back(v.second);
     }
-
+    
+    nbVertices = 0;
     while (ring.size() > 0)
     {
         nextRing = getNextRing(ring, previousRing);
 
-        // remove all boundaries for generating new ring
+        // remove all boundaries and heatpoints for generating new ring
         for(auto v = nextRing.begin(); v != nextRing.end();)
         {
-            vertices.push_back(v->second);
-            if(isBoundarie(v->second) || mapContains(boundaries, v->first))
+            if(isBoundarie(v->second) || mapContains(boundaries, v->first) || mapContains(heatPoints, v->first))
                 v = nextRing.erase(v);
             else
+            {
+                nbVertices++;
+                vertices.push_back(v->second);
+                // std::cout << v->second->getNumber() << endl;
                 v++;
+            }
         }
 
         previousRing = ring;
         ring = nextRing;
     }
+
+    nbBoundaries = boundaries.size();
+    for(std::pair<int, MeshVertex*> v: boundaries)
+    {
+        vertices.push_back(v.second);
+    }
     
     // init matrices
-    int nVertices = vertices.size();
+    nVertices = vertices.size();
     Eigen::MatrixXf vertexFactors(nVertices,nVertices);
     Eigen::VectorXf values(nVertices);
+
+    std::cout << "nHeat : " << nbHeatPoints << ", nBound : " << nbBoundaries << ", nbVertices : " << nbVertices << ", nTotalVertices : " << nVertices << endl;
+
+
+    for(int i = 0; i < nbHeatPoints; i++)
+    {
+        if(!mapContains(heatPoints, vertices[i]->getNumber()))
+            std::cout << "False" << endl;
+        else
+        {}
+    }
+    for(int i = nbHeatPoints; i < nbHeatPoints + nbVertices; i++)
+    {
+        if(mapContains(heatPoints, vertices[i]->getNumber()) || mapContains(boundaries, vertices[i]->getNumber()))
+            std::cout << "False" << endl;
+        else
+        {}
+    }
+    for(int i = nbHeatPoints + nbVertices; i < nbHeatPoints + nbVertices + nbBoundaries; i++)
+    {
+        if(!mapContains(boundaries, vertices[i]->getNumber()))
+            std::cout << "False" << endl;
+        else
+        {}
+    }
 
     // construct matrices
     for(int i = 0; i < nVertices; i++)
@@ -209,7 +249,7 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
             }
             else
             {
-                // 
+                // (valance aux angles) * /\ n - /\ v = value
                 if(i == j)
                     vertexFactors(i,j) = -1.f;
                 else
@@ -222,7 +262,7 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
                         vec4 da = vertices[i]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
                         vec4 db = vertices[j]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
 
-                        vertexFactors(i,j) = - (float) ((dot(ca, cb) + dot(da, db)));
+                        vertexFactors(i,j) = (float) ((dot(ca, cb) + dot(da, db)));
                     }
                     else
                         vertexFactors(i,j) = 0.f;
@@ -238,7 +278,7 @@ void laplacian(Mesh* mesh, map<int, MeshVertex*> heatPoints, map<int, MeshVertex
 
     // solve linear system ax = b
     Eigen::VectorXf x = lu.solve(values);
-    cout << x << endl;
+    std::cout << x << endl;
 
     // set laplacian value to vertices
     for(int i = 0; i < nVertices; i++)
@@ -294,10 +334,9 @@ int main(int argc, char **argv)
     // select heat vertices
     map<int, MeshVertex*> heatPoints;
     float coords2[] = {0,0,0,
-              0,0.25,0,
-              0,0.5,0};
+              -0.25,0.25,0};
     
-    for(int i = 0; i < 3; i+=3)
+    for(int i = 0; i < 3*2; i+=3)
     {
         vec3 coord(coords2[i], coords2[i+1], coords2[i+2]);
         vector<MeshVertex*> vertices = mesh->getVertex(coord);
