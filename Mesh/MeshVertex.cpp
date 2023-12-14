@@ -53,6 +53,27 @@ vector<MeshTriangle*> MeshVertex::getTrianglesAround()
     return triangles;
 }
 
+vector<MeshVertex*> MeshVertex::getVerticesAround()
+{
+    MeshHalfEdge* halfEdge = m_halfEdge; //starting half edge
+
+    vector<MeshVertex*> vertices;
+    MeshTriangle* triangle;
+
+    while(halfEdge != nullptr)
+    {
+        triangle = halfEdge->getTriangle();
+
+        vertices.push_back(triangle->getVertex0());
+        vertices.push_back(triangle->getVertex1());
+        vertices.push_back(triangle->getVertex2());
+
+        halfEdge = halfEdge->getSibling();
+    }
+
+    return vertices;
+}
+
 int MeshVertex::getNumber()
 {
     return m_number;

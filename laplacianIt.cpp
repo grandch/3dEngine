@@ -5,33 +5,6 @@
 #include <vector>
 #include <map>
 
-vector<MeshVertex*> getNeighbors(MeshVertex* v)
-{
-    vector<MeshVertex*> vertices;
-    vector<MeshTriangle*> triangles = v->getTrianglesAround();
-
-    // id verification
-    for(int i = 0; i < triangles.size(); i++)
-    {
-        if(!triangles[i]->getVertex0()->getNumber() != v->getNumber())
-        {
-            vertices.push_back(triangles[i]->getVertex0());
-        }
-
-        if(!triangles[i]->getVertex1()->getNumber() != v->getNumber())
-        {
-            vertices.push_back(triangles[i]->getVertex1());
-        }
-
-        if(!triangles[i]->getVertex2()->getNumber() != v->getNumber())
-        {
-            vertices.push_back(triangles[i]->getVertex2());
-        }
-    }
-
-    return vertices;
-}
-
 bool mapContains(map<int, MeshVertex*> map, int key)
 {
     auto search = map.find(key);
@@ -44,7 +17,7 @@ map<int, MeshVertex*> getNextRing(map<int, MeshVertex*> actualRing, map<int, Mes
 
     for(std::pair<int, MeshVertex*> actualV: actualRing)
     {
-        vector<MeshVertex*> vArround = getNeighbors(actualV.second);
+        vector<MeshVertex*> vArround = actualV.second->getVerticesAround();
         
         for(MeshVertex* arroundV: vArround)
         {
@@ -60,7 +33,7 @@ map<int, MeshVertex*> getNextRing(map<int, MeshVertex*> actualRing, map<int, Mes
 
 void vertexLaplacian(MeshVertex* v, float alpha)
 {
-    vector<MeshVertex*> neighbors = getNeighbors(v);
+    vector<MeshVertex*> neighbors = v->getVerticesAround();
 
     float sum = 0;
     for(MeshVertex* neighbor: neighbors)

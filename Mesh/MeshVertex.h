@@ -25,6 +25,7 @@ class MeshVertex
         ~MeshVertex();
 
         vector<MeshTriangle*> getTrianglesAround();
+        vector<MeshVertex*> getVerticesAround();
 
         int getNumber();
         void setNumber(int number);
