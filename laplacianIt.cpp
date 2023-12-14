@@ -3,33 +3,6 @@
 #include "Mesh/MeshTriangle.h"
 
 #include <vector>
-#include <map>
-
-bool mapContains(map<int, MeshVertex*> map, int key)
-{
-    auto search = map.find(key);
-    return search != map.end();
-}
-
-map<int, MeshVertex*> getNextRing(map<int, MeshVertex*> actualRing, map<int, MeshVertex*> previousRing)
-{
-    map<int, MeshVertex*> nextRing;
-
-    for(std::pair<int, MeshVertex*> actualV: actualRing)
-    {
-        vector<MeshVertex*> vArround = actualV.second->getVerticesAround();
-        
-        for(MeshVertex* arroundV: vArround)
-        {
-            if(!mapContains(actualRing, arroundV->getNumber()) && !mapContains(previousRing, arroundV->getNumber()))
-            {
-                nextRing.insert({arroundV->getNumber(), arroundV});
-            }
-        }
-    }
-
-    return nextRing;
-}
 
 void vertexLaplacian(MeshVertex* v, float alpha)
 {
@@ -44,54 +17,16 @@ void vertexLaplacian(MeshVertex* v, float alpha)
     v->setLaplacian(alpha * sum / neighbors.size());
 }
 
-void ringLaplacian(map<int, MeshVertex*> ring, float alpha)
+void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, float alpha)
 {
-    for(std::pair<int, MeshVertex*> v: ring)
+    vector<MeshVertex*> vertices = mesh->getVertices();
+
+    for(MeshVertex* v: vertices)
     {
-        vertexLaplacian(v.second, alpha);
-    }
-}
-
-void applyLaplacian(vector<map<int, MeshVertex*>> rings)
-{
-    for(map<int, MeshVertex*> ring: rings)
-    {
-        for(std::pair<int, MeshVertex*> v: ring)
-        {
-            v.second->applyLaplacian();
-        }
-    }
-}
-
-void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, int it, float alpha)
-{
-    // init
-    mesh->initLaplacian(heatVertex);
-    vector<map<int, MeshVertex*>> rings;
-    map<int, MeshVertex*> heat; heat.insert({heatVertex->getNumber(), heatVertex});
-    map<int, MeshVertex*> base;
-
-    rings.push_back(base);
-    rings.push_back(heat);
-
-    for(int i = 2; i < it+2; i++)
-    {
-        rings.push_back(getNextRing(rings[i-1], rings[i-2]));
+        vertexLaplacian(v, alpha);
     }
 
-    // remove base and heat rings (no computing needed)
-    rings.erase(rings.begin(), rings.begin()+2);
-
-    // compute laplacian with rings
-    for(int i = 0; i < it; i++)
-    {
-        for(int j = 0; j <= i && j < rings.size(); j++)
-        {
-            map<int, MeshVertex*> curentRing = rings[j];
-            ringLaplacian(curentRing, alpha);
-        }
-        applyLaplacian(rings);
-    }
+    mesh->applyLaplacian();
 }
 
 int main(int argc, char **argv)
@@ -111,8 +46,9 @@ int main(int argc, char **argv)
     mesh->setDrawEdges(true);
 
     MeshVertex* heatVertex = mesh->getVertex("v(8, 8, 0)");
-
-    laplacianIt(mesh, heatVertex, 32, 0.45);
+    mesh->initLaplacian(heatVertex);
+    for(int i = 0; i < 3; i++)
+        laplacianIt(mesh, heatVertex, 0.45);
 
     mesh->loadMesh();
 
