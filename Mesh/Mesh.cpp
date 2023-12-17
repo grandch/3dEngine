@@ -39,6 +39,8 @@ void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "view"), 1, GL_FALSE, value_ptr(view));
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
 
+            glDepthFunc(GL_LESS);     // Accept fragment if it closer to the camera than the former one
+
             lightManager->sendDataToShader(&m_shader);
             m_shader.sendMaterialToShader();
             
@@ -56,6 +58,11 @@ void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
                 glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "view"), 1, GL_FALSE, value_ptr(view));
                 glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
 
+                glDepthFunc(GL_ALWAYS);     // Accept fragment if it closer to the camera than the former one
+
+                lightManager->sendDataToShader(&m_shader);
+                m_shader.sendMaterialToShader();
+
                 glLineWidth(1.5);
                 glDrawElements(GL_LINES, m_edgeList.size()*2, GL_UNSIGNED_SHORT, 0);
 
@@ -71,6 +78,7 @@ void Mesh::loadVBO()
     //array to send
     vector<GLfloat> vertex;
     vector<GLfloat> colors;
+    vector<GLfloat> edgesColors;
     vector<GLfloat> normals;
     vector<GLfloat> uvs;
 
@@ -88,6 +96,10 @@ void Mesh::loadVBO()
         colors.push_back(top->getAttribute(1)[0]);
         colors.push_back(top->getAttribute(1)[1]);
         colors.push_back(top->getAttribute(1)[2]);
+
+        edgesColors.push_back(1-top->getAttribute(1)[0]);
+        edgesColors.push_back(1-top->getAttribute(1)[1]);
+        edgesColors.push_back(1-top->getAttribute(1)[2]);
 
         normals.push_back(top->getAttribute(2)[0]);
         normals.push_back(top->getAttribute(2)[1]);
@@ -121,6 +133,7 @@ void Mesh::loadVBO()
 
     m_vertexVboId = makeFloatVBO(vertex, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     m_colorVboId = makeFloatVBO(colors, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+    m_edgesColorVboId = makeFloatVBO(edgesColors, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     m_normalVboId = makeFloatVBO(normals, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
     m_uvVboId = makeFloatVBO(uvs, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 
@@ -173,8 +186,7 @@ void Mesh::loadEdgeVAO()
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(0);
 
-        // TODO: give it another color (eg setedge color) (another shader maybe)
-        glBindBuffer(GL_ARRAY_BUFFER, m_colorVboId);
+        glBindBuffer(GL_ARRAY_BUFFER, m_edgesColorVboId);
 
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(1);
@@ -413,6 +425,7 @@ void Mesh::initLaplacian(MeshVertex *heatVertex)
         v->setLaplacian(0.0);
         v->applyLaplacian();
     }
+    
     heatVertex->setLaplacian(1.0);
     heatVertex->applyLaplacian();
 }
