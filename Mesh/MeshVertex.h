@@ -41,6 +41,7 @@ class MeshVertex
         void computeNormal();
 
         MeshHalfEdge* getHalfEdgeTo(MeshVertex* vertex);
+        MeshHalfEdge* getHalfEdge();
 
         void linkSibling(MeshHalfEdge* halfEdge);
         void unlinkSibling(MeshHalfEdge* halfEdge);

@@ -64,9 +64,12 @@ vector<MeshVertex*> MeshVertex::getVerticesAround()
     {
         triangle = halfEdge->getTriangle();
 
-        vertices.push_back(triangle->getVertex0());
-        vertices.push_back(triangle->getVertex1());
-        vertices.push_back(triangle->getVertex2());
+        if(triangle->getVertex0() != this)
+            vertices.push_back(triangle->getVertex0());
+         if(triangle->getVertex1() != this)
+            vertices.push_back(triangle->getVertex1());
+         if(triangle->getVertex2() != this)
+            vertices.push_back(triangle->getVertex2());
 
         halfEdge = halfEdge->getSibling();
     }
@@ -150,6 +153,11 @@ MeshHalfEdge* MeshVertex::getHalfEdgeTo(MeshVertex* vertex)
         halfEdge = halfEdge->getSibling();
     }
     return nullptr;
+}
+
+MeshHalfEdge *MeshVertex::getHalfEdge()
+{
+    return m_halfEdge;
 }
 
 void MeshVertex::linkSibling(MeshHalfEdge* halfEdge)

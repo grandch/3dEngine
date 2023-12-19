@@ -11,12 +11,10 @@ void vertexLaplacian(MeshVertex* v, float alpha)
     float sum = 0;
     for(MeshVertex* neighbor: neighbors)
     {
-        // sum += neighbor->getLaplacian() + (1 - alpha) * v->getLaplacian();
         sum += neighbor->getLaplacian() - (1 - alpha) * v->getLaplacian();
     }
 
     v->setLaplacian(alpha * sum / neighbors.size());
-    // v->setLaplacian(sum / neighbors.size());
 }
 
 void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, float alpha)

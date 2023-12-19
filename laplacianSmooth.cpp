@@ -24,7 +24,6 @@ void laplacianSmooth(Mesh* mesh, float alpha, float lambda)
 
     for(int i = 0; i < laplacians.size(); i++)
     {
-        // vertices[i]->setCoord(laplacians[i]);
         mat4 transform = translate(laplacians[i]);
         vertices[i]->setCoord(lambda * transform * vertices[i]->getAttribute(0));
     }

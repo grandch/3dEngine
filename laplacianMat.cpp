@@ -40,6 +40,20 @@ std::pair<MeshVertex*, MeshVertex*> getSharedNeighbors(MeshVertex* v1, MeshVerte
     return {next1->getTarget(), next2->getTarget()};
 }
 
+bool isBoundary(MeshVertex* v)
+{
+    MeshHalfEdge* he = v->getHalfEdge();
+
+    while(he->getSibling() != nullptr)
+    {
+        if(he->getOpposite() == nullptr)
+            return true;
+        he = he->getSibling();
+    }
+
+    return false;
+}
+
 void laplacian(Mesh* mesh, map<int, std::pair<float, MeshVertex*>> heatPoints)
 {
     vector<MeshVertex*> vertices = mesh->getVertices();
@@ -63,37 +77,46 @@ void laplacian(Mesh* mesh, map<int, std::pair<float, MeshVertex*>> heatPoints)
                     vertexFactors(i,j) = 0.f;
             }
         }
-        else
+        else if(isBoundary(vertices[i]))
         {
             values[i] = 0.f;
 
             for(int j = 0; j < nVertices; j++)
             {
                 if(i==j)
-                    vertexFactors(i,j) = -1.f;
+                    vertexFactors(i,j) = 1.f;
                 else
-                {
-                    if(areNeighbors(vertices[i], vertices[j]))
-                    {
-                        std::pair<MeshVertex*, MeshVertex*> sharedNeighbors = getSharedNeighbors(vertices[i], vertices[j]);
-
-                        if(sharedNeighbors.first != nullptr && sharedNeighbors.second != nullptr)
-                        {
-                            vec4 ca = vertices[i]->getAttribute(0) - sharedNeighbors.first->getAttribute(0);
-                            vec4 cb = vertices[j]->getAttribute(0) - sharedNeighbors.first->getAttribute(0);
-                            vec4 da = vertices[i]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
-                            vec4 db = vertices[j]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
-
-                            vertexFactors(i,j) = (float) ((dot(ca, cb) + dot(da, db)));
-                        } else
-                        {
-                            vertexFactors(i,j) = 0;
-                        }
-                    }
-                    else
-                        vertexFactors(i,j) = 0.f;
-                }
+                    vertexFactors(i,j) = 0.f;
             }
+        }
+        else
+        {
+            int nNeighbors = 0;
+            for(int j = 0; j < nVertices; j++)
+            {
+                if(areNeighbors(vertices[i], vertices[j]))
+                {
+                    std::pair<MeshVertex*, MeshVertex*> sharedNeighbors = getSharedNeighbors(vertices[i], vertices[j]);
+
+                    if(sharedNeighbors.first != nullptr && sharedNeighbors.second != nullptr)
+                    {
+                        vec4 ca = vertices[i]->getAttribute(0) - sharedNeighbors.first->getAttribute(0);
+                        vec4 cb = vertices[j]->getAttribute(0) - sharedNeighbors.first->getAttribute(0);
+                        vec4 da = vertices[i]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
+                        vec4 db = vertices[j]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
+
+                        vertexFactors(i,j) = (float) ((dot(ca, cb) + dot(da, db)));
+                    } else
+                    {
+                        vertexFactors(i,j) = 0.f;
+                    }
+                    nNeighbors++;
+                }
+                else
+                    vertexFactors(i,j) = 0.f;
+            }
+            vertexFactors(i,i) = -nNeighbors;
+            values[i] = 0.f;
         }
     }
     
@@ -132,8 +155,8 @@ int main(int argc, char **argv)
     map<int, std::pair<float, MeshVertex*>> heatPoints;
 
     // select heat vertices
-    float coords[] = {0,0,0,
-              0,-4,0};
+    float coords[] = {2,0,0,
+              2.5,0,0};
 
     float coords2[] = {-0.5,0,0,
                         0,0.5,0,
@@ -170,19 +193,19 @@ int main(int argc, char **argv)
                         0,-0.5,0,
                         -0.5,-0.5,0};
     
-    for(int i = 0; i < 3; i+=3)
+    for(int i = 0; i < 3*2; i+=3)
     {
         vec3 coord(coords[i], coords[i+1], coords[i+2]);
         vector<MeshVertex*> vertices = mesh->getVertex(coord);
         heatPoints.insert({vertices[0]->getNumber(), {1.f, vertices[0]}});
     }
     
-    for(int i = 0; i < 3*34; i+=3)
-    {
-        vec3 coord(coords2[i], coords2[i+1], coords2[i+2]);
-        vector<MeshVertex*> vertices = mesh->getVertex(coord);
-        heatPoints.insert({vertices[0]->getNumber(), {0.f, vertices[0]}});
-    }
+    // for(int i = 0; i < 3*34; i+=3)
+    // {
+    //     vec3 coord(coords2[i], coords2[i+1], coords2[i+2]);
+    //     vector<MeshVertex*> vertices = mesh->getVertex(coord);
+    //     heatPoints.insert({vertices[0]->getNumber(), {0.f, vertices[0]}});
+    // }
 
     // compute laplacian
     laplacian(mesh, heatPoints);
