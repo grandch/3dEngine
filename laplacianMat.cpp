@@ -31,8 +31,11 @@ std::pair<MeshVertex*, MeshVertex*> getSharedNeighbors(MeshVertex* v1, MeshVerte
     MeshHalfEdge* he = v1->getHalfEdgeTo(v2);
     MeshHalfEdge* opp = he->getOpposite();
 
+    if(opp == nullptr)
+        return {nullptr, nullptr};
+
     MeshHalfEdge* next1 = he->getNext();
-    MeshHalfEdge* next2 = he->getNext();
+    MeshHalfEdge* next2 = opp->getNext();
 
     return {next1->getTarget(), next2->getTarget()};
 }
@@ -43,7 +46,6 @@ void laplacian(Mesh* mesh, map<int, std::pair<float, MeshVertex*>> heatPoints)
     int nVertices = vertices.size();
 
     // init matrices
-    nVertices = vertices.size();
     Eigen::MatrixXf vertexFactors(nVertices,nVertices);
     Eigen::VectorXf values(nVertices);
 
@@ -74,13 +76,19 @@ void laplacian(Mesh* mesh, map<int, std::pair<float, MeshVertex*>> heatPoints)
                     if(areNeighbors(vertices[i], vertices[j]))
                     {
                         std::pair<MeshVertex*, MeshVertex*> sharedNeighbors = getSharedNeighbors(vertices[i], vertices[j]);
-                        
-                        vec4 ca = vertices[i]->getAttribute(0) - sharedNeighbors.first->getAttribute(0);
-                        vec4 cb = vertices[j]->getAttribute(0) - sharedNeighbors.first->getAttribute(0);
-                        vec4 da = vertices[i]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
-                        vec4 db = vertices[j]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
 
-                        vertexFactors(i,j) = (float) ((dot(ca, cb) + dot(da, db)));
+                        if(sharedNeighbors.first != nullptr && sharedNeighbors.second != nullptr)
+                        {
+                            vec4 ca = vertices[i]->getAttribute(0) - sharedNeighbors.first->getAttribute(0);
+                            vec4 cb = vertices[j]->getAttribute(0) - sharedNeighbors.first->getAttribute(0);
+                            vec4 da = vertices[i]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
+                            vec4 db = vertices[j]->getAttribute(0) - sharedNeighbors.second->getAttribute(0);
+
+                            vertexFactors(i,j) = (float) ((dot(ca, cb) + dot(da, db)));
+                        } else
+                        {
+                            vertexFactors(i,j) = 0;
+                        }
                     }
                     else
                         vertexFactors(i,j) = 0.f;
@@ -104,43 +112,6 @@ void laplacian(Mesh* mesh, map<int, std::pair<float, MeshVertex*>> heatPoints)
     }
 }
 
-void transformLaplacian(Mesh* mesh, vec3 tr)
-{
-    vector<MeshVertex*> vertices = mesh->getVertices();
-
-    for(MeshVertex* v: vertices)
-    {
-        mat4 transform = translate(v->getLaplacian() * tr);
-        v->setCoord(/*v->getLaplacian() **/ transform * v->getAttribute(0));
-    }
-}
-
-void laplacianSmooth(Mesh* mesh, float alpha, float lambda)
-{
-    vector<MeshVertex*> vertices = mesh->getVertices();
-    vector<vec3> laplacians;
-
-    for(MeshVertex* v: vertices)
-    {
-        vector<MeshVertex*> neighbors = v->getVerticesAround();
-
-        vec4 sum = vec4(0);
-        for(MeshVertex* n: neighbors)
-        {
-            sum += n->getAttribute(0) - (1 - alpha) * v->getAttribute(0);
-        }
-
-       laplacians.push_back((alpha/neighbors.size()) * vec3(sum.x, sum.y, sum.z) );
-    }
-
-    for(int i = 0; i < laplacians.size(); i++)
-    {
-        // vertices[i]->setCoord(laplacians[i]);
-        mat4 transform = translate(laplacians[i]);
-        vertices[i]->setCoord(lambda * transform * vertices[i]->getAttribute(0));
-    }
-}
-
 int main(int argc, char **argv)
 {
     Scene scene("3dEngine", 1280, 1024);
@@ -152,7 +123,7 @@ int main(int argc, char **argv)
 
     Mesh* mesh = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
     Importer importer(mesh);
-    importer.loadObjFile("Models/laplacianMeshIt.obj");
+    importer.loadObjFile("Models/laplacianCurved.obj");
     mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 128);
     meshManager->addMesh("laplacianMesh", mesh);
     mesh->setDrawEdges(true);
@@ -162,33 +133,42 @@ int main(int argc, char **argv)
 
     // select heat vertices
     float coords[] = {0,0,0,
-              -0.25,0.25,0};
+              0,-4,0};
 
-    float coords2[] = {-0.75,0.75,0,
-                        -0.5,0.75,0,
-                        -0.25,0.75,0,
-                        -0.,0.75,0,
-                        0.25,0.75,0,
-                        0.5,0.75,0,
-                        0.75,0.75,0,
-                        0.75,0.5,0,
-                        0.75,0.25,0,
-                        0.75,0.,0,
-                        0.75,-0.25,0,
-                        0.75,-0.5,0,
-                        0.75,-0.75,0,
-                        0.5,-0.75,0,
-                        0.25,-0.75,0,
-                        0.,-0.75,0,
-                        -0.25,-0.75,0,
-                        -0.5,-0.75,0,
-                        -0.75,-0.75,0,
-                        -0.75,-0.5,0,
-                        -0.75,-0.25,0,
-                        -0.75,0.,0,
-                        -0.75,0.25,0,
-                        -0.75,0.5,0,
-                        -0.75,0.75,0,};
+    float coords2[] = {-0.5,0,0,
+                        0,0.5,0,
+                        0.5,0.5,0,
+                        1,0.5,0,
+                        1.5,0.5,0,
+                        2,0.5,0,
+                        2.5,0,0,
+                        2.5,-0.5,0,
+                        2.5,-1,0,
+                        2.5,-1.5,0,
+                        2.5,-2,0,
+                        2.5,-2.5,0,
+                        2.5,-3,0,
+                        2.5,-3.5,0,
+                        2.5,-4,0,
+                        2,-4.5,0,
+                        1.5,-4.5,0,
+                        1,-4.5,0,
+                        0.5,-4.5,0,
+                        0,-4.5,0,
+                        -0.5,-4,0,
+                        -0.5,-3.5,0,
+                        0,-3.5,0,
+                        0.5,-3.5,0,
+                        1,-3.5,0,
+                        1.5,-3,0,
+                        1.5,-2.5,0,
+                        1.5,-2,0,
+                        1.5,-1.5,0,
+                        1.5,-1,0,
+                        1,-0.5,0,
+                        0.5,-0.5,0,
+                        0,-0.5,0,
+                        -0.5,-0.5,0};
     
     for(int i = 0; i < 3; i+=3)
     {
@@ -196,8 +176,8 @@ int main(int argc, char **argv)
         vector<MeshVertex*> vertices = mesh->getVertex(coord);
         heatPoints.insert({vertices[0]->getNumber(), {1.f, vertices[0]}});
     }
-
-    for(int i = 0; i < 3*25; i+=3)
+    
+    for(int i = 0; i < 3*34; i+=3)
     {
         vec3 coord(coords2[i], coords2[i+1], coords2[i+2]);
         vector<MeshVertex*> vertices = mesh->getVertex(coord);
@@ -206,13 +186,6 @@ int main(int argc, char **argv)
 
     // compute laplacian
     laplacian(mesh, heatPoints);
-
-    // transformLaplacian(mesh, vec3(0, 1, 0.5));
-
-    // for(int i = 0; i < 0; i++)
-    // {
-    //     laplacianSmooth(mesh, 0.99, 0.2);
-    // }
 
     mesh->loadMesh();
 

@@ -208,7 +208,7 @@ void MeshVertex::applyLaplacian()
         float coef = (m_computedLaplacian - 0.5) / (0.25);
         m_attributes[1] = vec4(1. * coef, 0., 0., 1.) + vec4(0., 1. * (1-coef), 0., 1.);
     }
-    else if (m_computedLaplacian <= 1.)
+    else
     {
         float coef = (m_computedLaplacian - 0.75) / (0.25);
         m_attributes[1] = vec4(1. * coef, 1. * coef, 1. * coef, 1.) + vec4(1. * (1-coef), 0., 0., 1.);

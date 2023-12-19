@@ -11,12 +11,10 @@ void vertexLaplacian(MeshVertex* v, float alpha)
     float sum = 0;
     for(MeshVertex* neighbor: neighbors)
     {
-        // sum += neighbor->getLaplacian() + (1 - alpha) * v->getLaplacian();
         sum += neighbor->getLaplacian() - (1 - alpha) * v->getLaplacian();
     }
 
     v->setLaplacian(alpha * sum / neighbors.size());
-    // v->setLaplacian(sum / neighbors.size());
 }
 
 void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, float alpha)
@@ -30,6 +28,24 @@ void laplacianIt(Mesh* mesh, MeshVertex* heatVertex, float alpha)
 
     heatVertex->setLaplacian(1.0f);
     mesh->applyLaplacian();
+}
+
+float transfertFunction(float x)
+{
+    if(x < 0.4)
+        return 0.f;
+    return 1.f;
+}
+
+void transformLaplacian(Mesh* mesh, vec3 tr)
+{
+    vector<MeshVertex*> vertices = mesh->getVertices();
+
+    for(MeshVertex* v: vertices)
+    {
+        mat4 transform = translate(transfertFunction(v->getLaplacian()) * tr);
+        v->setCoord(transform * v->getAttribute(0));
+    }
 }
 
 int main(int argc, char **argv)
@@ -53,6 +69,8 @@ int main(int argc, char **argv)
 
     for(int i = 0; i < 500; i++)
         laplacianIt(mesh, heatVertex, 0.99);
+
+    transformLaplacian(mesh, vec3(0, 0.5, 1));
 
     mesh->loadMesh();
 
