@@ -1,0 +1,1 @@
+add_library(Bezier BezierCurve.cpp BezierSurface.cpp)

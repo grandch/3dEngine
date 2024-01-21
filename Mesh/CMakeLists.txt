@@ -1,0 +1,1 @@
+add_library(Mesh Mesh.cpp MeshEdge.cpp MeshHalfEdge.cpp MeshTriangle.cpp MeshVertex.cpp)
