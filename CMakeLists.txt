@@ -2,39 +2,23 @@ cmake_minimum_required(VERSION 3.10)
 
 project(3dEngine)
 
+find_package(OpenGL REQUIRED)
+find_package(glm REQUIRED)
+find_package(SDL2 REQUIRED)
+
+include_directories(Inputs Bezier Camera Importer lib Light Mesh Scene Scene/Axis Shaders ${OPENGL_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
+
+add_library(Inputs SHARED Inputs/Input.cpp)
+add_library(Bezier SHARED Bezier/BezierCurve.cpp Bezier/BezierSurface.cpp)
+add_library(Camera SHARED Camera/Camera.cpp)
+add_library(Importer SHARED Importer/Importer.cpp)
+add_library(Light SHARED Light/PointLight.cpp)
+add_library(Mesh SHARED Mesh/Mesh.cpp Mesh/MeshEdge.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshVertex.cpp)
+add_library(Scene SHARED Scene/Scene.cpp Scene/BezierManager.cpp Scene/LightManager.cpp Scene/MeshManager.cpp Scene/Axis/Axis.cpp)
+add_library(Shaders SHARED Shaders/Shader.cpp)
+add_library(lib SHARED lib/stb_image.cpp)
+
 add_executable(3dEngine main.cpp)
 
-add_subdirectory(Bezier)
-add_subdirectory(Camera)
-add_subdirectory(Importer)
-add_subdirectory(Inputs)
-add_subdirectory(Light)
-add_subdirectory(Mesh)
-add_subdirectory(Scene)
-add_subdirectory(Shaders)
-add_subdirectory(lib)
+target_link_libraries(3dEngine Inputs Bezier Camera Importer Light Mesh Scene Shaders lib ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
 
-# target_link_directories(3dEngine PUBLIC
-#                         Bezier
-#                         Camera
-#                         Importer
-#                         Inputs
-#                         Light
-#                         Mesh
-#                         Scene
-#                         Shaders
-#                         lib)
-
-
-
-# target_include_directories(3dEngine PUBLIC
-#                            "${PROJECT_BINARY_DIR}"
-#                            "${PROJECT_SOURCE_DIR}/Bezier"
-#                            "${PROJECT_SOURCE_DIR}/Camera"
-#                            "${PROJECT_SOURCE_DIR}/Importer"
-#                            "${PROJECT_SOURCE_DIR}/Inputs"
-#                            "${PROJECT_SOURCE_DIR}/Light"
-#                            "${PROJECT_SOURCE_DIR}/Mesh"
-#                            "${PROJECT_SOURCE_DIR}/Scene"
-#                            "${PROJECT_SOURCE_DIR}/Shaders"
-#                            "${PROJECT_SOURCE_DIR}/lib")
