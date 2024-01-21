@@ -3,7 +3,7 @@
 
 #include <GLES3/gl3.h>
 #include <glm/gtc/type_ptr.hpp>
-#include "../lib/stb_image.h"
+#include "../ext/stb/stb_image.h"
 
 #include <iostream>
 #include <string>
