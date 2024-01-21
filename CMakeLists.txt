@@ -22,3 +22,24 @@ add_executable(3dEngine main.cpp)
 
 target_link_libraries(3dEngine Inputs Bezier Camera Importer Light Mesh Scene Shaders lib ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
 
+file(GLOB VERTEXSHADERS
+  "Shaders/*.vert"
+)
+
+file(GLOB FRAGMENTSHADERS
+  "Shaders/*.frag"
+)
+
+file(GLOB TEXTURES
+  "Shaders/*.jpg"
+)
+
+file(GLOB MODELS
+  "Models/*.obj"
+)
+
+file(COPY ${VERTEXSHADERS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Shaders/)
+file(COPY ${FRAGMENTSHADERS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Shaders/)
+file(COPY ${TEXTURES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Shaders/)
+file(COPY ${MODELS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Models/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/convert.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
