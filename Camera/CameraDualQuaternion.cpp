@@ -1,16 +1,20 @@
 #include "CameraDualQuaternion.h"
 
-CameraDualQuaternion::CameraDualQuaternion() : m_phi(0.0), m_theta(0.0), m_orientation(), m_lateralAxis()
+CameraDualQuaternion::CameraDualQuaternion() : m_phi(0.0), m_theta(0.0)
 {
-     m_up = vec3(0, 0, 1);
+    m_up = vec3(0, 0, 1);
+
+    orientate(0,0);
 }
 
 // TODO : compute m_phi and m_theta according to position, target and up
-CameraDualQuaternion::CameraDualQuaternion(vec3 position, vec3 target, vec3 up) : m_phi(-35.26), m_theta(-135), m_orientation(), m_lateralAxis()
+CameraDualQuaternion::CameraDualQuaternion(vec3 position, vec3 target, vec3 up) : m_phi(-35.26), m_theta(-135)
 {
     m_up = vec3(up);
     m_position = vec3(position);
     m_target = vec3(target);
+
+    orientate(0,0);
 }
 
 CameraDualQuaternion::~CameraDualQuaternion()

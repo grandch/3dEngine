@@ -11,15 +11,17 @@
 
 using namespace glm;
 
-class CameraRotateAround : Camera
+class CameraRotateAround : public Camera
 {
     public:
 
         CameraRotateAround();
-        CameraRotateAround(vec3 position, vec3 target, vec3 verticalAxis);
+        CameraRotateAround(vec3 position, vec3 target, vec3 up);
         ~CameraRotateAround();
 
         void orientate(int xRel, int yRel);
+        void translate(int xRel, int yRel);
+        void zoom(int y);
         void move(Input const &input);
 
     private:

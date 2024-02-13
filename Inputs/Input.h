@@ -17,9 +17,12 @@ class Input
         bool getKey(const SDL_Scancode key) const;
         bool getMouseButton(const Uint8 button) const;
         bool getMouseMovement() const;
+        bool getWheelMovement() const;
 
         int getX() const;
         int getY() const;
+
+        int getMouseWheelY() const;
 
         int getXRel() const;
         int getYRel() const;
@@ -35,6 +38,7 @@ class Input
 
         int m_x, m_y;
         int m_xRel, m_yRel;
+        int m_mouseWheelY;
 
         bool m_end;
 };

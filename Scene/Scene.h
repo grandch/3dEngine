@@ -16,7 +16,7 @@
 #include "../Mesh/Mesh.h"
 #include "../Shaders/Shader.h"
 #include "../Inputs/Input.h"
-#include "../Camera/CameraDualQuaternion.h"
+#include "../Camera/CameraRotateAround.h"
 #include "../Importer/Importer.h"
 #include "Axis/Axis.h"
 #include "../Light/PointLight.h"

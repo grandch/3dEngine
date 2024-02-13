@@ -55,6 +55,11 @@ void Input::updateEvent()
 
             break;
 
+            //wheel movement
+            case SDL_MOUSEWHEEL:
+                m_mouseWheelY = m_event.wheel.y;
+            break;
+
             //closebutton
             case SDL_WINDOWEVENT:
 
@@ -99,6 +104,11 @@ bool Input::getMouseMovement() const
     }
 }
 
+bool Input::getWheelMovement() const
+{
+    // persitent data
+    return m_mouseWheelY != 0;
+}
 
 int Input::getX() const
 {
@@ -108,6 +118,11 @@ int Input::getX() const
 int Input::getY() const
 {
     return m_y;
+}
+
+int Input::getMouseWheelY() const
+{
+    return m_mouseWheelY;
 }
 
 int Input::getXRel() const
