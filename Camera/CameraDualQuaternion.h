@@ -25,9 +25,6 @@ class CameraDualQuaternion : public Camera
     private:
 
         float m_phi, m_theta;
-
-        vec3 m_orientation;
-        vec3 m_lateralAxis;
 };
 
 #endif
