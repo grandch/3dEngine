@@ -10,7 +10,7 @@ include_directories(Inputs Bezier Camera Importer ext/stb Light Mesh Scene Scene
 
 add_library(Inputs SHARED Inputs/Input.cpp)
 add_library(Bezier SHARED Bezier/BezierCurve.cpp Bezier/BezierSurface.cpp)
-add_library(Camera SHARED Camera/Camera.cpp)
+add_library(Camera SHARED Camera/CameraDualQuaternion.cpp)
 add_library(Importer SHARED Importer/Importer.cpp)
 add_library(Light SHARED Light/PointLight.cpp)
 add_library(Mesh SHARED Mesh/Mesh.cpp Mesh/MeshEdge.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshVertex.cpp)
