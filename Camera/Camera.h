@@ -23,7 +23,7 @@ class Camera
         glm::vec3 m_target;
         glm::vec3 m_up;
         glm::vec3 m_orientation;
-        glm::vec3 m_lateralAxis;
+        glm::vec3 m_right;
 };
 
 #endif

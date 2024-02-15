@@ -58,7 +58,7 @@ void CameraDualQuaternion::orientate(int xRel, int yRel)
         m_orientation.z = sin(phiRadian);
     }
 
-    m_lateralAxis = normalize(cross(m_up, m_orientation));
+    m_right = normalize(cross(m_up, m_orientation));
 
     m_target = m_position + m_orientation;
 }
@@ -84,13 +84,13 @@ void CameraDualQuaternion::move(Input const &input)
 
     if(input.getKey(SDL_SCANCODE_LEFT) || input.getKey(SDL_SCANCODE_A))
     {
-        m_position += m_lateralAxis * 0.3f;
+        m_position += m_right * 0.3f;
         m_target = m_position + m_orientation;
     }
 
     if(input.getKey(SDL_SCANCODE_RIGHT) || input.getKey(SDL_SCANCODE_D))
     {
-        m_position -= m_lateralAxis * 0.3f;
+        m_position -= m_right * 0.3f;
         m_target = m_position + m_orientation;
     }
 
