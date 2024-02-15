@@ -107,7 +107,8 @@ bool Input::getMouseMovement() const
 bool Input::getWheelMovement() const
 {
     // persitent data
-    return m_mouseWheelY != 0;
+    // return m_mouseWheelY != 0;
+    return false;
 }
 
 int Input::getX() const
