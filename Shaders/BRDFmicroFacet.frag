@@ -1,4 +1,7 @@
 #version 150 core
+#define M_PI 3.1415926535897932384626433832795
+
+// https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#implementation
 
 struct LightManager
 {
@@ -34,7 +37,6 @@ in vec2 out_uv;
 
 uniform Material material;
 uniform LightManager lightManager;
-uniform vec3 eye;
 
 uniform mat4 view;
 
@@ -53,51 +55,78 @@ vec3 ambient()
     return result;
 }
 
-vec3 diffuse()
+vec3 diffuse_brdf()
 {
     if(material.hasDiffuseColorTexture)
     {
-        return vec3(texture(material.diffuseColorTexture, out_uv)) / pi;
+        return vec3(texture(material.diffuseColorTexture, out_uv)) / M_PI;
     }
-    return material.diffuseColor / pi;
+    return material.diffuseColor / M_PI;
 }
 
-int heaviside(x)
+int heaviside(float x)
 {
     if(x > 0)
         return 1;
     return 0;
 }
 
-vec3 specular(lightPos, alpha)
+float VGGX(float NdotL, float NdotV, float HdotL, float HdotV, float alpha)
 {
-    l = fragPos - lightPos;
-    // get eyePos
-    v = fragPos - eyePos;
-    h = normalize(l + V);
-    G = (2*length(dot(normal, l))*heaviside(dot(h, l))) / (length(dot(normal, l)) + sqrt(alpha*alpha + pow((1-alpha), 2)*pow(dot(normal, l), 2)));
-    G *= (2*length(dot(normal, v))*heaviside(dot(h, v))) / (length(dot(normal, v)) + sqrt(alpha*alpha + pow((1-alpha), 2)*pow(dot(normal, v), 2)));
+    return (heaviside(HdotL) * heaviside(HdotV)) / ((abs(NdotL) + sqrt(alpha + (1 - alpha) * NdotL * NdotL)) * (abs(NdotV) + sqrt(alpha + (1 - alpha) * NdotV * NdotV)));
+}
 
-    V = G / (4 * length(dot(normal, l)) * length(dot(normal, v)));
+float DGGX(float NdotH, float alpha)
+{
+    return (alpha * heaviside(NdotH)) / (M_PI * pow((pow(NdotH, 2)*(alpha -1) + 1), 2));
+}
 
-    D = (alpha * alpha * heaviside(dot(normal, h))) / (pi * pow((pow(dot(normal, h), 2)*(alpha*alpha -1) + 1), 2));
+vec3 specular_brdf(float NdotL, float NdotH, float NdotV, float HdotL, float HdotV, float alpha)
+{
+    float alphaSq = alpha * alpha;
+    return vec3(DGGX(NdotH, alphaSq) * VGGX(NdotL, NdotV, HdotL, HdotV, alphaSq));
+}
 
-    if(material.hasSpecularColorTexture)
-    {
-        return texture(material.specularColorTexture, out_uv) * V * D;
-    }
-    return material.specularColor * V * D;
+vec3 conductor_fresnel(vec3 f0, vec3 bsdf, vec3 lightPos)
+{    
+    vec3 l = normalize(-fragPos + lightPos);
+    vec3 v = normalize(-fragPos);
+    vec3 h = normalize(l + v);
+    return bsdf * (f0 + (1 - f0) * pow(1 - abs(dot(v, h)), 5));
+}
+
+vec3 fresnel_mix(vec3 f0, vec3 base, vec3 layer, float HdotV)
+{
+    vec3 fr = f0 + (1 - f0) * pow(1 - abs(HdotV), 5);
+    return mix(base, layer, fr);
 }
 
 void main()
 {
     vec3 result = ambient();
-    
+    vec3 metal_brdf, dialectric_brdf;
+    float roughness = material.shininess;
+    float metallic = material.specularStrength;
+
+    vec3 c_diff = mix(material.diffuseColor, vec3(0), metallic);
+    vec3 f0 = mix(vec3(0.04), material.diffuseColor, metallic);
+    float alpha = roughness * roughness;
+
+    vec3 v = normalize(-fragPos);
+    float NdotV = dot(normal, v);
     for(int i = 0; i < lightManager.nbPointLights; i++) 
     {
-        result += diffuse(view * lightManager.pointLightsLocations[i], lightManager.pointLightsColors[i], 1.0);
-        result += specular(view * lightManager.pointLightsLocations[i], lightManager.pointLightsColors[i], 1.0);
+        vec3 l = normalize(-fragPos + vec3(view * lightManager.pointLightsLocations[i]));
+        vec3 h = normalize(l + v);
+        float NdotL = dot(normal, l);
+        float NdotH = dot(normal, h);
+        float HdotL = dot(h, l);
+        float HdotV = dot(h, v);
+
+        vec3 f_diffuse = NdotH * diffuse_brdf() * lightManager.pointLightsColors[i];
+        vec3 f_specular = NdotH * specular_brdf(NdotL, NdotH, NdotV, HdotL, HdotV, alpha) * lightManager.pointLightsColors[i];
+        result += fresnel_mix(f0, f_diffuse, f_specular, HdotV);
     }
-    
+
     out_Color = vec4(result, 1.0);
 }

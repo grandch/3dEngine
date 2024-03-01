@@ -25,16 +25,16 @@ int main(int argc, char **argv)
     bezier->transform(translate(vec3(10,0,0)));
     bezierManager->addCurve("curve", bezier);
 
-    Mesh* mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDF.frag");
+    Mesh* mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag");
     Importer importer(mesh);
     importer.loadObjFile("Models/scurry.obj");
-    mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 128);
+    mesh->setMaterial(vec3(1,1,1), vec3(1,1,1), 0.5, 0.9);
     meshManager->addMesh("scurry", mesh);
 
-    mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDF.frag");
+    mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag");
     Importer importer2(mesh);
     importer2.loadObjFile("Models/vase.obj");
-    mesh->setMaterial(vec3(1,1,1), vec3(0,1,0.3), 1, 32);
+    mesh->setMaterial(vec3(1,1,1), vec3(1,1,1), 0.77, 0.2);
     meshManager->addMesh("vase", mesh);
 
     BezierCurve* b0 = new BezierCurve(vec3(-1.5, 0, 0), vec3(-0.5, 0, -1), vec3(0.5, 0, 0), vec3(1.5, 0, 0));
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     BezierCurve* b2 = new BezierCurve(vec3(-1.5, 2, 0), vec3(-0.5, 2, 0), vec3(0.5, 5, 2), vec3(1.5, 2, 0));
     BezierCurve* b3 = new BezierCurve(vec3(-1.5, 3, 0), vec3(-0.5, 3, 0), vec3(0.5, 3, 0), vec3(1.5, 3, 0));
     BezierSurface* bezierS = new BezierSurface(b0, b1, b2, b3);
-    bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
+    bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag");
     bezierS->transform(translate(vec3(5,0,0)));
     bezierManager->addSurface("surface1", bezierS);
 
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     b2 = new BezierCurve(vec3(-1.5, 2, 0), vec3(-0.5, 2, 0), vec3(0.5, 2, 2), vec3(1.5, 2, 0));
     b3 = new BezierCurve(vec3(-1.5, 3, 0), vec3(-0.5, 3, 0), vec3(0.5, 3, 0), vec3(1.5, 3, 0));
     bezierS = new BezierSurface(b0, b1, b2, b3);
-    bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
+    bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag");
     bezierS->transform(translate(vec3(-5,0,0)));
     bezierS->getMesh()->getShader()->loadDiffuseColorTexture("Shaders/metal_plate_diff.jpg");
     bezierS->getMesh()->getShader()->loadShininessTexture("Shaders/metal_plate_rough.jpg");
