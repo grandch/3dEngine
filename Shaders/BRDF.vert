@@ -18,7 +18,7 @@ void main()
 {
     gl_Position = projection *  view * model * vec4(in_Vertex, 1.0);
 
-    normal = mat3(transpose(inverse(model))) * in_normal, 0.0;
+    normal = mat3(transpose(inverse(view * model))) * in_normal;
     fragPos = vec3(view * model * vec4(in_Vertex, 1.0));
     objectColor = in_Color;
     out_uv = in_uv;
