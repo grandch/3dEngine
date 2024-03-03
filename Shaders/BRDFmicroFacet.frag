@@ -91,7 +91,7 @@ float VGGX(float NdotL, float NdotV, float HdotL, float HdotV, float alpha)
 
 float DGGX(float NdotH, float alpha)
 {
-    return (alpha * heaviside(NdotH)) / (M_PI * pow((pow(NdotH, 2)*(alpha -1) + 1), 2));
+    return (alpha * NdotH) / (M_PI * pow((pow(NdotH, 2)*(alpha -1) + 1), 2));
 }
 
 vec3 specular_brdf(float NdotL, float NdotH, float NdotV, float HdotL, float HdotV, float alpha)
