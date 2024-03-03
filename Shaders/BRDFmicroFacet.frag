@@ -71,6 +71,19 @@ int heaviside(float x)
     return 0;
 }
 
+float GSchlickGGX(float NdotV, float k)
+{
+    return NdotV / ((NdotV) * (1-k) + k);
+}
+
+float GSmith(float NdotV, float NdotL, float alpha)
+{
+    float k = pow(alpha+1, 2)/8; // direct lighting
+    float ggx1 = GSchlickGGX(NdotV, k);
+    float ggx2 = GSchlickGGX(NdotL, k);
+    return ggx1 * ggx2;
+}
+
 float VGGX(float NdotL, float NdotV, float HdotL, float HdotV, float alpha)
 {
     return (heaviside(HdotL) * heaviside(HdotV)) / ((abs(NdotL) + sqrt(alpha + (1 - alpha) * NdotL * NdotL)) * (abs(NdotV) + sqrt(alpha + (1 - alpha) * NdotV * NdotV)));
@@ -83,16 +96,12 @@ float DGGX(float NdotH, float alpha)
 
 vec3 specular_brdf(float NdotL, float NdotH, float NdotV, float HdotL, float HdotV, float alpha)
 {
-    float alphaSq = alpha * alpha;
-    return vec3(DGGX(NdotH, alphaSq) * VGGX(NdotL, NdotV, HdotL, HdotV, alphaSq));
+    return vec3(DGGX(NdotH, alpha*alpha) * GSmith(NdotV, NdotL, alpha));
 }
 
-vec3 conductor_fresnel(vec3 f0, vec3 bsdf, vec3 lightPos)
-{    
-    vec3 l = normalize(-fragPos + lightPos);
-    vec3 v = normalize(-fragPos);
-    vec3 h = normalize(l + v);
-    return bsdf * (f0 + (1 - f0) * pow(1 - abs(dot(v, h)), 5));
+vec3 conductor_fresnel(vec3 f0, vec3 bsdf, float HdotV)
+{
+    return bsdf * (f0 + (1 - f0) * pow(1 - abs(HdotV), 5));
 }
 
 vec3 fresnel_mix(vec3 f0, vec3 base, vec3 layer, float HdotV)
@@ -104,28 +113,29 @@ vec3 fresnel_mix(vec3 f0, vec3 base, vec3 layer, float HdotV)
 void main()
 {
     vec3 result = ambient();
-    vec3 metal_brdf, dialectric_brdf;
     float roughness = material.shininess;
     float metallic = material.specularStrength;
 
-    vec3 c_diff = mix(material.diffuseColor, vec3(0), metallic);
-    vec3 f0 = mix(vec3(0.04), material.diffuseColor, metallic);
-    float alpha = roughness * roughness;
+    float alpha = roughness;
 
     vec3 v = normalize(-fragPos);
-    float NdotV = dot(normal, v);
-    for(int i = 0; i < lightManager.nbPointLights; i++) 
+    float NdotV = max(dot(normal, v), 0.);
+
+    for(int i = 0; i < lightManager.nbPointLights; i++)
     {
         vec3 l = normalize(-fragPos + vec3(view * lightManager.pointLightsLocations[i]));
         vec3 h = normalize(l + v);
-        float NdotL = dot(normal, l);
-        float NdotH = dot(normal, h);
-        float HdotL = dot(h, l);
-        float HdotV = dot(h, v);
+        float NdotL = max(dot(normal, l), 0.);
+        float NdotH = max(dot(normal, h), 0.);
+        float HdotL = max(dot(h, l), 0.);
+        float HdotV = max(dot(h, v), 0.);
 
         vec3 f_diffuse = NdotH * diffuse_brdf() * lightManager.pointLightsColors[i];
         vec3 f_specular = NdotH * specular_brdf(NdotL, NdotH, NdotV, HdotL, HdotV, alpha) * lightManager.pointLightsColors[i];
-        result += fresnel_mix(f0, f_diffuse, f_specular, HdotV);
+        vec3 dielectric = fresnel_mix(vec3(1.5), f_diffuse, f_specular, HdotV);
+        vec3 metal = conductor_fresnel(material.diffuseColor, f_specular, HdotV);
+
+        result += mix(dielectric, metal, metallic);
     }
 
     out_Color = vec4(result, 1.0);
