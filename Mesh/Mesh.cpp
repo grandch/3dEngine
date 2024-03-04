@@ -186,6 +186,11 @@ void Mesh::loadEdgeVAO()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+GLuint Mesh::getVaoId()
+{
+    return m_vaoId;
+}
+
 GLuint Mesh::makeFloatVBO(vector<GLfloat> values, int vboType, GLenum usage)
 {
     GLuint id;
@@ -253,6 +258,11 @@ void Mesh::popTriangle(MeshTriangle* triangle)
     }
 
     m_triangleList.erase(m_triangleList.begin() + i);
+}
+
+vector<MeshTriangle *> Mesh::getTriangles()
+{
+    return m_triangleList;
 }
 
 void Mesh::pushHalfEdge(MeshHalfEdge* halfEdge)

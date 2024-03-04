@@ -10,11 +10,14 @@
 
 #include <vector>
 
+// #include "MeshManager.h"
 #include "../Light/PointLight.h"
 #include "../Shaders/Shader.h"
 
 using namespace glm;
 using namespace std;
+
+class MeshManager;
 
 class LightManager
 {
@@ -32,10 +35,13 @@ class LightManager
         float getAmbientStrength();
 
         void sendDataToShader(Shader* shader);
+
+        void shadowMap(MeshManager* meshes);
         
     private:
         GLfloat m_locations[40];
         GLfloat m_colors[30];
+        vector<PointLight*> m_lights;
         int m_nbLight;
 
         vec3 m_ambientColor;

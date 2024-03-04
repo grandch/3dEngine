@@ -20,6 +20,7 @@ class MeshManager
 
         void addMesh(string name, Mesh* mesh);
         Mesh* getMesh(string name);
+        vector<pair<string, Mesh*>> getMeshes();
         void removeMesh(string name);
         void transformMesh(string name, mat4 transform);
 

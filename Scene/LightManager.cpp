@@ -23,6 +23,8 @@ void LightManager::addLight(PointLight *pLight)
         m_colors[m_nbLight*3+1] = color[1];
         m_colors[m_nbLight*3+2] = color[2];
 
+        m_lights.push_back(pLight);
+
         m_nbLight++;
     }
 }
@@ -65,4 +67,12 @@ void LightManager::sendDataToShader(Shader* shader)
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "lightManager.nbPointLights"), m_nbLight);
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "lightManager.ambientStrength"), m_ambientStrength);
     glUniform3fv(glGetUniformLocation(shader->getProgramID(), "lightManager.ambientColor"), 1, value_ptr(m_ambientColor));
+}
+
+void LightManager::shadowMap(MeshManager *meshes)
+{
+    for(PointLight* pl: m_lights)
+    {
+        pl->shadowMap(meshes);
+    }
 }

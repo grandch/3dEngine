@@ -38,6 +38,8 @@ class Mesh
 
         void loadEdgeVAO();
 
+        GLuint getVaoId();
+
         GLuint makeFloatVBO(vector<GLfloat> values, int vboType, GLenum usage);
         GLuint makeShortVBO(vector<GLushort> values, int vboType, GLenum usage);
 
@@ -46,6 +48,7 @@ class Mesh
         MeshTriangle* addTriangle(MeshVertex* v1, MeshVertex* v2, MeshVertex* v3);
         void pushTriangle(MeshTriangle* triangle);
         void popTriangle(MeshTriangle* triangle);
+        vector<MeshTriangle*> getTriangles();
 
         void pushHalfEdge(MeshHalfEdge* halfEdge);
         void popHalfEdge(MeshHalfEdge* halfEdge);

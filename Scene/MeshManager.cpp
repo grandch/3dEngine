@@ -17,6 +17,11 @@ Mesh* MeshManager::getMesh(string name)
     return m_meshes[name];
 }
 
+vector<pair<string, Mesh*>> MeshManager::getMeshes()
+{
+    return vector<pair<string, Mesh*>>(m_meshes.begin(), m_meshes.end());
+}
+
 void MeshManager::removeMesh(string name)
 {
     m_meshes.erase(name);
