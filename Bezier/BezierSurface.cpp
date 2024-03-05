@@ -6,7 +6,7 @@
 
 #include <vector>
 
-BezierSurface::BezierSurface(BezierCurve* bc0, BezierCurve* bc1, BezierCurve* bc2, BezierCurve* bc3): m_mesh(nullptr)
+BezierSurface::BezierSurface(BezierCurve* bc0, BezierCurve* bc1, BezierCurve* bc2, BezierCurve* bc3, Renderer* renderer): m_mesh(nullptr), m_renderer(renderer)
 {
     m_bcT.push_back(bc0);
     m_bcT.push_back(bc1);
@@ -24,7 +24,7 @@ void BezierSurface::compute(int s, int t, string vertexShader, string fragmentSh
         free(m_mesh);
     }
 
-    m_mesh = new Mesh(vertexShader, fragmentShader);
+    m_mesh = new Mesh(vertexShader, fragmentShader, m_renderer);
 
     vector<vector<vec3>> pt;
 
@@ -38,7 +38,7 @@ void BezierSurface::compute(int s, int t, string vertexShader, string fragmentSh
 
     for(int i = 0; i < t; i++)
     {
-        BezierCurve* bcs = new BezierCurve(pt[0][i], pt[1][i], pt[2][i], pt[3][i]);
+        BezierCurve* bcs = new BezierCurve(pt[0][i], pt[1][i], pt[2][i], pt[3][i], m_renderer);
         //ps.push_back(bcs->compute(s));
 
         vector<vec3> p = bcs->compute(s);

@@ -13,6 +13,7 @@
 
 #include "../Shaders/Shader.h"
 #include "../Scene/LightManager.h"
+#include "../Renderer/Renderer.h"
 
 class MeshHalfEdge;
 class MeshVertex;
@@ -26,7 +27,7 @@ class Mesh
 {
     public:
 
-        Mesh(string vertexShader, string fragmentShader);
+        Mesh(string vertexShader, string fragmentShader, Renderer* renderer);
         ~Mesh();
 
         void loadMesh(); //load the shader and the vbo/vao

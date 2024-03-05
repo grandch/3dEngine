@@ -9,6 +9,8 @@
 #include <string>
 #include <iostream>
 
+#include "../Renderer/Renderer.h"
+
 using namespace glm;
 using namespace std;
 
@@ -18,7 +20,7 @@ class BezierCurve
 {
     public:
 
-        BezierCurve(vec3 p0, vec3 p1, vec3 p2, vec3 p3);
+        BezierCurve(vec3 p0, vec3 p1, vec3 p2, vec3 p3, Renderer* renderer);
         ~BezierCurve();
 
         vec3 getPoint(int i);
@@ -42,6 +44,8 @@ class BezierCurve
         Mesh* m_meshControlPolygon;
 
         BezierCurve* m_next;
+
+        Renderer* m_renderer;
 };
 
 #endif

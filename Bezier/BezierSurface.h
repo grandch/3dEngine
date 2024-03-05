@@ -3,6 +3,8 @@
 
 #include "../Mesh/Mesh.h"
 #include "../Scene/LightManager.h"
+#include "../Renderer/Renderer.h"
+
 #include <vector>
 
 using namespace std;
@@ -13,7 +15,7 @@ class BezierSurface
 {
     public:
 
-        BezierSurface(BezierCurve* bc0, BezierCurve* bc1, BezierCurve* bc2, BezierCurve* bc3);
+        BezierSurface(BezierCurve* bc0, BezierCurve* bc1, BezierCurve* bc2, BezierCurve* bc3, Renderer* renderer);
         ~BezierSurface();
 
         void compute(int s, int t, string vertexShader, string fragmentShader);
@@ -29,6 +31,8 @@ class BezierSurface
         vector<BezierCurve*> m_bcS;
 
         Mesh* m_mesh;
+
+        Renderer* m_renderer;
 };
 
 #endif

@@ -1,18 +1,18 @@
 #include "../../Mesh/Mesh.h"
+#include "../../Renderer/Renderer.h"
 
 class Axis
 {
     public:
 
-        Axis();
+        Axis(Renderer* renderer);
         ~Axis();
 
-        void loadAxis();
         void draw(mat4 &projection, mat4 &view);
     
     private:
 
-    Mesh* m_meshX;
-    Mesh* m_meshY;
-    Mesh* m_meshZ;
+        Mesh* m_meshX;
+        Mesh* m_meshY;
+        Mesh* m_meshZ;
 };

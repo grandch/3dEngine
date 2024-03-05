@@ -5,8 +5,10 @@
 #include "MeshTriangle.h"
 #include "MeshEdge.h"
 
-Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader, vec3(1), vec3(1), 1, 64), m_drawEdges(false), m_model(glm::mat4(1.0f))
-{}
+Mesh::Mesh(string vertexShader, string fragmentShader, Renderer* renderer): m_shader(vertexShader, fragmentShader, vec3(1), vec3(1), 1, 64), m_drawEdges(false), m_model(glm::mat4(1.0f))
+{
+    renderer->addMesh(this, fragmentShader);
+}
 
 Mesh::~Mesh()
 {

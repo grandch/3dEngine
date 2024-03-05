@@ -4,27 +4,17 @@
 #include "../LightManager.h"
 
 
-Axis::Axis(): m_meshX(nullptr), m_meshY(nullptr), m_meshZ(nullptr)
-{}
-
-Axis::~Axis()
-{
-    free(m_meshX);
-    free(m_meshY);
-    free(m_meshZ);
-}
-
-void Axis::loadAxis()
+Axis::Axis(Renderer* renderer): m_meshX(nullptr), m_meshY(nullptr), m_meshZ(nullptr)
 {
     if(m_meshX != nullptr){free(m_meshX);}
     if(m_meshY != nullptr){free(m_meshY);}
     if(m_meshZ != nullptr){free(m_meshZ);}
 
-    m_meshX = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshX = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", renderer);
     m_meshX->setDrawEdges(true);
-    m_meshY = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshY = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", renderer);
     m_meshY->setDrawEdges(true);
-    m_meshZ = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshZ = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", renderer);
     m_meshZ->setDrawEdges(true);
 
     // add axis color to vertex
@@ -57,6 +47,13 @@ void Axis::loadAxis()
     m_meshX->loadMesh();
     m_meshY->loadMesh();
     m_meshZ->loadMesh();
+}
+
+Axis::~Axis()
+{
+    free(m_meshX);
+    free(m_meshY);
+    free(m_meshZ);
 }
 
 void Axis::draw(mat4 &projection, mat4 &view)

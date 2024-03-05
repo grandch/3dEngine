@@ -4,9 +4,9 @@
 #include "../Mesh/MeshVertex.h"
 #include "../Scene/LightManager.h"
 
-BezierCurve::BezierCurve(vec3 p0, vec3 p1, vec3 p2, vec3 p3): m_p0(p0), m_p3(p3), m_p1(p1), m_p2(p2), m_meshCurve(nullptr), m_meshControlPolygon(nullptr), m_next(nullptr)
+BezierCurve::BezierCurve(vec3 p0, vec3 p1, vec3 p2, vec3 p3, Renderer* renderer): m_p0(p0), m_p3(p3), m_p1(p1), m_p2(p2), m_meshCurve(nullptr), m_meshControlPolygon(nullptr), m_next(nullptr), m_renderer(renderer)
 {
-    m_meshControlPolygon = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshControlPolygon = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", renderer);
     m_meshControlPolygon->setDrawEdges(true);
 
     MeshVertex* v1 = new MeshVertex(m_meshControlPolygon, "V1");
@@ -55,7 +55,7 @@ void BezierCurve::addSegment(vec3 p1, vec3 p2, vec3 p3)
     }
     else
     {
-        m_next = new BezierCurve(m_p3, p1, p2, p3);
+        m_next = new BezierCurve(m_p3, p1, p2, p3, m_renderer);
     }
 }
 
@@ -74,7 +74,7 @@ vector<vec3> BezierCurve::compute(int nbPoints)
         free(m_meshCurve);
     }
 
-    m_meshCurve = new Mesh("Shaders/Color.vert", "Shaders/Color.frag");
+    m_meshCurve = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", m_renderer);
     m_meshCurve->setDrawEdges(true);
     
     vector<vec3> p;

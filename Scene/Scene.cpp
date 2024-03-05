@@ -2,10 +2,11 @@
 
 Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidth(width), m_wHeight(height), m_window(0), m_openGLContext(0), m_input()
 {
-    m_axis = new Axis();
     m_lightManager = new LightManager();
     m_meshManager = new MeshManager();
     m_bezierManager = new BezierManager();
+    m_renderer = new Renderer();
+    m_axis = new Axis(m_renderer);
 }
 
 Scene::~Scene()
@@ -32,6 +33,11 @@ MeshManager *Scene::getMeshManager()
 BezierManager *Scene::getBezierManager()
 {
     return m_bezierManager;
+}
+
+Renderer *Scene::getRenderer()
+{
+    return m_renderer;
 }
 
 bool Scene::initWindow()
@@ -171,12 +177,10 @@ void Scene::mainLoop()
 bool Scene::initScene()
 {
     if (this->initWindow() == false)
-    return false;
+        return false;
 
     if (this->initGL() == false)
-    return false;
-
-    m_axis->loadAxis();
+        return false;
 
     return true;
 }

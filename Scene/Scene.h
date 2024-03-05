@@ -23,6 +23,7 @@
 #include "LightManager.h"
 #include "MeshManager.h"
 #include "BezierManager.h"
+#include "../Renderer/Renderer.h"
 
 #include <GLES3/gl3.h>
 
@@ -39,6 +40,7 @@ class Scene
         LightManager* getLightManager();
         MeshManager* getMeshManager();
         BezierManager* getBezierManager();
+        Renderer* getRenderer();
 
         bool initWindow();
         bool initGL();
@@ -65,5 +67,7 @@ class Scene
         LightManager* m_lightManager;
         MeshManager* m_meshManager;
         BezierManager* m_bezierManager;
+
+        Renderer* m_renderer;
 };
 #endif

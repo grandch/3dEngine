@@ -6,7 +6,7 @@ find_package(OpenGL REQUIRED)
 find_package(glm REQUIRED)
 find_package(SDL2 REQUIRED)
 
-include_directories(Inputs Bezier Camera Importer ext/stb Light Mesh Scene Scene/Axis Shaders ${OPENGL_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
+include_directories(Inputs Bezier Camera Importer ext/stb Light Mesh Renderer Scene Scene/Axis Shaders ${OPENGL_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
 
 add_library(Inputs SHARED Inputs/Input.cpp)
 add_library(Bezier SHARED Bezier/BezierCurve.cpp Bezier/BezierSurface.cpp)
@@ -14,13 +14,14 @@ add_library(Camera SHARED Camera/CameraDualQuaternion.cpp Camera/CameraRotateAro
 add_library(Importer SHARED Importer/Importer.cpp)
 add_library(Light SHARED Light/PointLight.cpp)
 add_library(Mesh SHARED Mesh/Mesh.cpp Mesh/MeshEdge.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshVertex.cpp)
+add_library(Renderer SHARED Renderer/Renderer.cpp)
 add_library(Scene SHARED Scene/Scene.cpp Scene/BezierManager.cpp Scene/LightManager.cpp Scene/MeshManager.cpp Scene/Axis/Axis.cpp)
 add_library(Shaders SHARED Shaders/Shader.cpp)
 add_library(ext SHARED ext/stb/stb_image.cpp)
 
 add_executable(3dEngine main.cpp)
 
-target_link_libraries(3dEngine Inputs Bezier Camera Importer Light Mesh Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
+target_link_libraries(3dEngine Inputs Bezier Camera Importer Light Mesh Renderer Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
 
 file(GLOB VERTEXSHADERS
   "Shaders/*.vert"
