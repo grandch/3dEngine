@@ -5,7 +5,7 @@ Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidt
     m_lightManager = new LightManager();
     m_meshManager = new MeshManager();
     m_bezierManager = new BezierManager();
-    m_renderer = new Renderer();
+    m_renderer = new Renderer(m_lightManager);
     m_axis = new Axis(m_renderer);
 }
 
@@ -158,9 +158,11 @@ void Scene::mainLoop()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
         camera.lookAt(view);
 
-        m_axis->draw(projection, view);
-        m_meshManager->draw(projection, view, m_lightManager);
-        m_bezierManager->draw(projection, view, m_lightManager);
+        // m_axis->draw(projection, view);
+        // m_meshManager->draw(projection, view, m_lightManager);
+        // m_bezierManager->draw(projection, view, m_lightManager);
+
+        m_renderer->render(projection, view);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 

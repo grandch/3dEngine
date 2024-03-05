@@ -43,6 +43,11 @@ GLuint Shader::getProgramID() const
     return m_programID;
 }
 
+void Shader::useProgram()
+{
+    glUseProgram(m_programID);
+}
+
 Material* Shader::getMaterial()
 {
     return m_material;

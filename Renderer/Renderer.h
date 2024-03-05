@@ -12,23 +12,38 @@
 #include <vector>
 #include <string>
 
+#include "../Scene/LightManager.h"
+
 class Mesh;
+
+enum Shaders {
+    blinnPhong,
+    GGX,
+    color,
+    invalid
+};
 
 using namespace std;
 
 class Renderer
 {
     public:
-        Renderer();
+
+        Renderer(LightManager* lightManager);
         ~Renderer();
 
         void addMesh(Mesh* mesh, string fragShader);
         void addShader(string fragShader, vector<Mesh*> meshes);
 
-        void render();
+        void render(mat4 &projection, mat4 &view);
 
     private:
-        map<string, vector<Mesh*>> m_shaderDic;
+
+        Shaders resolveShader(string input);
+
+        map<Shaders, vector<Mesh*>> m_shaderDic;
+
+        LightManager* m_lightManager;
 };
 
 #endif

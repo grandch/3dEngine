@@ -41,6 +41,7 @@ class Shader
         Shader& operator=(Shader const &toCopyShader);
 
         GLuint getProgramID() const;
+        void useProgram();
         Material* getMaterial();
         void setMaterial(vec3 diffuseColor, vec3 specularColor, float specularStrength, float shininess);
 
