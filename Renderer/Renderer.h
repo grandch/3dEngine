@@ -41,6 +41,8 @@ class Renderer
 
         Shaders resolveShader(string input);
 
+        void sendTransforms(mat4 &projection, mat4 &view, mat4 model, GLuint programId);
+
         map<Shaders, vector<Mesh*>> m_shaderDic;
 
         LightManager* m_lightManager;

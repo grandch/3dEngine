@@ -55,10 +55,3 @@ Axis::~Axis()
     free(m_meshY);
     free(m_meshZ);
 }
-
-void Axis::draw(mat4 &projection, mat4 &view)
-{
-    m_meshX->draw(projection, view, new LightManager());
-    m_meshY->draw(projection, view, new LightManager());
-    m_meshZ->draw(projection, view, new LightManager());
-}

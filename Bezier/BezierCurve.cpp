@@ -112,17 +112,6 @@ vector<vec3> BezierCurve::compute(int nbPoints)
     return p;
 }
 
-void BezierCurve::draw(mat4 &projection, mat4 &view)
-{
-    m_meshCurve->draw(projection, view, new LightManager());
-    m_meshControlPolygon->draw(projection, view, new LightManager());
-
-    if(m_next != nullptr)
-    {
-        m_next->draw(projection, view);
-    }
-}
-
 void BezierCurve::transform(mat4 transf)
 {
     m_meshControlPolygon->transform(transf);

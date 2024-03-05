@@ -45,16 +45,3 @@ void BezierManager::transformSurface(string name, mat4 transform)
 {
     m_surfaces[name]->transform(transform);
 }
-
-void BezierManager::draw(mat4 &projection, mat4 &view, LightManager *lightManager)
-{
-    for(auto i = m_curves.begin(); i != m_curves.end(); ++i)
-    {
-        i->second->draw(projection, view);
-    }
-
-    for(auto i = m_surfaces.begin(); i != m_surfaces.end(); ++i)
-    {
-        i->second->draw(projection, view, lightManager);
-    }
-}

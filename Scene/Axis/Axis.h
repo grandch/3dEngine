@@ -7,8 +7,6 @@ class Axis
 
         Axis(Renderer* renderer);
         ~Axis();
-
-        void draw(mat4 &projection, mat4 &view);
     
     private:
 

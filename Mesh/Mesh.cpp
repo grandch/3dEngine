@@ -30,43 +30,10 @@ void Mesh::loadMesh()
     m_shader.load();
 }
 
-void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
+bool Mesh::displayEdges()
 {
-    glUseProgram(m_shader.getProgramID());
-
-        glBindVertexArray(m_vaoId); //lock the vao
-
-            //send transform matrices uniforms to shaders
-            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "model"), 1, GL_FALSE, value_ptr(m_model));
-            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "view"), 1, GL_FALSE, value_ptr(view));
-            glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
-
-            lightManager->sendDataToShader(&m_shader);
-            m_shader.sendMaterialToShader();
-            
-            //draw
-            glDrawElements(GL_TRIANGLES, m_triangleList.size()*3, GL_UNSIGNED_SHORT, 0);
-
-        glBindVertexArray(0); //unlock the vao
-
-        //same for the edges
-        if(m_drawEdges)
-        {
-            glBindVertexArray(m_edgeVaoId);
-
-                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "model"), 1, GL_FALSE, value_ptr(m_model));
-                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "view"), 1, GL_FALSE, value_ptr(view));
-                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "projection"), 1, GL_FALSE, value_ptr(projection));
-
-                glLineWidth(1.5);
-                glDrawElements(GL_LINES, m_edgeList.size()*2, GL_UNSIGNED_SHORT, 0);
-
-            glBindVertexArray(0);
-        }
-        
-
-    glUseProgram(0);
-}       
+    return m_drawEdges;
+}
 
 void Mesh::loadVBO()
 {
@@ -164,6 +131,16 @@ void Mesh::loadVAO()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+GLuint Mesh::getVaoId()
+{
+    return m_vaoId;
+}
+
+GLuint Mesh::getEdgeVaoId()
+{
+    return m_edgeVaoId;
+}
+
 void Mesh::loadEdgeVAO()
 {
     glGenVertexArrays(1, &m_edgeVaoId);
@@ -257,6 +234,11 @@ void Mesh::popTriangle(MeshTriangle* triangle)
     m_triangleList.erase(m_triangleList.begin() + i);
 }
 
+int Mesh::getTrianglesNb()
+{
+    return m_triangleList.size();
+}
+
 void Mesh::pushHalfEdge(MeshHalfEdge* halfEdge)
 {
     m_halfEdgeList.push_back(halfEdge);
@@ -302,6 +284,11 @@ void Mesh::popEdge(MeshEdge* edge)
     }
 
     m_edgeList.erase(m_edgeList.begin() + i);
+}
+
+int Mesh::getEdgesNb()
+{
+    return m_edgeList.size();
 }
 
 MeshVertex* Mesh::addVertex(string name)
@@ -366,4 +353,9 @@ Shader *Mesh::getShader()
 void Mesh::transform(mat4 transform)
 {
     m_model = transform * m_model;
+}
+
+mat4 Mesh::getModelTransform()
+{
+    return m_model;
 }

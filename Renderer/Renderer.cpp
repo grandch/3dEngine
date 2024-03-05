@@ -20,46 +20,87 @@ void Renderer::addShader(string fragShader, vector<Mesh *> meshes)
 }
 
 void Renderer::render(mat4 &projection, mat4 &view)
-{
-    // for shaders (ifs)
-        // use program
-        // for objects
-            // lock vao
-            // send uniforms
-            // send light data to shader
-            // send material data to shader
-            // draw
-    
+{  
     for(pair<Shaders, vector<Mesh*>> p: m_shaderDic)
     {
         switch (p.first)
         {
         case color:
-            // p.second[0]->getShader()->useProgram();
+        {
+            Shader* shader = p.second[0]->getShader();
+            shader->useProgram();
                 for(Mesh* mesh: p.second)
                 {
-                    mesh->draw(projection, view, m_lightManager);
+                    glBindVertexArray(mesh->getVaoId());
+                        sendTransforms(projection, view, mesh->getModelTransform(), shader->getProgramID());
+                        glDrawElements(GL_TRIANGLES, mesh->getTrianglesNb()*3, GL_UNSIGNED_SHORT, 0);
+                    glBindVertexArray(0);
+                    if(mesh->displayEdges())
+                    {
+                        glBindVertexArray(mesh->getEdgeVaoId());
+                        // send uniforms
+                        glLineWidth(1.5);
+                        glDrawElements(GL_LINES,mesh->getEdgesNb()*2, GL_UNSIGNED_SHORT, 0);
+                    glBindVertexArray(0);
+                    }
                 }
-            // glUseProgram(0);
+            glUseProgram(0);
             break;
+        }
 
         case blinnPhong:
-            // p.second[0]->getShader()->useProgram();
+        {
+            Shader* shader = p.second[0]->getShader();
+            shader->useProgram();
                 for(Mesh* mesh: p.second)
                 {
-                    mesh->draw(projection, view, m_lightManager);
+                    glBindVertexArray(mesh->getVaoId());
+                        sendTransforms(projection, view, mesh->getModelTransform(), shader->getProgramID());
+                        m_lightManager->sendDataToShader(shader);
+                        mesh->getShader()->sendMaterialToShader();
+                        glDrawElements(GL_TRIANGLES, mesh->getTrianglesNb()*3, GL_UNSIGNED_SHORT, 0);
+                    glBindVertexArray(0);
+                    if(mesh->displayEdges())
+                    {
+                        glBindVertexArray(mesh->getEdgeVaoId());
+                        // send uniforms
+                        // send light data to shader
+                        // send material data to shader
+                        glLineWidth(1.5);
+                        glDrawElements(GL_LINES,mesh->getEdgesNb()*2, GL_UNSIGNED_SHORT, 0);
+                    glBindVertexArray(0);
+                    }
                 }
-            // glUseProgram(0);
+            glUseProgram(0);
             break;
+        }
 
         case GGX:
-            // p.second[0]->getShader()->useProgram();
+        {
+            Shader* shader = p.second[0]->getShader();
+            shader->useProgram();
                 for(Mesh* mesh: p.second)
                 {
-                    mesh->draw(projection, view, m_lightManager);
+                    glBindVertexArray(mesh->getVaoId());
+                        sendTransforms(projection, view, mesh->getModelTransform(), shader->getProgramID());
+                        m_lightManager->sendDataToShader(shader);
+                        mesh->getShader()->sendMaterialToShader();
+                        glDrawElements(GL_TRIANGLES, mesh->getTrianglesNb()*3, GL_UNSIGNED_SHORT, 0);
+                    glBindVertexArray(0);
+                    if(mesh->displayEdges())
+                    {
+                        glBindVertexArray(mesh->getEdgeVaoId());
+                        // send uniforms
+                        // send light data to shader
+                        // send material data to shader
+                        glLineWidth(1.5);
+                        glDrawElements(GL_LINES,mesh->getEdgesNb()*2, GL_UNSIGNED_SHORT, 0);
+                    glBindVertexArray(0);
+                    }
                 }
-            // glUseProgram(0);
+            glUseProgram(0);
             break;
+        }
 
         case invalid:
             break;
@@ -75,4 +116,11 @@ Shaders Renderer::resolveShader(string input)
     if(input == "Shaders/BRDFmicroFacet.frag") return GGX;
     if(input == "Shaders/Color.frag") return color;
     return invalid;
+}
+
+void Renderer::sendTransforms(mat4 &projection, mat4 &view, mat4 model, GLuint programId)
+{
+    glUniformMatrix4fv(glGetUniformLocation(programId, "model"), 1, GL_FALSE, value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(programId, "view"), 1, GL_FALSE, value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(programId, "projection"), 1, GL_FALSE, value_ptr(projection));
 }

@@ -19,7 +19,6 @@ class BezierSurface
         ~BezierSurface();
 
         void compute(int s, int t, string vertexShader, string fragmentShader);
-        void draw(mat4 &projection, mat4 &view, LightManager* lightManager);
 
         void transform(mat4 transf);
 

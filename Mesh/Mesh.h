@@ -32,10 +32,12 @@ class Mesh
 
         void loadMesh(); //load the shader and the vbo/vao
 
-        void draw(mat4 &projection, mat4 &view, LightManager* lightManager);
+        bool displayEdges();
 
         void loadVBO();
         void loadVAO();
+        GLuint getVaoId();
+        GLuint getEdgeVaoId();
 
         void loadEdgeVAO();
 
@@ -47,12 +49,14 @@ class Mesh
         MeshTriangle* addTriangle(MeshVertex* v1, MeshVertex* v2, MeshVertex* v3);
         void pushTriangle(MeshTriangle* triangle);
         void popTriangle(MeshTriangle* triangle);
+        int getTrianglesNb();
 
         void pushHalfEdge(MeshHalfEdge* halfEdge);
         void popHalfEdge(MeshHalfEdge* halfEdge);
 
         void pushEdge(MeshEdge* edge);
         void popEdge(MeshEdge* edge);
+        int getEdgesNb();
 
         MeshVertex* addVertex(string name);
         void pushVertex(MeshVertex* vertex);
@@ -67,6 +71,7 @@ class Mesh
         Shader* getShader();
 
         void transform(mat4 transform);
+        mat4 getModelTransform();
 
     private:
 

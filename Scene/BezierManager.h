@@ -29,8 +29,6 @@ class BezierManager
         void removeSurface(string name);
         void transformSurface(string name, mat4 transform);
 
-        void draw(mat4 &projection, mat4 &view, LightManager* lightManager);
-
     private:
         map<string, BezierCurve*> m_curves;
         map<string, BezierSurface*> m_surfaces;
