@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     BezierCurve* b2 = new BezierCurve(vec3(-1.5, 2, 0), vec3(-0.5, 2, 0), vec3(0.5, 5, 2), vec3(1.5, 2, 0), renderer);
     BezierCurve* b3 = new BezierCurve(vec3(-1.5, 3, 0), vec3(-0.5, 3, 0), vec3(0.5, 3, 0), vec3(1.5, 3, 0), renderer);
     BezierSurface* bezierS = new BezierSurface(b0, b1, b2, b3, renderer);
-    bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag");
+    bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
     bezierS->transform(translate(vec3(5,0,0)));
     bezierManager->addSurface("surface1", bezierS);
 
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     b2 = new BezierCurve(vec3(-1.5, 2, 0), vec3(-0.5, 2, 0), vec3(0.5, 2, 2), vec3(1.5, 2, 0), renderer);
     b3 = new BezierCurve(vec3(-1.5, 3, 0), vec3(-0.5, 3, 0), vec3(0.5, 3, 0), vec3(1.5, 3, 0), renderer);
     bezierS = new BezierSurface(b0, b1, b2, b3, renderer);
-    bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag");
+    bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
     bezierS->transform(translate(vec3(-5,0,0)));
     bezierS->getMesh()->getShader()->loadDiffuseColorTexture("Shaders/metal_plate_diff.jpg");
     bezierS->getMesh()->getShader()->loadShininessTexture("Shaders/metal_plate_rough.jpg");
