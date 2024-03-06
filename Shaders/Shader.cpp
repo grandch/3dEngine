@@ -9,6 +9,8 @@ Shader::Shader(string vertexPath, string fragmentPath, vec3 diffuseColor, vec3 s
     m_material->specularColor = specularColor;
     m_material->specularStrength = specularStrength;
     m_material->shininess = shininess;
+
+    load();
 }
 
 Shader::Shader(Shader const &toCopyShader)
@@ -124,6 +126,7 @@ bool Shader::load()
 
 bool Shader::shaderCompile(GLuint &shader, GLenum type, string const &filePath)
 {
+    cout << type << endl;
     shader = glCreateShader(type); //create the shader ID
     string line, code;
     GLint compileError(0);

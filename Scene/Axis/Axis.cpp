@@ -6,10 +6,6 @@
 
 Axis::Axis(Renderer* renderer): m_meshX(nullptr), m_meshY(nullptr), m_meshZ(nullptr)
 {
-    if(m_meshX != nullptr){free(m_meshX);}
-    if(m_meshY != nullptr){free(m_meshY);}
-    if(m_meshZ != nullptr){free(m_meshZ);}
-
     m_meshX = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", renderer);
     m_meshX->setDrawEdges(true);
     m_meshY = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", renderer);

@@ -26,8 +26,6 @@ void Mesh::loadMesh()
     loadVBO();
     loadVAO();
     loadEdgeVAO();
-
-    m_shader.load();
 }
 
 bool Mesh::displayEdges()
