@@ -12,6 +12,7 @@
 #include <string>
 
 #include "../Shaders/Shader.h"
+#include "../Shaders/Material.h"
 #include "../Scene/LightManager.h"
 #include "../Renderer/Renderer.h"
 
@@ -27,7 +28,7 @@ class Mesh
 {
     public:
 
-        Mesh(string vertexShader, string fragmentShader, Renderer* renderer);
+        Mesh(string vertexShader, string fragmentShader, Material* material, Renderer* renderer);
         ~Mesh();
 
         void loadMesh(); //load the shader and the vbo/vao
@@ -66,9 +67,9 @@ class Mesh
         void compileShaders();
 
         void setDrawEdges(bool de);
-        void setMaterial(vec3 diffuseColor, vec3 specularColor, float specularStrength, float shininess);
 
         Shader* getShader();
+        Material* getMaterial();
 
         void transform(mat4 transform);
         mat4 getModelTransform();
@@ -83,6 +84,7 @@ class Mesh
         vector<MeshEdge*> m_edgeList;
 
         Shader m_shader;
+        Material* m_material;
 
         GLuint m_vertexVboId;
         GLuint m_colorVboId;

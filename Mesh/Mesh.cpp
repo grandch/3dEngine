@@ -5,7 +5,7 @@
 #include "MeshTriangle.h"
 #include "MeshEdge.h"
 
-Mesh::Mesh(string vertexShader, string fragmentShader, Renderer* renderer): m_shader(vertexShader, fragmentShader, vec3(1), vec3(1), 1, 64), m_drawEdges(false), m_model(glm::mat4(1.0f))
+Mesh::Mesh(string vertexShader, string fragmentShader, Material* material, Renderer* renderer): m_shader(vertexShader, fragmentShader), m_material(material), m_drawEdges(false), m_model(glm::mat4(1.0f))
 {
     renderer->addMesh(this, fragmentShader);
 }
@@ -338,14 +338,14 @@ void Mesh::setDrawEdges(bool de)
     m_drawEdges = de;
 }
 
-void Mesh::setMaterial(vec3 diffuseColor, vec3 specularColor, float specularStrength, float shininess)
-{
-    m_shader.setMaterial(diffuseColor, specularColor, specularStrength, shininess);
-}
-
 Shader *Mesh::getShader()
 {
     return &m_shader;
+}
+
+Material *Mesh::getMaterial()
+{
+    return m_material;
 }
 
 void Mesh::transform(mat4 transform)
