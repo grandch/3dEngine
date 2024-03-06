@@ -39,6 +39,9 @@ class Renderer
 
     private:
 
+        Shader* m_gBufferShader; (to lock in the gbuffer pass)
+        Shader* m_deferredShader; (to lock in the lighting pass (one for GGX and BlinnPhong or one shader per BRDF + direct rendering for color/transparency))
+
         void initGBuffer();
 
         Shaders resolveShader(string input);

@@ -2,7 +2,11 @@
 
 #include "../Mesh/Mesh.h"
 
-Renderer::Renderer(int width, int height, LightManager* lightManager): m_width(width), m_height(height), m_lightManager(lightManager) {}
+Renderer::Renderer(int width, int height, LightManager* lightManager): m_width(width), m_height(height), m_lightManager(lightManager) 
+{
+    m_gBufferShader = new Shader("Shaders/BRDF.vert", "Shaders/gBufferBlinnPhongGGX.frag", vec3(0), vec3(0), 0, 0);
+    // m_deferredShader = new Shader();
+}
 
 Renderer::~Renderer() {}
 
