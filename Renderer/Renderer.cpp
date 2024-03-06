@@ -4,8 +4,33 @@
 
 Renderer::Renderer(int width, int height, LightManager* lightManager): m_width(width), m_height(height), m_lightManager(lightManager) 
 {
-    m_gBufferShader = new Shader("Shaders/BRDF.vert", "Shaders/gBufferBlinnPhongGGX.frag", vec3(0), vec3(0), 0, 0);
-    // m_deferredShader = new Shader();
+    m_gBufferShader = new Shader("Shaders/BRDF.vert", "Shaders/gBufferBlinnPhongGGX.frag");
+    m_deferredShader = new Shader("Shaders/lightingPass.vert", "Shaders/lightingPass.frag");
+
+    vector<float> quadVertices = {  
+        // positions   // texCoords
+        -1.0f,  1.0f,  0.0f, 1.0f,
+        -1.0f, -1.0f,  0.0f, 0.0f,
+        1.0f, -1.0f,  1.0f, 0.0f,
+
+        -1.0f,  1.0f,  0.0f, 1.0f,
+        1.0f, -1.0f,  1.0f, 0.0f,
+        1.0f,  1.0f,  1.0f, 1.0f
+    };	
+
+    // make vbo
+    glGenBuffers(1, &m_quadVboId);
+    glBindBuffer(GL_ARRAY_BUFFER, m_quadVboId);
+    glBufferData(GL_ARRAY_BUFFER, quadVertices.size()*sizeof(GLfloat), quadVertices.data(), GL_STATIC_DRAW);
+
+    // make vao
+    glGenVertexArrays(1, &m_quadVaoId);
+    glBindVertexArray(m_quadVaoId);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*) 0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glBindVertexArray(0);
 }
 
 Renderer::~Renderer() {}
@@ -25,98 +50,43 @@ void Renderer::addShader(string fragShader, vector<Mesh *> meshes)
 
 void Renderer::render(mat4 &projection, mat4 &view)
 {
-    unsigned int attachments[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
-    for(pair<Shaders, vector<Mesh*>> p: m_shaderDic)
-    {
-        switch (p.first)
-        {
-        case color:
-        {
-            Shader* shader = p.second[0]->getShader();
-            shader->useProgram();
-                for(Mesh* mesh: p.second)
-                {
-                    glBindVertexArray(mesh->getVaoId());
-                        sendTransforms(projection, view, mesh->getModelTransform(), shader->getProgramID());
-                        glDrawElements(GL_TRIANGLES, mesh->getTrianglesNb()*3, GL_UNSIGNED_SHORT, 0);
-                    glBindVertexArray(0);
-                    if(mesh->displayEdges())
-                    {
-                        glBindVertexArray(mesh->getEdgeVaoId());
-                        // send uniforms
-                        glLineWidth(1.5);
-                        glDrawElements(GL_LINES,mesh->getEdgesNb()*2, GL_UNSIGNED_SHORT, 0);
-                    glBindVertexArray(0);
-                    }
-                }
-            glUseProgram(0);
-            break;
-        }
+    // // geometry pass
 
-        case blinnPhong:
-        {
-            Shader* shader = p.second[0]->getShader();
-            shader->useProgram();
-                for(Mesh* mesh: p.second)
-                {
-                    glBindVertexArray(mesh->getVaoId());
-                        sendTransforms(projection, view, mesh->getModelTransform(), shader->getProgramID());
-                        m_lightManager->sendDataToShader(shader);
-                        mesh->getShader()->sendMaterialToShader();
-                        glDrawElements(GL_TRIANGLES, mesh->getTrianglesNb()*3, GL_UNSIGNED_SHORT, 0);
-                    glBindVertexArray(0);
-                    if(mesh->displayEdges())
-                    {
-                        glBindVertexArray(mesh->getEdgeVaoId());
-                        // send uniforms
-                        // send light data to shader
-                        // send material data to shader
-                        glLineWidth(1.5);
-                        glDrawElements(GL_LINES,mesh->getEdgesNb()*2, GL_UNSIGNED_SHORT, 0);
-                    glBindVertexArray(0);
-                    }
-                }
-            glUseProgram(0);
-            break;
-        }
+    // unsigned int attachments[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+    // for(pair<Shaders, vector<Mesh*>> p: m_shaderDic)
+    // {
+    //     if(p.first == GGX)
+    //     {
+    //         m_gBufferShader->useProgram();
+    //         for(Mesh* mesh: p.second)
+    //         {
+    //             glBindVertexArray(mesh->getVaoId());
 
-        case GGX:
-        {
-            Shader* shader = p.second[0]->getShader();
-            shader->useProgram();
-                for(Mesh* mesh: p.second)
-                {
-                    glBindVertexArray(mesh->getVaoId());
+    //                 sendTransforms(projection, view, mesh->getModelTransform(), m_gBufferShader->getProgramID());
+    //                 m_gBufferShader->sendMaterialToShader(mesh->getMaterial());
+    //                 glDrawBuffers(3, attachments);
 
-                        sendTransforms(projection, view, mesh->getModelTransform(), shader->getProgramID());
-                        mesh->getShader()->sendMaterialToShader();
-                        glDrawBuffers(3, attachments);
+    //             glBindVertexArray(0);
+    //         }
+    //         glUseProgram(0);
+    //     }
+    // }
 
-                        m_lightManager->sendDataToShader(shader);
-                        glDrawElements(GL_TRIANGLES, mesh->getTrianglesNb()*3, GL_UNSIGNED_SHORT, 0);
+    // // lighting pass
 
-                    glBindVertexArray(0);
-                    if(mesh->displayEdges())
-                    {
-                        glBindVertexArray(mesh->getEdgeVaoId());
-                        // send uniforms
-                        // send light data to shader
-                        // send material data to shader
-                        glLineWidth(1.5);
-                        glDrawElements(GL_LINES,mesh->getEdgesNb()*2, GL_UNSIGNED_SHORT, 0);
-                    glBindVertexArray(0);
-                    }
-                }
-            glUseProgram(0);
-            break;
-        }
-
-        case invalid:
-            break;
-        default:
-            break;
-        }
-    }
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // glActiveTexture(GL_TEXTURE0);
+    // glBindTexture(GL_TEXTURE_2D, m_gPosition);
+    // glActiveTexture(GL_TEXTURE1);
+    // glBindTexture(GL_TEXTURE_2D, m_gNormal);
+    // glActiveTexture(GL_TEXTURE2);
+    // glBindTexture(GL_TEXTURE_2D, m_gColorSpec);
+    
+    m_deferredShader->useProgram();
+        glBindVertexArray(m_quadVaoId);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(0);
+    glUseProgram(0);
 }
 
 void Renderer::initGBuffer()

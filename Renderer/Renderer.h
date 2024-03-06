@@ -16,13 +16,6 @@
 
 class Mesh;
 
-enum Shaders {
-    blinnPhong,
-    GGX,
-    color,
-    invalid
-};
-
 using namespace std;
 
 class Renderer
@@ -39,8 +32,8 @@ class Renderer
 
     private:
 
-        Shader* m_gBufferShader; (to lock in the gbuffer pass)
-        Shader* m_deferredShader; (to lock in the lighting pass (one for GGX and BlinnPhong or one shader per BRDF + direct rendering for color/transparency))
+        Shader* m_gBufferShader; // to lock in the gbuffer pass
+        Shader* m_deferredShader;  // to lock in the lighting pass (one for GGX and BlinnPhong or one shader per BRDF + direct rendering for color/transparency)
 
         void initGBuffer();
 
@@ -55,6 +48,9 @@ class Renderer
         map<Shaders, vector<Mesh*>> m_shaderDic;
 
         LightManager* m_lightManager;
+
+        GLuint m_quadVboId;
+        GLuint m_quadVaoId;
 };
 
 #endif
