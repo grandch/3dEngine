@@ -2,6 +2,8 @@
 
 Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidth(width), m_wHeight(height), m_window(0), m_openGLContext(0), m_input()
 {
+    initWindow();
+    initGL();
     m_lightManager = new LightManager();
     m_meshManager = new MeshManager();
     m_bezierManager = new BezierManager();
@@ -174,17 +176,6 @@ void Scene::mainLoop()
             SDL_Delay(frameRate - time);
         }
     }
-}
-
-bool Scene::initScene()
-{
-    if (this->initWindow() == false)
-        return false;
-
-    if (this->initGL() == false)
-        return false;
-
-    return true;
 }
 
 void Scene::screenshot()

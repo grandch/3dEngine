@@ -47,8 +47,6 @@ class Scene
 
         void mainLoop();
 
-        bool initScene();
-
         void screenshot();
 
     private:
