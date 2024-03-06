@@ -33,17 +33,17 @@ void main()
     gPosition = fragPos;
     gNormal = normalize(normal);
     
-    if(hasDiffuseColorTexture)
+    if(material.hasDiffuseColorTexture)
     {
-        gAlbedoSpec.rgb = texture(material.diffuseColorTexture, out_uv);
+        gAlbedoSpec.rgb = vec3(texture(material.diffuseColorTexture, out_uv));
     }
     else
     {
-        gAlbedoSpec.rgb = material.diffuseColor;
+        gAlbedoSpec.rgb = vec3(material.diffuseColor);
     }
-    if(hasSpecularStrengthTexture)
+    if(material.hasSpecularStrengthTexture)
     {
-        gAlbedoSpec.a = texture(material.specularStrengthTexture, out_uv);
+        gAlbedoSpec.a = float(texture(material.specularStrengthTexture, out_uv));
     }
     else
     {
