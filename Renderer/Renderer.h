@@ -29,7 +29,7 @@ class Renderer
 {
     public:
 
-        Renderer(LightManager* lightManager);
+        Renderer(int width, int height, LightManager* lightManager);
         ~Renderer();
 
         void addMesh(Mesh* mesh, string fragShader);
@@ -39,9 +39,15 @@ class Renderer
 
     private:
 
+        void initGBuffer();
+
         Shaders resolveShader(string input);
 
         void sendTransforms(mat4 &projection, mat4 &view, mat4 model, GLuint programId);
+
+        int m_width, m_height;
+
+        unsigned int m_gBuffer, m_gPosition, m_gNormal, m_gColorSpec;
 
         map<Shaders, vector<Mesh*>> m_shaderDic;
 

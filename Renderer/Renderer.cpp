@@ -2,7 +2,7 @@
 
 #include "../Mesh/Mesh.h"
 
-Renderer::Renderer(LightManager* lightManager): m_lightManager(lightManager) {}
+Renderer::Renderer(int width, int height, LightManager* lightManager): m_width(width), m_height(height), m_lightManager(lightManager) {}
 
 Renderer::~Renderer() {}
 
@@ -20,7 +20,8 @@ void Renderer::addShader(string fragShader, vector<Mesh *> meshes)
 }
 
 void Renderer::render(mat4 &projection, mat4 &view)
-{  
+{
+    unsigned int attachments[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
     for(pair<Shaders, vector<Mesh*>> p: m_shaderDic)
     {
         switch (p.first)
@@ -82,10 +83,14 @@ void Renderer::render(mat4 &projection, mat4 &view)
                 for(Mesh* mesh: p.second)
                 {
                     glBindVertexArray(mesh->getVaoId());
+
                         sendTransforms(projection, view, mesh->getModelTransform(), shader->getProgramID());
-                        m_lightManager->sendDataToShader(shader);
                         mesh->getShader()->sendMaterialToShader();
+                        glDrawBuffers(3, attachments);
+
+                        m_lightManager->sendDataToShader(shader);
                         glDrawElements(GL_TRIANGLES, mesh->getTrianglesNb()*3, GL_UNSIGNED_SHORT, 0);
+
                     glBindVertexArray(0);
                     if(mesh->displayEdges())
                     {
@@ -108,6 +113,37 @@ void Renderer::render(mat4 &projection, mat4 &view)
             break;
         }
     }
+}
+
+void Renderer::initGBuffer()
+{
+    // g buffer
+    glGenFramebuffers(1, &m_gBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_gBuffer);
+
+    // position buffer
+    glGenTextures(1, &m_gPosition);
+    glBindTexture(GL_TEXTURE_2D, m_gPosition);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_gPosition, 0);
+
+    // normal buffer
+    glGenTextures(1, &m_gNormal);
+    glBindTexture(GL_TEXTURE_2D, m_gNormal);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_gNormal, 0);
+
+    // color and specular buffer
+    glGenTextures(1, &m_gColorSpec);
+    glBindTexture(GL_TEXTURE_2D, m_gColorSpec);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, m_gColorSpec, 0);
 }
 
 Shaders Renderer::resolveShader(string input)

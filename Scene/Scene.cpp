@@ -5,7 +5,7 @@ Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidt
     m_lightManager = new LightManager();
     m_meshManager = new MeshManager();
     m_bezierManager = new BezierManager();
-    m_renderer = new Renderer(m_lightManager);
+    m_renderer = new Renderer(width, height, m_lightManager);
     m_axis = new Axis(m_renderer);
 }
 
