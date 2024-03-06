@@ -4,6 +4,7 @@
 #include "../Mesh/Mesh.h"
 #include "../Scene/LightManager.h"
 #include "../Renderer/Renderer.h"
+#include "../Shaders/Material.h"
 
 #include <vector>
 
@@ -32,6 +33,8 @@ class BezierSurface
         Mesh* m_mesh;
 
         Renderer* m_renderer;
+
+        Material* m_material;
 };
 
 #endif

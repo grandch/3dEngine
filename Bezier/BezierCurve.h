@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include "../Renderer/Renderer.h"
+#include "../Shaders/Material.h"
 
 using namespace glm;
 using namespace std;
@@ -45,6 +46,8 @@ class BezierCurve
         BezierCurve* m_next;
 
         Renderer* m_renderer;
+
+        Material* m_material;
 };
 
 #endif

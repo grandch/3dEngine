@@ -1,5 +1,6 @@
 #include "../../Mesh/Mesh.h"
 #include "../../Renderer/Renderer.h"
+#include "../../Shaders/Material.h"
 
 class Axis
 {
@@ -13,4 +14,6 @@ class Axis
         Mesh* m_meshX;
         Mesh* m_meshY;
         Mesh* m_meshZ;
+
+        Material* m_material;
 };

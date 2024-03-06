@@ -6,11 +6,13 @@
 
 Axis::Axis(Renderer* renderer): m_meshX(nullptr), m_meshY(nullptr), m_meshZ(nullptr)
 {
-    m_meshX = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", renderer);
+    m_material = new Material(color, vec3(0), vec3(0), 0, 0);
+
+    m_meshX = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", m_material, renderer);
     m_meshX->setDrawEdges(true);
-    m_meshY = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", renderer);
+    m_meshY = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", m_material, renderer);
     m_meshY->setDrawEdges(true);
-    m_meshZ = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", renderer);
+    m_meshZ = new Mesh("Shaders/Color.vert", "Shaders/Color.frag", m_material, renderer);
     m_meshZ->setDrawEdges(true);
 
     // add axis color to vertex

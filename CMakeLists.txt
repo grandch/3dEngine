@@ -16,7 +16,7 @@ add_library(Light SHARED Light/PointLight.cpp)
 add_library(Mesh SHARED Mesh/Mesh.cpp Mesh/MeshEdge.cpp Mesh/MeshHalfEdge.cpp Mesh/MeshTriangle.cpp Mesh/MeshVertex.cpp)
 add_library(Renderer SHARED Renderer/Renderer.cpp)
 add_library(Scene SHARED Scene/Scene.cpp Scene/BezierManager.cpp Scene/LightManager.cpp Scene/MeshManager.cpp Scene/Axis/Axis.cpp)
-add_library(Shaders SHARED Shaders/Shader.cpp)
+add_library(Shaders SHARED Shaders/Shader.cpp Shaders/Material.cpp)
 add_library(ext SHARED ext/stb/stb_image.cpp)
 
 add_executable(3dEngine main.cpp)

@@ -8,6 +8,8 @@
 
 BezierSurface::BezierSurface(BezierCurve* bc0, BezierCurve* bc1, BezierCurve* bc2, BezierCurve* bc3, Renderer* renderer): m_mesh(nullptr), m_renderer(renderer)
 {
+    m_material = new Material(color, vec3(0), vec3(0), 0, 0);
+
     m_bcT.push_back(bc0);
     m_bcT.push_back(bc1);
     m_bcT.push_back(bc2);
@@ -24,7 +26,7 @@ void BezierSurface::compute(int s, int t, string vertexShader, string fragmentSh
         free(m_mesh);
     }
 
-    m_mesh = new Mesh(vertexShader, fragmentShader, m_renderer);
+    m_mesh = new Mesh(vertexShader, fragmentShader, m_material, m_renderer);
 
     vector<vector<vec3>> pt;
 

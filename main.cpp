@@ -8,13 +8,11 @@
 #include "Bezier/BezierCurve.h"
 #include "Bezier/BezierSurface.h"
 #include "Renderer/Renderer.h"
+#include "Shaders/Material.h"
 
 int main(int argc, char **argv)
 {
     Scene scene("3dEngine", 1280, 1024);
-
-    if (scene.initScene() == false)
-        return -1;
 
     BezierManager* bezierManager = scene.getBezierManager();
     MeshManager* meshManager = scene.getMeshManager();
@@ -27,16 +25,15 @@ int main(int argc, char **argv)
     bezier->transform(translate(vec3(10,0,0)));
     bezierManager->addCurve("curve", bezier);
 
-    Mesh* mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag", renderer);
+    Material* material = new Material(GGX, vec3(1), vec3(1), 0.4, 0.5);
+    Mesh* mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag", material, renderer);
     Importer importer(mesh);
     importer.loadObjFile("Models/scurry.obj");
-    mesh->setMaterial(vec3(1,1,1), vec3(1,1,1), 0.5, 0.9);
     meshManager->addMesh("scurry", mesh);
 
-    mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag", renderer);
+    mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag", material, renderer);
     Importer importer2(mesh);
     importer2.loadObjFile("Models/vase.obj");
-    mesh->setMaterial(vec3(1,1,1), vec3(1,1,1), 0.4, 0.5);
     meshManager->addMesh("vase", mesh);
 
     BezierCurve* b0 = new BezierCurve(vec3(-1.5, 0, 0), vec3(-0.5, 0, -1), vec3(0.5, 0, 0), vec3(1.5, 0, 0), renderer);
@@ -55,9 +52,9 @@ int main(int argc, char **argv)
     bezierS = new BezierSurface(b0, b1, b2, b3, renderer);
     bezierS->compute(64, 64, "Shaders/BRDF.vert", "Shaders/BRDF.frag");
     bezierS->transform(translate(vec3(-5,0,0)));
-    bezierS->getMesh()->getShader()->loadDiffuseColorTexture("Shaders/metal_plate_diff.jpg");
-    bezierS->getMesh()->getShader()->loadShininessTexture("Shaders/metal_plate_rough.jpg");
-    bezierS->getMesh()->getShader()->loadSpecularColorTexture("Shaders/metal_plate_spec.jpg");
+    bezierS->getMesh()->getMaterial()->loadDiffuseColorTexture("Shaders/metal_plate_diff.jpg");
+    bezierS->getMesh()->getMaterial()->loadShininessTexture("Shaders/metal_plate_rough.jpg");
+    bezierS->getMesh()->getMaterial()->loadSpecularColorTexture("Shaders/metal_plate_spec.jpg");
     bezierManager->addSurface("surface2", bezierS);
 
     PointLight p1 = PointLight(vec4(4,10,4,1), vec3(1,0.95,0.9));
