@@ -32,7 +32,7 @@ void main()
 {
     gPosition = fragPos;
     gNormal = normalize(normal);
-    
+
     if(material.hasDiffuseColorTexture)
     {
         gAlbedoSpec.rgb = vec3(texture(material.diffuseColorTexture, out_uv));

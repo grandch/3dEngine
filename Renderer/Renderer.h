@@ -8,7 +8,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <map>
+// #include <map>
 #include <vector>
 #include <string>
 
@@ -26,7 +26,6 @@ class Renderer
         ~Renderer();
 
         void addMesh(Mesh* mesh, string fragShader);
-        void addShader(string fragShader, vector<Mesh*> meshes);
 
         void render(mat4 &projection, mat4 &view);
 
@@ -45,7 +44,7 @@ class Renderer
 
         unsigned int m_gBuffer, m_gPosition, m_gNormal, m_gColorSpec;
 
-        map<Shaders, vector<Mesh*>> m_shaderDic;
+        vector<Mesh*> m_meshes;
 
         LightManager* m_lightManager;
 
