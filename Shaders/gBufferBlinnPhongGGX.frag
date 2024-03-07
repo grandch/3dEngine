@@ -35,7 +35,7 @@ void main()
 
     if(material.hasDiffuseColorTexture)
     {
-        gAlbedoSpec.rgb = vec3(texture(material.diffuseColorTexture, out_uv));
+        gAlbedoSpec.rgb = texture(material.diffuseColorTexture, out_uv).rgb;
     }
     else
     {

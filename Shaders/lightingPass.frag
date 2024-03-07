@@ -1,14 +1,19 @@
 #version 150 core
 out vec4 out_color;
-  
+
 in vec2 TexCoords;
 
-uniform sampler2D positionTexture;
-// uniform sampler2D normalTexture;
-// uniform sampler2D albedoSpecTexture;
+uniform sampler2D gPosition;
+uniform sampler2D gNormal;
+uniform sampler2D gAlbedoSpec;
 
 void main()
-{ 
-    out_color = vec4(vec3(texture(positionTexture, TexCoords)), 1);
-    // out_color = vec4(TexCoords.x, TexCoords.y, 1., 1.);
+{
+    // retrieve data from G-buffer
+    vec3 FragPos = texture(gPosition, TexCoords).rgb;
+    vec3 Normal = texture(gNormal, TexCoords).rgb;
+    vec3 Albedo = texture(gAlbedoSpec, TexCoords).rgb;
+    float Specular = texture(gAlbedoSpec, TexCoords).a;
+
+    out_color = vec4(Normal, 1);
 }
