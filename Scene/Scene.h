@@ -51,6 +51,8 @@ class Scene
 
     private:
 
+        mat4 m_view;
+
         string m_windowTitle;
         int m_wWidth;
         int m_wHeight;

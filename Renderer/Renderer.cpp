@@ -87,7 +87,7 @@ void Renderer::render(mat4 &projection, mat4 &view)
         glUniform1i(glGetUniformLocation(m_deferredShader->getProgramID(), "gNormal"), 1);
         glUniform1i(glGetUniformLocation(m_deferredShader->getProgramID(), "gAlbedoSpec"), 2);
 
-        // m_lightManager->sendDataToShader(m_gBufferShader);
+        m_lightManager->sendDataToShader(m_deferredShader);
 
         glBindVertexArray(m_quadVaoId);
             glDrawArrays(GL_TRIANGLES, 0, 6);

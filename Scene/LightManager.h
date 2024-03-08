@@ -19,7 +19,7 @@ using namespace std;
 class LightManager
 {
     public:
-        LightManager();
+        LightManager(mat4* view);
         ~LightManager();
 
         void addLight(PointLight* pLight);
@@ -34,6 +34,7 @@ class LightManager
         void sendDataToShader(Shader* shader);
         
     private:
+        mat4* m_view;
         GLfloat m_locations[40];
         GLfloat m_colors[30];
         int m_nbLight;

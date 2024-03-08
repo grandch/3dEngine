@@ -1,7 +1,7 @@
 #include "LightManager.h"
 #include <iostream>
 
-LightManager::LightManager() : m_nbLight(0)
+LightManager::LightManager(mat4* view) : m_nbLight(0), m_view(view)
 {}
 
 LightManager::~LightManager()
@@ -65,4 +65,5 @@ void LightManager::sendDataToShader(Shader* shader)
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "lightManager.nbPointLights"), m_nbLight);
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "lightManager.ambientStrength"), m_ambientStrength);
     glUniform3fv(glGetUniformLocation(shader->getProgramID(), "lightManager.ambientColor"), 1, value_ptr(m_ambientColor));
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "lightManager.view"), 1, GL_FALSE, value_ptr(*m_view));
 }

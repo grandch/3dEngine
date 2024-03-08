@@ -4,7 +4,7 @@ Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidt
 {
     initWindow();
     initGL();
-    m_lightManager = new LightManager();
+    m_lightManager = new LightManager(&m_view);
     m_meshManager = new MeshManager();
     m_bezierManager = new BezierManager();
     m_renderer = new Renderer(width, height, m_lightManager);
@@ -106,13 +106,12 @@ void Scene::mainLoop()
     Uint32 loopBeg(0), loopEnd(0), time(0);
 
     mat4 projection;
-    mat4 view;
 
     projection = perspective(70.0, (double) m_wWidth / m_wHeight, 1.0, 100.0); //init the camera
-    view = mat4(0.1);
+    m_view = mat4(0.1);
 
     CameraRotateAround camera(vec3(-15, 10, 10), vec3(0, 0, 0), vec3(0, 1, 0));
-    camera.lookAt(view);
+    camera.lookAt(m_view);
     m_input.showCursor(false);
     m_input.cursorCapture(true);
 
@@ -158,13 +157,13 @@ void Scene::mainLoop()
         
         glClearColor(0.5, 0.5, 0.5, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
-        camera.lookAt(view);
+        camera.lookAt(m_view);
 
-        // m_axis->draw(projection, view);
-        // m_meshManager->draw(projection, view, m_lightManager);
-        // m_bezierManager->draw(projection, view, m_lightManager);
+        // m_axis->draw(projection, m_view);
+        // m_meshManager->draw(projection, m_view, m_lightManager);
+        // m_bezierManager->draw(projection, m_view, m_lightManager);
 
-        m_renderer->render(projection, view);
+        m_renderer->render(projection, m_view);
 
         SDL_GL_SwapWindow(m_window); //refresh the window
 
