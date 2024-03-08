@@ -19,6 +19,7 @@ struct LightManager
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
+uniform sampler2D ssao;
 
 uniform LightManager lightManager;
 
@@ -88,6 +89,7 @@ vec3 fresnel_mix(vec3 f0, vec3 base, vec3 layer, float HdotV)
 void main()
 {
     // retrieve data from G-buffer
+    float ao = texture(ssao, TexCoords).r;
     vec3 fragPos = texture(gPosition, TexCoords).rgb;
     vec3 normal = texture(gNormal, TexCoords).rgb;
     vec3 albedo = texture(gAlbedoSpec, TexCoords).rgb;
@@ -101,7 +103,7 @@ void main()
     vec3 v = normalize(-fragPos);
     float NdotV = max(dot(normal, v), 0.);
 
-    vec3 result = ambient() * albedo;
+    vec3 result = ambient() * albedo * ao;
 
     for(int i = 0; i < lightManager.nbPointLights; i++)
     {

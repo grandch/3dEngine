@@ -8,9 +8,10 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// #include <map>
 #include <vector>
 #include <string>
+#include <random>
+#include <cmath>
 
 #include "../Scene/LightManager.h"
 
@@ -31,10 +32,13 @@ class Renderer
 
     private:
 
-        Shader* m_gBufferShader; // to lock in the gbuffer pass
-        Shader* m_deferredShader;  // to lock in the lighting pass (one for GGX and BlinnPhong or one shader per BRDF + direct rendering for color/transparency)
+        Shader* m_gBufferShader;
+        Shader* m_deferredShader;
+        Shader* m_ssaoShader;
+        Shader* m_ssaoBlurShader;
 
         void initGBuffer();
+        void initSSAO();
 
         Shaders resolveShader(string input);
 
@@ -42,7 +46,10 @@ class Renderer
 
         int m_width, m_height;
 
-        unsigned int m_gBuffer, m_gPosition, m_gNormal, m_gColorSpec;
+        unsigned int m_gBuffer, m_gPosition, m_gNormal, m_gColorSpec, m_ssaoFBO, m_ssaoColorBuffer, m_ssaoNoiseTexture, m_ssaoBlurFBO, m_ssaoBlurColorBuffer;
+
+        vector<vec3> m_ssaoKernel;
+        vector<vec3> m_ssaoNoise;
 
         vector<Mesh*> m_meshes;
 
