@@ -8,7 +8,7 @@
 
 BezierSurface::BezierSurface(BezierCurve* bc0, BezierCurve* bc1, BezierCurve* bc2, BezierCurve* bc3, Renderer* renderer): m_mesh(nullptr), m_renderer(renderer)
 {
-    m_material = new Material(color, vec3(0), vec3(0), 0, 0);
+    m_material = new Material(GGX, vec3(1), vec3(1), 0.5, 0.5);
 
     m_bcT.push_back(bc0);
     m_bcT.push_back(bc1);

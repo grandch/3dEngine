@@ -93,7 +93,7 @@ void main()
     vec3 albedo = texture(gAlbedoSpec, TexCoords).rgb;
     float specular = texture(gAlbedoSpec, TexCoords).a;
 
-    float roughness = specular;
+    float roughness = texture(gNormal, TexCoords).a;
     float metallic = specular;
 
     float alpha = roughness;

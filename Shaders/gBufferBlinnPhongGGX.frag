@@ -19,7 +19,7 @@ struct Material
 };
 
 layout (location = 0) out vec3 gPosition;
-layout (location = 1) out vec3 gNormal;
+layout (location = 1) out vec4 gNormal;
 layout (location = 2) out vec4 gAlbedoSpec;
 
 in vec2 out_uv;
@@ -31,7 +31,16 @@ uniform Material material;
 void main()
 {
     gPosition = fragPos;
-    gNormal = normalize(normal);
+    gNormal.rgb = normalize(normal);
+    
+    if(material.hasShininessTexture)
+    {
+        gNormal.a = float(texture(material.shininessTexture, out_uv));
+    }
+    else
+    {
+        gNormal.a = material.shininess;
+    }
 
     if(material.hasDiffuseColorTexture)
     {

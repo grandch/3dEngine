@@ -25,12 +25,13 @@ int main(int argc, char **argv)
     bezier->transform(translate(vec3(10,0,0)));
     bezierManager->addCurve("curve", bezier);
 
-    Material* material = new Material(GGX, vec3(1), vec3(1), 0.4, 0.5);
+    Material* material = new Material(GGX, vec3(0.5, 0.9, 0.3), vec3(1), 0.7, 0.06);
     Mesh* mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag", material, renderer);
     Importer importer(mesh);
     importer.loadObjFile("Models/scurry.obj");
     meshManager->addMesh("scurry", mesh);
 
+    material = new Material(GGX, vec3(0.1, 0.3, 0.9), vec3(1), .1, 0.75);
     mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag", material, renderer);
     Importer importer2(mesh);
     importer2.loadObjFile("Models/vase.obj");
@@ -63,7 +64,7 @@ int main(int argc, char **argv)
     lightManager->addLight(new PointLight(vec4(4,10,4,1), vec3(1,0.95,0.9)));
     lightManager->addLight(new PointLight(vec4(-4,5,4,1), vec3(1,0.6,0.3)));
     lightManager->addLight(new PointLight(vec4(0,5,-3,1), vec3(0.6,0.9,1)));
-    lightManager->setAmbientLight(vec3(0.2,0.3,0.5), 0.3);
+    lightManager->setAmbientLight(vec3(0.2,0.3,0.5), 0.7);
 
 
     scene.mainLoop();
