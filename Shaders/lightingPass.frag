@@ -103,7 +103,7 @@ void main()
     vec3 v = normalize(-fragPos);
     float NdotV = max(dot(normal, v), 0.);
 
-    vec3 result = ambient() * albedo * ao;
+    vec3 result = ambient() * albedo;
 
     for(int i = 0; i < lightManager.nbPointLights; i++)
     {
@@ -122,5 +122,6 @@ void main()
         result += mix(dielectric, metal, metallic);
     }
 
+    result *= ao;
     out_Color = vec4(result, 1.0);
 }
