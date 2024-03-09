@@ -110,7 +110,7 @@ void Scene::mainLoop()
     projection = perspective(70.0, (double) m_wWidth / m_wHeight, 1.0, 100.0); //init the camera
     m_view = mat4(0.1);
 
-    CameraRotateAround camera(vec3(-15, 10, 10), vec3(0, 0, 0), vec3(0, 1, 0));
+    CameraRotateAround camera(vec3(0, 0, 23), vec3(0, 0, 0), vec3(0, 1, 0));
     camera.lookAt(m_view);
     m_input.showCursor(false);
     m_input.cursorCapture(true);
