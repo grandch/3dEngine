@@ -19,9 +19,11 @@ add_library(Scene SHARED Scene/Scene.cpp Scene/BezierManager.cpp Scene/LightMana
 add_library(Shaders SHARED Shaders/Shader.cpp Shaders/Material.cpp)
 add_library(ext SHARED ext/stb/stb_image.cpp)
 
-add_executable(3dEngine main.cpp)
+add_executable(pbr pbr.cpp)
+add_executable(deferred-ssao deferred-ssao.cpp)
 
-target_link_libraries(3dEngine Inputs Bezier Camera Importer Light Mesh Renderer Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
+target_link_libraries(pbr Inputs Bezier Camera Importer Light Mesh Renderer Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
+target_link_libraries(deferred-ssao Inputs Bezier Camera Importer Light Mesh Renderer Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
 
 file(GLOB VERTEXSHADERS
   "Shaders/*.vert"
