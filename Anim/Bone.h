@@ -1,6 +1,7 @@
 #ifndef BONE
 #define BONE
 
+#include <glm/fwd.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -8,14 +9,13 @@
 
 #include <vector>
 
-using namespace glm;
 using namespace std;
 
 typedef struct 
 {
-    vec3 translate;
-    vec3 scale;
-    mat4 rotate;
+    glm::vec3 translate;
+    glm::vec3 scale;
+    glm::mat4 rotate;
 } Pose;
 
 class Bone
@@ -25,14 +25,16 @@ class Bone
         Bone(Bone* previous);
         ~Bone();
 
-        mat4 getPose(int idPose);
-        mat4 getPose(int idPose1, int idPose2, float time);
+        glm::mat4 getPose(int idPose);
+        glm::mat4 getPose(int idPose1, int idPose2, float time);
 
-        // void setPose(int idPose, mat4 pose);
+        void setTranslate(int idPose, glm::vec3 transf);
+        void setRotate(int idPose, glm::mat4 rot);
+        void setScale(int idPose, glm::vec3 sca);
 
     private:
 
-        mat4 buildTransform(Pose pose);
+        glm::mat4 buildTransform(Pose pose);
 
         Bone* m_previous;
         vector<Pose> m_poses;
