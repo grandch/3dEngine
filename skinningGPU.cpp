@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     // --------------------- Mesh Import -------------------
 
     MeshManager* meshManager = scene.getMeshManager();
-    Mesh* mesh = new Mesh("Shaders/BRDF.vert", "Shaders/BRDFmicroFacet.frag");
+    Mesh* mesh = new Mesh("Shaders/skinning.vert", "Shaders/skinning.frag");
     Importer importer2(mesh);
     importer2.loadObjFile("Models/cylinder.obj");
     mesh->setMaterial(vec3(1,1,1), vec3(1,1,1), 0.4, 0.9);
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
     // --------------------- Weights attribution -------------------
 
-    vector<pair<MeshVertex*, pair<float, float>>> verticesWeights;
+    vector<vec2> verticesWeights;
 
     for(MeshVertex* vertex: mesh->getVertexList())
     {
@@ -66,22 +66,16 @@ int main(int argc, char **argv)
             wa = 0; wb = 1;
         }
 
-        verticesWeights.push_back({vertex, {wa, wb}});
+        verticesWeights.push_back(vec2(wa, wb));
     }
 
 
-    // --------------------- Animation with CPU -------------------
+    // --------------------- Animation with GPU -------------------
 
-    boneB->setRotate(1, rotate(0.9f, vec3(1,0,0)));
     boneA->setRotate(1, rotate(-0.3f, vec3(1,0,0.3)));
+    boneB->setRotate(1, rotate(0.9f, vec3(1,0,0)));
 
-    for(pair<MeshVertex*, pair<float, float>> vw: verticesWeights)
-    {
-        vec4 coord = vw.first->getAttribute(0);
-        coord = (vw.second.first * boneA->getPose(1)) * coord + (vw.second.second * boneB->getPose(1)) * coord;
-        vw.first->setCoord(vec3(coord));
-    }
-    mesh->loadMesh();
+    mesh->skinningGPUOn(verticesWeights, boneA, boneB);
 
 
     // --------------------- Lighting and scene loop -------------------

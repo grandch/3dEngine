@@ -4,8 +4,9 @@
 #include "MeshVertex.h"
 #include "MeshTriangle.h"
 #include "MeshEdge.h"
+#include <GLES3/gl3.h>
 
-Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader, vec3(1), vec3(1), 1, 64), m_drawEdges(false), m_model(glm::mat4(1.0f))
+Mesh::Mesh(string vertexShader, string fragmentShader): m_shader(vertexShader, fragmentShader, vec3(1), vec3(1), 1, 64), m_drawEdges(false), m_model(glm::mat4(1.0f)), m_skinningGPU(false)
 {}
 
 Mesh::~Mesh()
@@ -33,6 +34,12 @@ void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
     glUseProgram(m_shader.getProgramID());
 
         glBindVertexArray(m_vaoId); //lock the vao
+
+            if(m_skinningGPU)
+            {
+                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "boneA"), 1, GL_FALSE, value_ptr(m_boneA->getPose(1)));
+                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "boneB"), 1, GL_FALSE, value_ptr(m_boneB->getPose(1)));
+            }
 
             //send transform matrices uniforms to shaders
             glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "model"), 1, GL_FALSE, value_ptr(m_model));
@@ -369,4 +376,75 @@ Shader *Mesh::getShader()
 void Mesh::transform(mat4 transform)
 {
     m_model = transform * m_model;
+}
+
+void Mesh::skinningGPUOn(vector<vec2> weights, Bone* boneA, Bone* boneB)
+{
+    m_skinningGPU = true;
+    loadVBOSkinning(weights);
+    loadVAOSkinning();
+    m_boneA = boneA;
+    m_boneB = boneB;
+}
+
+void Mesh::loadVBOSkinning(vector<vec2> weights)
+{
+    //array to send
+    vector<GLfloat> w;
+
+    int number = 0;
+
+    for(MeshVertex* top: m_vertexList)
+    {
+        GLfloat wa, wb;
+        if(top->getAttribute(0)[1] < -0.5)
+        {
+            wa = 1; wb = 0;
+        }
+        else if (top->getAttribute(0)[1] < 0) 
+        {
+            wa = 0.8; wb = 0.2;
+        }
+        else if (top->getAttribute(0)[1] == 0) 
+        {
+            wa = 0.5; wb = 0.5;
+        }
+        else if (top->getAttribute(0)[1] > 0) {
+            wa = 0.2; wb = 0.8;
+        }
+        else if (top->getAttribute(0)[1] > 0.5) 
+        {
+            wa = 0; wb = 1;
+        }
+
+        w.push_back(wa);
+        w.push_back(wb);
+    }
+
+    m_weightVboId = makeFloatVBO(w, GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+}
+
+void Mesh::loadVAOSkinning()
+{
+    glDeleteVertexArrays(1, &m_vaoId);
+    glGenVertexArrays(1, &m_vaoId);
+
+    glBindVertexArray(m_vaoId);
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_vertexVboId);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, m_weightVboId);
+
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(1);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_faceIndexVboId);
+        
+    glBindVertexArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

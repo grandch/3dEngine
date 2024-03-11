@@ -13,6 +13,7 @@
 
 #include "../Shaders/Shader.h"
 #include "../Scene/LightManager.h"
+#include "../Anim/Bone.h"
 
 class MeshHalfEdge;
 class MeshVertex;
@@ -68,6 +69,10 @@ class Mesh
 
         void transform(mat4 transform);
 
+        void skinningGPUOn(vector<vec2> weights, Bone* boneA, Bone* boneB);
+        void loadVBOSkinning(vector<vec2> weights);
+        void loadVAOSkinning();
+
     private:
 
         mat4 m_model;
@@ -91,5 +96,10 @@ class Mesh
         GLuint m_edgeVaoId;
 
         bool m_drawEdges;
+
+        bool m_skinningGPU;
+        Bone* m_boneA;
+        Bone* m_boneB;
+        GLuint m_weightVboId;
 };
 #endif
