@@ -333,6 +333,11 @@ void Mesh::popVertex(MeshVertex* vertex)
     m_vertexList.erase(m_vertexList.begin() + i);
 }
 
+vector<MeshVertex*> Mesh::getVertexList()
+{
+    return m_vertexList;
+}
+
 void Mesh::computeNormals()
 {
     for(MeshVertex* v: m_vertexList)

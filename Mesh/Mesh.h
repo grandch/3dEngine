@@ -56,6 +56,7 @@ class Mesh
         MeshVertex* addVertex(string name);
         void pushVertex(MeshVertex* vertex);
         void popVertex(MeshVertex* vertex);
+        vector<MeshVertex*> getVertexList();
 
         void computeNormals();
         void compileShaders();
