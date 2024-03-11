@@ -6,8 +6,9 @@ find_package(OpenGL REQUIRED)
 find_package(glm REQUIRED)
 find_package(SDL2 REQUIRED)
 
-include_directories(Inputs Bezier Camera Importer ext/stb Light Mesh Scene Scene/Axis Shaders ${OPENGL_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
+include_directories(Anim Inputs Bezier Camera Importer ext/stb Light Mesh Scene Scene/Axis Shaders ${OPENGL_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
 
+add_library(Anim SHARED Anim/Bone.cpp)
 add_library(Inputs SHARED Inputs/Input.cpp)
 add_library(Bezier SHARED Bezier/BezierCurve.cpp Bezier/BezierSurface.cpp)
 add_library(Camera SHARED Camera/CameraDualQuaternion.cpp Camera/CameraRotateAround.cpp)
@@ -20,7 +21,7 @@ add_library(ext SHARED ext/stb/stb_image.cpp)
 
 add_executable(3dEngine main.cpp)
 
-target_link_libraries(3dEngine Inputs Bezier Camera Importer Light Mesh Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
+target_link_libraries(3dEngine Anim Inputs Bezier Camera Importer Light Mesh Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
 
 file(GLOB VERTEXSHADERS
   "Shaders/*.vert"
