@@ -2,6 +2,8 @@
 #include <glm/detail/qualifier.hpp>
 #include <glm/fwd.hpp>
 
+#include <iostream>
+
 Bone::Bone(): m_previous(nullptr)
 {
     // first pose is always rest pose
@@ -10,6 +12,7 @@ Bone::Bone(): m_previous(nullptr)
     pose.scale = glm::vec3(1);
     pose.rotate = glm::mat4(1);
     m_poses.push_back(pose);
+    m_transf.push_back(buildTransform(pose));
 }
 
 Bone::Bone(Bone* previous): m_previous(previous)
@@ -20,6 +23,7 @@ Bone::Bone(Bone* previous): m_previous(previous)
     pose.scale = glm::vec3(1);
     pose.rotate = glm::mat4(1);
     m_poses.push_back(pose);
+    m_transf.push_back(buildTransform(pose));
 }
 
 Bone::~Bone() {}
@@ -27,45 +31,38 @@ Bone::~Bone() {}
 glm::mat4 Bone::getPose(int idPose)
 {
     if(idPose < m_poses.size())
-    {
-        glm::mat4 previousPose = glm::mat4(1);
-        if( m_previous != nullptr)
-        {
-            previousPose = m_previous->getPose(idPose);
-        }
-
-        return previousPose * buildTransform(m_poses[idPose]);
-    }
+        return m_transf[idPose];
     // error
     return glm::mat4(1);
 }
 
-glm::mat4 Bone::getPose(int idPose1, int idPose2, float time)
-{
-    if(idPose1 < m_poses.size() && idPose2 < m_poses.size())
-    {
-        glm::mat4 previousPose = glm::mat4(1);
-        if( m_previous != nullptr)
-        {
-            previousPose = m_previous->getPose(idPose1, idPose2, time);
-        }
+// glm::mat4 Bone::getPose(int idPose1, int idPose2, float time)
+// {
+//     if(idPose1 < m_poses.size() && idPose2 < m_poses.size())
+//     {
+//         glm::mat4 previousPose = glm::mat4(1);
+//         if( m_previous != nullptr)
+//         {
+//             previousPose = m_previous->getPose(idPose1, idPose2, time);
+//         }
 
-        Pose pose;
-        pose.translate = time * m_poses[idPose1].translate + (1 - time) * m_poses[idPose2].translate;
-        pose.rotate = time * m_poses[idPose1].rotate + (1 - time) * m_poses[idPose2].rotate;
-        pose.scale = time * m_poses[idPose1].scale + (1 - time) * m_poses[idPose2].scale;
+//         Pose pose;
+//         pose.translate = time * m_poses[idPose1].translate + (1 - time) * m_poses[idPose2].translate;
+//         pose.rotate = time * m_poses[idPose1].rotate + (1 - time) * m_poses[idPose2].rotate;
+//         pose.scale = time * m_poses[idPose1].scale + (1 - time) * m_poses[idPose2].scale;
 
-        return previousPose * buildTransform(pose);
-    }
-    // error
-    return glm::mat4(1);
-}
+//         return previousPose * buildTransform(pose);
+//     }
+//     // error
+//     return glm::mat4(1);
+// }
 
 void Bone::setTranslate(int idPose, glm::vec3 transf)
 {
     if(idPose < m_poses.size())
     {
         m_poses[idPose].translate = transf;
+        m_transf[idPose] = getPreviousPose(idPose) * buildTransform(m_poses[idPose]);
     }
     else {
         Pose pose;
@@ -73,6 +70,7 @@ void Bone::setTranslate(int idPose, glm::vec3 transf)
         pose.rotate = glm::mat4(1);
         pose.translate = transf;
         m_poses.push_back(pose);
+        m_transf.push_back(getPreviousPose(idPose) * buildTransform(pose));
     }
 }
 
@@ -81,6 +79,7 @@ void Bone::setRotate(int idPose, glm::mat4 rot)
     if(idPose < m_poses.size())
     {
         m_poses[idPose].rotate = rot;
+        m_transf[idPose] = getPreviousPose(idPose) * buildTransform(m_poses[idPose]);
     }
     else {
         Pose pose;
@@ -88,6 +87,7 @@ void Bone::setRotate(int idPose, glm::mat4 rot)
         pose.scale = glm::vec3(1);
         pose.rotate = rot;
         m_poses.push_back(pose);
+        m_transf.push_back(getPreviousPose(idPose) * buildTransform(pose));
     }
 }
 
@@ -96,6 +96,7 @@ void Bone::setScale(int idPose, glm::vec3 sca)
     if(idPose < m_poses.size())
     {
         m_poses[idPose].scale = sca;
+        m_transf[idPose] = getPreviousPose(idPose) * buildTransform(m_poses[idPose]);
     }
     else {
         Pose pose;
@@ -103,6 +104,7 @@ void Bone::setScale(int idPose, glm::vec3 sca)
         pose.rotate = glm::mat4(1);
         pose.scale = sca;
         m_poses.push_back(pose);
+        m_transf.push_back(getPreviousPose(idPose) * buildTransform(pose));
     }
 }
 
@@ -113,4 +115,11 @@ glm::mat4 Bone::buildTransform(Pose pose)
     transf = glm::scale(transf, pose.scale);
 
     return transf;
+}
+
+glm::mat4 Bone::getPreviousPose(int idPose)
+{
+    if( m_previous != nullptr)
+        return m_previous->getPose(idPose);
+    return glm::mat4(1);
 }
