@@ -22,6 +22,7 @@ class Bone
 {
     public:
 
+        Bone();
         Bone(Bone* previous);
         ~Bone();
 

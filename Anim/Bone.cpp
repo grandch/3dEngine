@@ -1,12 +1,24 @@
 #include "Bone.h"
+#include <glm/detail/qualifier.hpp>
+#include <glm/fwd.hpp>
+
+Bone::Bone(): m_previous(nullptr)
+{
+    // first pose is always rest pose
+    Pose pose;
+    pose.translate = glm::vec3(0);
+    pose.scale = glm::vec3(1);
+    pose.rotate = glm::mat4(1);
+    m_poses.push_back(pose);
+}
 
 Bone::Bone(Bone* previous): m_previous(previous)
 {
     // first pose is always rest pose
     Pose pose;
     pose.translate = glm::vec3(0);
-    pose.scale = glm::vec3(0);
-    pose.rotate = glm::rotate(0.f, glm::vec3(1, 0, 0));
+    pose.scale = glm::vec3(1);
+    pose.rotate = glm::mat4(1);
     m_poses.push_back(pose);
 }
 
@@ -57,6 +69,8 @@ void Bone::setTranslate(int idPose, glm::vec3 transf)
     }
     else {
         Pose pose;
+        pose.scale = glm::vec3(1);
+        pose.rotate = glm::mat4(1);
         pose.translate = transf;
         m_poses.push_back(pose);
     }
@@ -70,6 +84,8 @@ void Bone::setRotate(int idPose, glm::mat4 rot)
     }
     else {
         Pose pose;
+        pose.translate = glm::vec3(0);
+        pose.scale = glm::vec3(1);
         pose.rotate = rot;
         m_poses.push_back(pose);
     }
@@ -83,6 +99,8 @@ void Bone::setScale(int idPose, glm::vec3 sca)
     }
     else {
         Pose pose;
+        pose.translate = glm::vec3(0);
+        pose.rotate = glm::mat4(1);
         pose.scale = sca;
         m_poses.push_back(pose);
     }
