@@ -27,10 +27,10 @@ void MeshManager::transformMesh(string name, mat4 transform)
     m_meshes[name]->transform(transform);
 }
 
-void MeshManager::draw(mat4 &projection, mat4 &view, LightManager *lightManager)
+void MeshManager::draw(mat4 &projection, mat4 &view, LightManager *lightManager, float time)
 {    
     for(auto i = m_meshes.begin(); i != m_meshes.end(); ++i)
     {
-        i->second->draw(projection, view, lightManager);
+        i->second->draw(projection, view, lightManager, 0.1*time);
     }
 }

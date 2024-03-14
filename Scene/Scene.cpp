@@ -1,5 +1,7 @@
 #include "Scene.h"
 
+#include <cmath>
+
 Scene::Scene(string title, int width, int height): m_windowTitle(title), m_wWidth(width), m_wHeight(height), m_window(0), m_openGLContext(0), m_input()
 {
     m_axis = new Axis();
@@ -92,7 +94,7 @@ bool Scene::initGL()
     return true;
 }
 
-void Scene::mainLoop()
+void Scene::mainLoop(Bone* boneA, Bone* boneB, vector<vec2> verticesWeights, bool gpu)
 {
     unsigned int frameRate(1000/50);
     Uint32 loopBeg(0), loopEnd(0), time(0);
@@ -109,6 +111,11 @@ void Scene::mainLoop()
     m_input.cursorCapture(true);
 
     float angleY(0.0);
+
+    vector<vec4> vertexlist;
+    vector<MeshVertex*> meshvertexlist = m_meshManager->getMesh("cylinder")->getVertexList();
+    for(MeshVertex* vertex: meshvertexlist)
+        vertexlist.push_back(vertex->getAttribute(0));
 
     while (!m_input.end())
     {
@@ -147,13 +154,29 @@ void Scene::mainLoop()
         {
             angleY += 360.0;
         }
-        
+
+        if(!gpu)
+        {
+            for(int i = 0; i < verticesWeights.size(); i++)
+            {
+                vec4 coord = vertexlist[i];
+                vec4 coord2 = (verticesWeights[i][0] * boneA->getPose(0, 1, sin(0.01*loopBeg))) * coord + (verticesWeights[i][1] * boneB->getPose(0, 1, sin(0.01*loopBeg))) * coord;
+                meshvertexlist[i]->setCoord(vec3(coord2));
+            }
+
+            m_meshManager->getMesh("cylinder")->loadMesh();
+        }
+        else 
+        {
+            m_meshManager->getMesh("cylinder")->skinningGPUOn(verticesWeights, boneA, boneB);
+        }
+            
         glClearColor(0.5, 0.5, 0.5, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the window and the depth buffer
         camera.lookAt(view);
 
         m_axis->draw(projection, view);
-        m_meshManager->draw(projection, view, m_lightManager);
+        m_meshManager->draw(projection, view, m_lightManager, 0.01 * loopBeg);
         m_bezierManager->draw(projection, view, m_lightManager);
 
         SDL_GL_SwapWindow(m_window); //refresh the window

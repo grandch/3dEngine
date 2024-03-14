@@ -23,7 +23,7 @@ class MeshManager
         void removeMesh(string name);
         void transformMesh(string name, mat4 transform);
 
-        void draw(mat4 &projection, mat4 &view, LightManager* lightManager);
+        void draw(mat4 &projection, mat4 &view, LightManager* lightManager, float time);
 
     private:
         map<string, Mesh*> m_meshes;

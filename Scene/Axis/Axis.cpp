@@ -61,7 +61,7 @@ void Axis::loadAxis()
 
 void Axis::draw(mat4 &projection, mat4 &view)
 {
-    m_meshX->draw(projection, view, new LightManager());
-    m_meshY->draw(projection, view, new LightManager());
-    m_meshZ->draw(projection, view, new LightManager());
+    m_meshX->draw(projection, view, new LightManager(), 0);
+    m_meshY->draw(projection, view, new LightManager(), 0);
+    m_meshZ->draw(projection, view, new LightManager(), 0);
 }

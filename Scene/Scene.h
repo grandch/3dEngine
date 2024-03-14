@@ -23,6 +23,7 @@
 #include "LightManager.h"
 #include "MeshManager.h"
 #include "BezierManager.h"
+#include "../Anim/Bone.h"
 
 #include <GLES3/gl3.h>
 
@@ -43,7 +44,7 @@ class Scene
         bool initWindow();
         bool initGL();
 
-        void mainLoop();
+        void mainLoop(Bone* boneA, Bone* boneB, vector<vec2> verticesWeights, bool gpu);
 
         bool initScene();
 

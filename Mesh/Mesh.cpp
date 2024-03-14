@@ -29,7 +29,7 @@ void Mesh::loadMesh()
     m_shader.load();
 }
 
-void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
+void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager, float loopBeg)
 {
     glUseProgram(m_shader.getProgramID());
 
@@ -37,8 +37,8 @@ void Mesh::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
 
             if(m_skinningGPU)
             {
-                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "boneA"), 1, GL_FALSE, value_ptr(m_boneA->getPose(1)));
-                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "boneB"), 1, GL_FALSE, value_ptr(m_boneB->getPose(1)));
+                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "boneA"), 1, GL_FALSE, value_ptr(m_boneA->getPose(0, 1, sin(loopBeg))));
+                glUniformMatrix4fv(glGetUniformLocation(m_shader.getProgramID(), "boneB"), 1, GL_FALSE, value_ptr(m_boneB->getPose(0, 1, sin(loopBeg))));
             }
 
             //send transform matrices uniforms to shaders
@@ -409,7 +409,8 @@ void Mesh::loadVBOSkinning(vector<vec2> weights)
         {
             wa = 0.5; wb = 0.5;
         }
-        else if (top->getAttribute(0)[1] > 0) {
+        else if (top->getAttribute(0)[1] > 0) 
+        {
             wa = 0.2; wb = 0.8;
         }
         else if (top->getAttribute(0)[1] > 0.5) 

@@ -35,13 +35,12 @@ int main(int argc, char **argv)
 
     // --------------------- Bones Creation -------------------
 
-    Bone* boneA = new Bone(); // root bone
-    Bone* boneB = new Bone(boneA);
+    Bone* boneA = new Bone(vec3(0,-1,0)); // root bone
+    Bone* boneB = new Bone(vec3(0), boneA);
+    vector<vec2> verticesWeights;
 
 
     // --------------------- Weights attribution -------------------
-
-    vector<pair<MeshVertex*, pair<float, float>>> verticesWeights;
 
     for(MeshVertex* vertex: mesh->getVertexList())
     {
@@ -66,22 +65,14 @@ int main(int argc, char **argv)
             wa = 0; wb = 1;
         }
 
-        verticesWeights.push_back({vertex, {wa, wb}});
+        verticesWeights.push_back(vec2(wa, wb));
     }
 
 
     // --------------------- Animation with CPU -------------------
 
     boneB->setRotate(1, rotate(0.9f, vec3(1,0,0)));
-    boneA->setRotate(1, rotate(-0.3f, vec3(1,0,0.3)));
-
-    for(pair<MeshVertex*, pair<float, float>> vw: verticesWeights)
-    {
-        vec4 coord = vw.first->getAttribute(0);
-        coord = (vw.second.first * boneA->getPose(1)) * coord + (vw.second.second * boneB->getPose(1)) * coord;
-        vw.first->setCoord(vec3(coord));
-    }
-    mesh->loadMesh();
+    boneA->setRotate(1, rotate(-0.3f, vec3(1,0,0)));
 
 
     // --------------------- Lighting and scene loop -------------------
@@ -95,7 +86,7 @@ int main(int argc, char **argv)
     lightManager->addLight(new PointLight(vec4(0,5,-3,1), vec3(0.6,0.9,1)));
     lightManager->setAmbientLight(vec3(0.2,0.3,0.5), 0.7);
 
-    scene.mainLoop();
+    scene.mainLoop(boneA, boneB, verticesWeights, false);
 
     return 0;
 }

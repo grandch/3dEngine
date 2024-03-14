@@ -114,8 +114,8 @@ vector<vec3> BezierCurve::compute(int nbPoints)
 
 void BezierCurve::draw(mat4 &projection, mat4 &view)
 {
-    m_meshCurve->draw(projection, view, new LightManager());
-    m_meshControlPolygon->draw(projection, view, new LightManager());
+    m_meshCurve->draw(projection, view, new LightManager(), 0);
+    m_meshControlPolygon->draw(projection, view, new LightManager(), 0);
 
     if(m_next != nullptr)
     {

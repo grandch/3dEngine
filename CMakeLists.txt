@@ -19,13 +19,9 @@ add_library(Scene SHARED Scene/Scene.cpp Scene/BezierManager.cpp Scene/LightMana
 add_library(Shaders SHARED Shaders/Shader.cpp)
 add_library(ext SHARED ext/stb/stb_image.cpp)
 
-add_executable(refCPU refCPU.cpp)
-add_executable(refGPU refGPU.cpp)
 add_executable(skinningCPU skinningCPU.cpp)
 add_executable(skinningGPU skinningGPU.cpp)
 
-target_link_libraries(refCPU Anim Inputs Bezier Camera Importer Light Mesh Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
-target_link_libraries(refGPU Anim Inputs Bezier Camera Importer Light Mesh Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
 target_link_libraries(skinningCPU Anim Inputs Bezier Camera Importer Light Mesh Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
 target_link_libraries(skinningGPU Anim Inputs Bezier Camera Importer Light Mesh Scene Shaders ext ${OPENGL_LIBRARIES} ${GLM_LIBRARY_DIRS} ${SDL2_LIBRARIES})
 

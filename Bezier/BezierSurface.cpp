@@ -82,7 +82,7 @@ void BezierSurface::compute(int s, int t, string vertexShader, string fragmentSh
 
 void BezierSurface::draw(mat4 &projection, mat4 &view, LightManager* lightManager)
 {
-    m_mesh->draw(projection, view, lightManager);
+    m_mesh->draw(projection, view, lightManager, 0);
 
     for(BezierCurve* bc : m_bcT)
     {

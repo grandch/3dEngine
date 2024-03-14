@@ -32,7 +32,7 @@ class Mesh
 
         void loadMesh(); //load the shader and the vbo/vao
 
-        void draw(mat4 &projection, mat4 &view, LightManager* lightManager);
+        void draw(mat4 &projection, mat4 &view, LightManager* lightManager, float loopBeg);
 
         void loadVBO();
         void loadVAO();

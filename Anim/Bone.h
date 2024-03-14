@@ -22,12 +22,14 @@ class Bone
 {
     public:
 
-        Bone();
-        Bone(Bone* previous);
+        Bone(glm::vec3 position);
+        Bone(glm::vec3 position, Bone* previous);
         ~Bone();
 
         glm::mat4 getPose(int idPose);
-        // glm::mat4 getPose(int idPose1, int idPose2, float time);
+        glm::mat4 getPose(int idPose1, int idPose2, float time);
+
+        glm::vec4 tranformPointWithPose(glm::vec4 point, int idPose1, int idPose2, float time);
 
         void setTranslate(int idPose, glm::vec3 transf);
         void setRotate(int idPose, glm::mat4 rot);
@@ -41,6 +43,8 @@ class Bone
         Bone* m_previous;
         vector<Pose> m_poses;
         vector<glm::mat4> m_transf;
+
+        glm::vec3 m_position;
 };
 
 #endif
