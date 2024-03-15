@@ -160,7 +160,7 @@ void Scene::mainLoop(Bone* boneA, Bone* boneB, vector<vec2> verticesWeights, boo
             for(int i = 0; i < verticesWeights.size(); i++)
             {
                 vec4 coord = vertexlist[i];
-                vec4 coord2 = (verticesWeights[i][0] * boneA->getPose(0, 1, sin(0.01*loopBeg))) * coord + (verticesWeights[i][1] * boneB->getPose(0, 1, sin(0.01*loopBeg))) * coord;
+                vec4 coord2 = (verticesWeights[i][0] * boneA->getPose(0, 1, sin(0.001*loopBeg))) * coord + (verticesWeights[i][1] * boneB->getPose(0, 1, sin(0.001*loopBeg))) * coord;
                 meshvertexlist[i]->setCoord(vec3(coord2));
             }
 

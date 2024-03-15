@@ -43,40 +43,12 @@ int main(int argc, char **argv)
 
     vector<vec2> verticesWeights;
 
-    // for(MeshVertex* vertex: mesh->getVertexList())
-    // {
-    //     float wa, wb;
-    //     if(vertex->getAttribute(0)[1] < -0.5)
-    //     {
-    //         wa = 1; wb = 0;
-    //     }
-    //     else if (vertex->getAttribute(0)[1] < 0) 
-    //     {
-    //         wa = 0.8; wb = 0.2;
-    //     }
-    //     else if (vertex->getAttribute(0)[1] == 0) 
-    //     {
-    //         wa = 0.5; wb = 0.5;
-    //     }
-    //     else if (vertex->getAttribute(0)[1] > 0) {
-    //         wa = 0.2; wb = 0.8;
-    //     }
-    //     else if (vertex->getAttribute(0)[1] > 0.5) 
-    //     {
-    //         wa = 0; wb = 1;
-    //     }
-
-    //     verticesWeights.push_back(vec2(wa, wb));
-    // }
-
 
     // --------------------- Animation with GPU -------------------
 
 
     boneB->setRotate(1, rotate(0.9f, vec3(1,0,0)));
-    // boneA->setRotate(1, rotate(-0.3f, vec3(1,0,0)));
-
-    // mesh->skinningGPUOn(verticesWeights, boneA, boneB);
+    boneA->setRotate(1, rotate(-0.3f, vec3(1,0,0)));
 
 
     // --------------------- Lighting and scene loop -------------------

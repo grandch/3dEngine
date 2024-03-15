@@ -38,6 +38,7 @@ glm::mat4 Bone::getPose(int idPose)
 
 glm::mat4 Bone::getPose(int idPose1, int idPose2, float time)
 {
+    time = 0.5 * time + 0.5;
     if(idPose1 < m_poses.size() && idPose2 < m_poses.size())
     {
         glm::mat4 previousPose = glm::mat4(1);
@@ -61,10 +62,10 @@ glm::vec4 Bone::tranformPointWithPose(glm::vec4 point, int idPose1, int idPose2,
 {
     if(m_previous != nullptr)
         point = m_previous->tranformPointWithPose(point, idPose1, idPose2, time);
-    point = glm::translate(m_position) * point;
+    point = glm::translate(-m_position) * point;
     glm::mat4 pose = getPose(idPose1, idPose2, time);
     point = pose * point;
-    return glm::translate(-m_position) * point;
+    return glm::translate(m_position) * point;
 }
 
 void Bone::setTranslate(int idPose, glm::vec3 transf)
